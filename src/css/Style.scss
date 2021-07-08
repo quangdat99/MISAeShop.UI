@@ -18,6 +18,7 @@ $color-text-3: #919eab;
 $color-text-4: #c4cdd5;
 $color-text-5: #dfe3e8;
 $color-text-6: #f1f3f8;
+$color-text-7: #f0f0f0;
 /* #endregion */
 
 /* #region color primary */
@@ -198,6 +199,9 @@ a {
             margin-right: 1px;
         }
     }
+    .grid {
+        overflow: auto;
+    }
     .footer {
         height: 53px;
         padding: 10px !important;
@@ -246,14 +250,17 @@ a {
 
     & ~ div {
         background-color: $color-white;
-        box-shadow: 0px 1px 6px #c0c0c0;
-        z-index: 20px;
+        box-shadow: 0px 4px 4px #c0c0c0;
+        z-index: 100;
         position: absolute;
-
+        padding: 1px;
+        &:focus {
+            outline: none;
+        }
         .dropdown-item {
             cursor: pointer;
-            height: 32px;
-            line-height: 32px;
+            height: 30px;
+            line-height: 30px;
             padding-right: 12px;
             padding-left: 12px;
             &:hover {
@@ -261,6 +268,143 @@ a {
                 color: $color-white;
             }
         }
+    }
+}
+/* #endregion */
+
+/* #region table */
+.table {
+    // display: none;
+    width: 100%;
+    border-collapse: collapse;
+    thead tr {
+        height: 35px;
+        text-align: left;
+        th {
+            background-color: $color-text-7;
+            border-bottom: 1px solid $color-text-4;
+            border-right: 1px solid $color-text-4;
+            background-color: $color-text-6;
+            white-space: nowrap;
+            position: sticky;
+            top: -1px;
+            height: 20px;
+            &:first-child {
+                padding-left: 10px;
+                padding-right: 10px;
+            }
+            .th-title {
+                height: 34px;
+                align-items: center;
+                justify-content: center;
+                display: flex;
+                div {
+                    display: inline-block;
+                }
+            }
+            tr {
+                &:first-child {
+                    width: 100%;
+                    text-align: center;
+                }
+                &:last-child {
+                    display: flex;
+                }
+            }
+        }
+    }
+}
+/* #endregion */
+
+/* #region checkbox */
+.checkbox {
+    display: none;
+
+    & + label {
+        border-radius: 2px;
+        display: inline-block;
+        position: relative;
+        border: 2px solid $color-text-3;
+        height: 14px;
+        width: 14px;
+    }
+
+    &:checked + label {
+        border: 0px;
+
+        &::after {
+            border-radius: 2px;
+            background-image: url("./assets/icons/check.png");
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: 0 0;
+            height: 19px;
+            width: 19px;
+            content: "";
+            position: absolute;
+            top: -3px;
+            left: -3px;
+        }
+    }
+}
+/* #endregion */
+
+/* #region filter type */
+.filter-type {
+    height: 34px;
+    width: 34px;
+    background-color: $color-white;
+    text-align: center;
+    padding-top: 10px;
+    cursor: pointer;
+    border: 1px solid $color-text-5;
+    font-weight: 400;
+
+    & ~ div {
+        border-radius: 3px;
+        font-weight: 400;
+        background-color: $color-white;
+        box-shadow: 0px 4px 8px #c0c0c0;
+        z-index: 20;
+        position: absolute;
+        margin-top: 3px;
+        padding: 1px;
+        &:focus {
+            outline: none;
+        }
+        .dropdown-item {
+            cursor: pointer;
+            height: 30px;
+            line-height: 30px;
+            padding-right: 12px;
+            padding-left: 16px;
+            &:hover {
+                background-color: $color-primary-3;
+                color: $color-white;
+            }
+        }
+    }
+}
+/* #endregion */
+
+/* #region input */
+.input-filter {
+    height: 34px;
+    border: 1px solid #ccc;
+    padding-left: 12px;
+    width: 100%;
+    outline: none;
+
+    &:focus {
+        border-color: $color-primary-3;
+    }
+
+    &.has-icon {
+        padding-right: 28px;
+    }
+
+    &.has-error {
+        border-color: #f20 !important;
     }
 }
 /* #endregion */

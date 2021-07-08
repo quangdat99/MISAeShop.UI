@@ -1,0 +1,74 @@
+<template>
+  <div>
+    <div class="filter-type" @click.prevent="toggleOption">
+      {{ curruntText }}
+    </div>
+    <div
+      class="dropdown-content"
+      ref="autofocus"
+      tabindex="0"
+      @focusout="closeDropdown"
+      v-if="isShow"
+    >
+      <div
+        class="dropdown-item"
+        v-for="(option, index) in optionFilter"
+        :key="index"
+        @click="selectOption(option)"
+      >
+        {{ option.text }}
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+export default {
+  props: {
+    /**
+     * Kiểu lọc
+     */
+    optionFilter: {
+      type: Array,
+    },
+  },
+  data: () => ({
+    /**
+     * Hiển thị Dropdown
+     */
+    isShow: false,
+    currunt: 1,
+    curruntText: "",
+  }),
+  methods: {
+    /**
+     * Thay đổi trạng thái dropdown
+     */
+    toggleOption() {
+      this.isShow = !this.isShow;
+    },
+    closeDropdown() {
+      setTimeout(() => {
+        this.isShow = false;
+      }, 200);
+    },
+    selectOption(option) {
+      this.currunt = option.value;
+      this.curruntText = option.text.slice(0, 1);
+      this.closeDropdown();
+    },
+  },
+  watch: {
+    isShow: function () {
+      if (this.isShow) {
+        setTimeout(() => {
+          this.$refs.autofocus.focus();
+        }, 100);
+      }
+    },
+  },
+  mounted() {
+    this.curruntText = this.optionFilter[0].text.slice(0, 1);
+  },
+};
+</script>
