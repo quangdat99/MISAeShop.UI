@@ -91,7 +91,7 @@
                 <div>
                   <FilterType :optionFilter="optionFilter" />
                 </div>
-                <div><InputFilter style="width: 150px" /></div>
+                <div><InputFilter style="width: 120px" /></div>
               </tr>
             </th>
             <th>
@@ -132,7 +132,9 @@
             </th>
           </tr>
         </thead>
-        <tbody></tbody>
+        <tbody>
+          <InventoryItem v-for="n in 20" :key="n" />
+        </tbody>
       </table>
     </div>
     <div class="footer"></div>
@@ -145,6 +147,8 @@ import ButtonDropdown from "../../components/common/ButtonDropdown.vue";
 import Checkbox from "../../components/common/Checkbox.vue";
 import FilterType from "../../components/common/FilterType.vue";
 import InputFilter from "../../components/common/InputFilter.vue";
+import InventoryItem from "../../pages/inventory/InventoryItem.vue";
+// import AutoCompleteFilter from "../../components/common/AutoCompleteFilter.vue";
 export default {
   components: {
     Button,
@@ -152,6 +156,8 @@ export default {
     Checkbox,
     FilterType,
     InputFilter,
+    InventoryItem,
+    // AutoCompleteFilter,
   },
   data: () => ({
     optionFilter: [
