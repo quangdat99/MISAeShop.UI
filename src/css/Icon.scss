@@ -1,0 +1,72 @@
+$icon-size-16: 16px;
+$icon-size-22: 22px;
+$icon-size-24: 24px;
+
+@mixin icon-default {
+    background-image: url("./assets/images/common-icon.png");
+    background-repeat: no-repeat;
+    display: inline-block;
+}
+
+@mixin icon-default-2 {
+    background-image: url("./assets/images/slibarmenu.png");
+    background-repeat: no-repeat;
+    display: inline-block;
+}
+
+@mixin icon-bind($position, $size: $icon-size-16) {
+    background-position: $position;
+    height: $size;
+    width: $size;
+}
+
+.icon {
+    @include icon-default();
+
+    /* #region toolbar */
+    &.icon-btnnew-white {
+        @include icon-bind(-1px -128px);
+    }
+    &.icon-btnclone-white {
+        @include icon-bind(-976px -128px);
+    }
+    &.icon-btnedit-white {
+        @include icon-bind(-77px -203px);
+    }
+    &.icon-btndel-white {
+        @include icon-bind(-1076px -128px);
+    }
+    &.icon-btnrefresh-white {
+        @include icon-bind(-876px -128px);
+    }
+    /* #endregion */
+    /* #region paging */
+    &.icon-page-next {
+        @include icon-bind(-749px -124px, $icon-size-24);
+    }
+    &.icon-page-last {
+        @include icon-bind(-798px -124px, $icon-size-24);
+    }
+    &.icon-page-prev {
+        @include icon-bind(-700px -124px, $icon-size-24);
+    }
+    &.icon-page-first {
+        @include icon-bind(-649px -124px, $icon-size-24);
+    }
+    &.icon-page-loading {
+        @include icon-bind(-849px -124px, $icon-size-24);
+    }
+    /* #endregion */
+}
+
+.icon-navbar {
+    @include icon-default-2();
+    /* #region navbar */
+    &.icon-navbar-overview {
+        @include icon-bind(0 0px, $icon-size-22);
+    }
+    &.icon-navbar-inventory {
+        @include icon-bind(0 -355px, $icon-size-22);
+    }
+    /* #endregion */
+}

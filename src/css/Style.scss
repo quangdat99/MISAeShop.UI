@@ -1,0 +1,266 @@
+@import "./Generic.scss";
+@import "./Icon.scss";
+
+$navbar-width: 150px;
+$header-height: 52px;
+
+@mixin flex-row {
+    display: flex;
+    flex-direction: row;
+}
+
+/* #region color */
+$color-white: #ffffff;
+/* #region color text*/
+$color-text-1: #212b36;
+$color-text-2: #637381;
+$color-text-3: #919eab;
+$color-text-4: #c4cdd5;
+$color-text-5: #dfe3e8;
+$color-text-6: #f1f3f8;
+/* #endregion */
+
+/* #region color primary */
+$color-primary-1: #1e235a;
+$color-primary-2: #2b3173;
+$color-primary-3: #6b6f9d;
+$color-primary-4: #e5e6eb;
+/* #endregion */
+
+/* #region color success */
+$color-succes-1: #188203;
+$color-succes-2: #50b83c;
+$color-succes-3: #dcf1d8;
+/* #endregion */
+
+/* #region color warning */
+$color-warning-1: #eb7500;
+$color-warning-2: #ff9900;
+$color-warning-3: #ffebcc;
+/* #endregion */
+
+/* #region color error */
+$color-error-1: #ed6347;
+$color-error-2: #fdac9a;
+$color-error-3: #fbeae5;
+/* #endregion */
+
+/* #endregion */
+
+/* #region Generic */
+@font-face {
+    font-family: "Roboto";
+    src: url("./assets/fonts/Roboto-Regular.ttf") format("woff2");
+}
+
+@font-face {
+    font-family: Roboto-Bold;
+    src: url("./assets/fonts/Roboto-Bold.ttf") format("woff2");
+}
+
+@font-face {
+    font-family: Roboto-Italic;
+    src: url("./assets/fonts/Roboto-Italic.ttf") format("woff2");
+}
+
+* {
+    box-sizing: border-box;
+    font-family: inherit;
+    font-size: inherit;
+}
+
+body {
+    font-family: roboto !important;
+    font-size: 13px;
+    overflow-y: auto;
+    scroll-behavior: smooth;
+    margin: 0;
+    padding: 0;
+}
+
+a {
+    text-decoration: none;
+}
+
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #fff;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #b8bcc3;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #a1a4aa;
+}
+
+/* #endregion */
+
+/* #region Header */
+.header {
+    position: absolute;
+    left: $navbar-width;
+    top: 0;
+    right: 0;
+    height: $header-height;
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid $color-text-5;
+    .header-left {
+        .header-left-text {
+            font-family: Roboto-Bold;
+            font-size: 18px;
+            color: $color-text-1;
+            margin-left: 21px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+    }
+}
+/* #endregion */
+
+/* #region Navbar */
+.navbar {
+    background-color: $color-primary-2;
+    color: #fff;
+    width: $navbar-width;
+    height: 100vh;
+    overflow: auto;
+    .logo-box {
+        @include flex-row();
+        padding-top: 3px;
+        padding: 24px;
+        height: $header-height;
+        align-items: center;
+        background-color: $color-primary-1;
+        background-image: url("./assets/images/Logo_Full_White.png");
+        background-repeat: no-repeat;
+        background-size: contain;
+        cursor: pointer;
+    }
+    .navbar-content {
+        .navbar-item {
+            height: 40px;
+            padding-left: 8px;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            text-decoration: none;
+            &:active,
+            &.active {
+                background-color: $color-primary-1;
+                color: #fff;
+            }
+            &:hover:not(.active) {
+                background-color: $color-primary-1;
+                color: #fff;
+            }
+            .navbar-item-icon {
+                font-size: 22px;
+                line-height: 22px;
+                height: 22px;
+                width: 22px;
+                margin-right: 10px;
+            }
+            .navbar-item-text {
+                height: 24px;
+                line-height: 24px;
+                color: $color-text-4;
+            }
+        }
+    }
+}
+/* #endregion */
+
+/* #region Content */
+.content {
+    position: fixed;
+    left: $navbar-width;
+    top: $header-height;
+    right: 0px;
+    bottom: 0px;
+    padding: 8px;
+    background-color: $color-primary-4;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    .toolbar {
+        height: 36px;
+        width: 100%;
+        display: flex;
+        background-color: $color-primary-1;
+        .toolbar-btn {
+            margin-right: 1px;
+        }
+    }
+    .footer {
+        height: 53px;
+        padding: 10px !important;
+        width: 100%;
+        background-color: $color-white;
+        margin-top: auto;
+    }
+}
+/* #endregion */
+
+/* #region button */
+.btn {
+    height: 36px;
+    display: flex;
+    color: $color-white;
+    align-items: center;
+    padding-left: 8px;
+    padding-right: 8px;
+    cursor: pointer;
+    &.btn-primary {
+        background-color: $color-primary-2;
+        color: $color-white;
+        &:hover {
+            background-color: $color-primary-3;
+        }
+    }
+    .btn-text {
+        padding-left: 8px;
+        padding-right: 8px;
+    }
+    .btn-option {
+        margin-left: 8px;
+        height: 100%;
+        width: 16px;
+        .option-icon {
+            background-image: url("./assets/icons/down-arrow.png");
+            background-position: 0 0;
+            background-size: contain;
+            background-repeat: no-repeat;
+            height: 8px;
+            width: 8px;
+            margin-top: 14px;
+            margin-left: 8px;
+        }
+    }
+
+    & ~ div {
+        background-color: $color-white;
+        box-shadow: 0px 1px 6px #c0c0c0;
+        z-index: 20px;
+        position: absolute;
+
+        .dropdown-item {
+            cursor: pointer;
+            height: 32px;
+            line-height: 32px;
+            padding-right: 12px;
+            padding-left: 12px;
+            &:hover {
+                background-color: $color-primary-1;
+                color: $color-white;
+            }
+        }
+    }
+}
+/* #endregion */
