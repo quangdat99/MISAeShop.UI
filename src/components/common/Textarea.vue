@@ -1,6 +1,6 @@
 <template>
   <!-- #region input -->
-  <input
+  <textarea
     class="input"
     :class="{ 'has-icon': hasIcon }"
     :type="type"

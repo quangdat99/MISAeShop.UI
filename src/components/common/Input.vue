@@ -19,6 +19,7 @@ export default {
   props: {
     /**
      * Xác định có icon không
+     * CreatedBy: dqdat (11/6/2021)
      */
     hasIcon: {
       type: Boolean,
@@ -27,6 +28,7 @@ export default {
 
     /**
      * Placeholder của input
+     * CreatedBy: dqdat (11/6/2021)
      */
     placeholder: {
       type: String,
@@ -35,6 +37,7 @@ export default {
 
     /**
      * Type của input
+     * CreatedBy: dqdat (11/6/2021)
      */
     type: {
       type: String,
@@ -43,6 +46,7 @@ export default {
 
     /**
      * Giá trị của input
+     * CreatedBy: dqdat (11/6/2021)
      */
     value: {
       type: String,

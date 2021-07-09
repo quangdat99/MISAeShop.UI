@@ -138,10 +138,13 @@
       </table>
     </div>
     <div class="footer"></div>
+    <InventoryDetail v-if="!isShowDialog" />
   </div>
 </template>
 
 <script>
+import InventoryDetail from "../../pages/inventory/InventoryDetail.vue";
+
 import Button from "../../components/common/Button.vue";
 import ButtonDropdown from "../../components/common/ButtonDropdown.vue";
 import Checkbox from "../../components/common/Checkbox.vue";
@@ -157,6 +160,7 @@ export default {
     FilterType,
     InputFilter,
     InventoryItem,
+    InventoryDetail,
     // AutoCompleteFilter,
   },
   data: () => ({
@@ -167,6 +171,7 @@ export default {
       { value: 4, text: "-: Kết thúc bằng" },
       { value: 5, text: "!: Không chứa" },
     ],
+    isShowDialog: false,
   }),
 };
 </script>

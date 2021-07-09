@@ -11,94 +11,35 @@ $header-height: 52px;
 
 /* #region color */
 $color-white: #ffffff;
-/* #region color text*/
+//color text
 $color-text-1: #212b36;
-$color-text-2: #637381;
+$color-text-2: #757575;
 $color-text-3: #919eab;
 $color-text-4: #c4cdd5;
 $color-text-5: #dfe3e8;
 $color-text-6: #f1f3f8;
 $color-text-7: #f0f0f0;
-/* #endregion */
 
-/* #region color primary */
+//color primary
 $color-primary-1: #1e235a;
 $color-primary-2: #2b3173;
 $color-primary-3: #6b6f9d;
 $color-primary-4: #e5e6eb;
-/* #endregion */
 
-/* #region color success */
+//color success
 $color-succes-1: #188203;
 $color-succes-2: #50b83c;
 $color-succes-3: #dcf1d8;
-/* #endregion */
 
-/* #region color warning */
+//color warning
 $color-warning-1: #eb7500;
 $color-warning-2: #ff9900;
 $color-warning-3: #ffebcc;
-/* #endregion */
 
-/* #region color error */
+//color error
 $color-error-1: #ed6347;
 $color-error-2: #fdac9a;
 $color-error-3: #fbeae5;
-/* #endregion */
-
-/* #endregion */
-
-/* #region Generic */
-@font-face {
-    font-family: "Roboto";
-    src: url("./assets/fonts/Roboto-Regular.ttf") format("woff2");
-}
-
-@font-face {
-    font-family: Roboto-Bold;
-    src: url("./assets/fonts/Roboto-Bold.ttf") format("woff2");
-}
-
-@font-face {
-    font-family: Roboto-Italic;
-    src: url("./assets/fonts/Roboto-Italic.ttf") format("woff2");
-}
-
-* {
-    box-sizing: border-box;
-    font-family: inherit;
-    font-size: inherit;
-}
-
-body {
-    font-family: roboto !important;
-    font-size: 13px;
-    overflow-y: auto;
-    scroll-behavior: smooth;
-    margin: 0;
-    padding: 0;
-}
-
-a {
-    text-decoration: none;
-}
-
-::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
-}
-
-::-webkit-scrollbar-track {
-    background: #fff;
-}
-
-::-webkit-scrollbar-thumb {
-    background: #b8bcc3;
-}
-
-::-webkit-scrollbar-thumb:hover {
-    background: #a1a4aa;
-}
 
 /* #endregion */
 
@@ -212,6 +153,105 @@ a {
 }
 /* #endregion */
 
+/* #region Dialog */
+.dialog {
+    position: fixed;
+    left: $navbar-width;
+    top: $header-height;
+    right: 0px;
+    bottom: 0px;
+    padding: 8px;
+    background-color: $color-primary-4;
+
+    z-index: 1000;
+    .dialog-content {
+        height: 100%;
+        background-color: $color-white;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        .dialog-header,
+        .dialog-footer {
+            height: 52px;
+            width: 100%;
+            display: flex;
+            padding: 8px;
+            padding-left: 12px;
+            .dialog-btn {
+                margin-right: 8px;
+                .btn {
+                    border-radius: 4px;
+                }
+                &:last-child {
+                    .btn {
+                        border: 1px solid $color-white;
+                        &:hover {
+                            border: 1px solid $color-primary-1;
+                        }
+                    }
+                }
+            }
+        }
+        .dialog-header {
+            border-bottom: 1px solid $color-text-5;
+        }
+        .dialog-footer {
+            border-top: 1px solid $color-text-5;
+            margin-top: auto;
+        }
+        .dialog-body {
+            padding: 8px;
+            overflow-y: auto;
+            .body-item {
+                .label-item {
+                    font: 600 15px Roboto !important;
+                    color: $color-text-2;
+                    padding: 8px 0;
+                }
+                .info-item {
+                    // display: table;
+                    // table-layout: fixed;
+                    display: flex;
+                    margin: 8px 0;
+                    margin-left: 12px;
+                    .title-item {
+                        padding-top: 8px;
+                        padding-right: 5px;
+                        height: 34px;
+                        min-width: 160px;
+                        .require {
+                            padding-left: 2px;
+                            color: red;
+                        }
+                        .icon {
+                            transform: translate(3px, 3px);
+                        }
+                    }
+                    .input {
+                        border-radius: 3px;
+                        height: 34px;
+                    }
+                    .note-item {
+                        font: 300 13px Roboto !important;
+                        font-style: italic !important;
+                        padding-top: 8px;
+                        padding-left: 8px;
+                    }
+                    .layout-item {
+                        width: 200px;
+                        height: 180px;
+                        border-color: #636dde !important;
+                        border-width: 1px !important;
+                        border-style: dashed;
+                        border-radius: 3px;
+                    }
+                }
+            }
+        }
+    }
+}
+/* #endregion */
+
 /* #region button */
 .btn {
     height: 36px;
@@ -226,6 +266,15 @@ a {
         color: $color-white;
         &:hover {
             background-color: $color-primary-3;
+        }
+    }
+    &.btn-secondary {
+        background-color: $color-white;
+        color: $color-primary-2;
+        font-weight: bold;
+        border: 1px solid $color-primary-1;
+        &:hover {
+            color: $color-primary-3;
         }
     }
     .btn-text {
@@ -315,7 +364,7 @@ a {
     }
     tbody tr {
         &:hover td {
-            background-color: #f6f6f6 !important;
+            background-color: #f1f6f7 !important;
         }
         td {
             padding-left: 8px;
@@ -404,15 +453,15 @@ a {
 /* #endregion */
 
 /* #region input */
-.input-filter {
+.input {
     height: 34px;
-    border: 1px solid #ccc;
-    padding-left: 12px;
+    border: 1px solid #d0d0d0;
+    padding: 5px 10px;
     width: 100%;
     outline: none;
 
     &:focus {
-        border-color: $color-primary-3;
+        border-color: #636dde;
     }
 
     &.has-icon {

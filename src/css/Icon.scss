@@ -40,6 +40,23 @@ $icon-size-24: 24px;
         @include icon-bind(-876px -128px);
     }
     /* #endregion */
+    /* #region dialog */
+    &.icon-save {
+        @include icon-bind(-327px -127px);
+    }
+    &.icon-saveduplicate {
+        @include icon-bind(-952px -127px);
+    }
+    &.icon-saveadd {
+        @include icon-bind(-26px -127px);
+    }
+    &.icon-cancle {
+        @include icon-bind(-252px -127px);
+    }
+    &.icon-question {
+        @include icon-bind(-177px -177px);
+    }
+    /* #endreion */
     /* #region paging */
     &.icon-page-next {
         @include icon-bind(-749px -124px, $icon-size-24);
