@@ -20,7 +20,12 @@
           />
         </div>
         <div class="dialog-btn">
-          <Button text="Hủy bỏ" icon="icon-cancle" color="secondary" />
+          <Button
+            text="Hủy bỏ"
+            icon="icon-cancle"
+            color="secondary"
+            @click="onClickCloseDialog"
+          />
         </div>
       </div>
       <div class="dialog-body">
@@ -77,7 +82,14 @@
           </div>
           <div class="info-item">
             <div class="title-item">Định mức tồn kho</div>
-            <Input />
+            <div class="label-input-item">
+              <div class="title-input-item">Tối thiểu</div>
+              <Input style="width: 70px" type="number" value="0" />
+            </div>
+            <div class="label-input-item">
+              <div class="title-input-item">Tối đa</div>
+              <Input style="width: 60px" type="number" value="0" />
+            </div>
           </div>
           <div class="info-item">
             <div class="title-item">Vị trí lưu trữ trong kho</div>
@@ -92,22 +104,47 @@
           <div class="label-item">THÔNG TIN THUỘC TÍNH</div>
           <div class="info-item">
             <div class="title-item">Thuộc tính</div>
-            <Input style="width: 238px" />
+            <div class="label-input-item">
+              <div class="title-input-item" style="width: 137px">Màu sắc</div>
+              <Input style="width: 295px" placeholder="Xanh, Đỏ, Vàng..." />
+            </div>
           </div>
           <div class="info-item">
             <div class="title-item"></div>
-            <Input style="width: 238px" />
+            <div class="label-input-item">
+              <div class="title-input-item" style="width: 137px">Size</div>
+              <Input style="width: 295px" placeholder="S, M, L, XL..." />
+            </div>
           </div>
         </div>
         <div class="body-item">
           <div class="label-item">THÔNG TIN BỔ SUNG</div>
           <div class="info-item">
             <div class="title-item">Trọng lượng gói hàng (g)</div>
-            <Input style="width: 238px" />
+            <Input style="width: 243px" />
           </div>
           <div class="info-item">
             <div class="title-item">Kích thước đóng gói (cm)</div>
-            <Input style="width: 238px" />
+            <Input
+              style="
+                width: 77px;
+                border-top-right-radius: 0px;
+                border-bottom-right-radius: 0px;
+              "
+              placeholder="Chiều dài"
+            />
+            <Input
+              style="width: 87px; border-radius: 0px"
+              placeholder="Chiều rộng"
+            />
+            <Input
+              style="
+                width: 79px;
+                border-top-left-radius: 0px;
+                border-bottom-left-radius: 0px;
+              "
+              placeholder="Chiều cao"
+            />
           </div>
           <div class="info-item">
             <div class="title-item">Mô tả</div>
@@ -116,9 +153,24 @@
           <div class="info-item">
             <div class="title-item">Ảnh hàng hóa</div>
             <div class="layout-item">
-              <div class="option-item"></div>
-              <div class="image-item"></div>
-              <div class="up-image-item"></div>
+              <div class="option-item">
+                <div class="btn-option">
+                  <div class="option-icon icon icon-choose"></div>
+                  <div class="option-text">Biểu tượng</div>
+                </div>
+              </div>
+              <div class="image-item">
+                <img src="../../assets/images/Image.jpg" alt="" />
+              </div>
+              <div class="up-image-item">
+                <div class="btn-primary">...</div>
+              </div>
+            </div>
+            <div class="note-item" style="color: #9e9e9e">
+              - Lựa chọn biểu tượng để thay thế nếu không có ảnh
+              <br />
+              <br />
+              - Định dạng ảnh (.jpg, .jpeg, .png, .gif) và dung lượng &#60; 5MB
             </div>
           </div>
         </div>
@@ -142,7 +194,12 @@
           />
         </div>
         <div class="dialog-btn">
-          <Button text="Hủy bỏ" icon="icon-cancle" color="secondary" />
+          <Button
+            text="Hủy bỏ"
+            icon="icon-cancle"
+            color="secondary"
+            @click="onClickCloseDialog"
+          />
         </div>
       </div>
     </div>
@@ -158,6 +215,11 @@ export default {
     Button,
     Input,
     Textarea,
+  },
+  methods: {
+    onClickCloseDialog() {
+      this.$emit("closeDialog");
+    },
   },
 };
 </script>

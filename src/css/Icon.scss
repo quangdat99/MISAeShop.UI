@@ -56,6 +56,9 @@ $icon-size-24: 24px;
     &.icon-question {
         @include icon-bind(-177px -177px);
     }
+    &.icon-choose {
+        @include icon-bind(-76px -178px);
+    }
     /* #endreion */
     /* #region paging */
     &.icon-page-next {

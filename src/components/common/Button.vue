@@ -1,5 +1,8 @@
 <template>
-  <div :class="['btn', color ? 'btn-' + color : '']">
+  <div
+    :class="['btn', color ? 'btn-' + color : '']"
+    @click.prevent="$emit('click')"
+  >
     <div :class="['btn-icon icon', icon ? icon : '']"></div>
     <div class="btn-text">{{ text }}</div>
   </div>

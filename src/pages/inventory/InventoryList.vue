@@ -2,7 +2,11 @@
   <div class="content">
     <div class="toolbar">
       <div class="toolbar-btn">
-        <ButtonDropdown text="Thêm mới" icon="icon-btnnew-white" />
+        <ButtonDropdown
+          text="Thêm mới"
+          icon="icon-btnnew-white"
+          @click="onClickShowDialog"
+        />
       </div>
       <div class="toolbar-btn">
         <Button text="Nhân bản" icon="icon-btnclone-white" />
@@ -133,12 +137,16 @@
           </tr>
         </thead>
         <tbody>
-          <InventoryItem v-for="n in 20" :key="n" />
+          <InventoryItem
+            v-for="n in 20"
+            :key="n"
+            :class="[n % 2 ? 'odd' : 'even']"
+          />
         </tbody>
       </table>
     </div>
     <div class="footer"></div>
-    <InventoryDetail v-if="!isShowDialog" />
+    <InventoryDetail v-if="isShowDialog" @closeDialog="closeDialog" />
   </div>
 </template>
 
@@ -173,6 +181,14 @@ export default {
     ],
     isShowDialog: false,
   }),
+  methods: {
+    closeDialog() {
+      this.isShowDialog = false;
+    },
+    onClickShowDialog() {
+      this.isShowDialog = true;
+    },
+  },
 };
 </script>
 
