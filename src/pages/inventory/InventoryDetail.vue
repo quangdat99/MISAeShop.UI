@@ -176,14 +176,14 @@
             <div class="label-input-item">
               <div class="title-input-item" style="width: 137px">Màu sắc</div>
               <!-- <Input style="width: 295px" placeholder="Xanh, Đỏ, Vàng..." /> -->
-              <InputForm :stringData.sync="stringData" />
+              <InputForm :stringData.sync="stringDataColor" />
             </div>
           </div>
           <div class="info-item">
             <div class="title-item"></div>
             <div class="label-input-item">
               <div class="title-input-item" style="width: 137px">Size</div>
-              <Input style="width: 295px" placeholder="S, M, L, XL..." />
+              <InputForm :stringData.sync="stringDataSize" />
             </div>
           </div>
         </div>
@@ -322,7 +322,8 @@ export default {
   },
   data() {
     return {
-      stringData: "Xanh/Đỏ/Vàng",
+      stringDataColor: "Xanh/Đỏ/Vàng",
+      stringDataSize: "S/M/L",
     };
   },
   methods: {

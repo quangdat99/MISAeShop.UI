@@ -849,9 +849,11 @@ $color-error-3: #fbeae5;
     align-items: center;
     position: relative;
     padding: 2px;
+    cursor: text;
     &.focus {
         border: 1px solid #636dde;
     }
+
     .item-form {
         height: 22px;
         border-radius: 3px;
@@ -862,6 +864,7 @@ $color-error-3: #fbeae5;
         align-items: center;
         .text-item {
             padding: 6px;
+            cursor: default;
         }
         .icon-item {
             padding: 3px 7px 4px 4px;

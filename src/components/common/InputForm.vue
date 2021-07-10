@@ -1,5 +1,9 @@
 <template>
-  <div class="input-form" :class="[focusForm ? 'focus' : '']">
+  <div
+    class="input-form"
+    @click="onClickInputForm"
+    :class="[focusForm ? 'focus' : '']"
+  >
     <div class="item-form" v-for="(item, index) in itemData" :key="index">
       <div class="text-item">{{ item }}</div>
       <div class="icon-item">
@@ -38,6 +42,10 @@ export default {
     blurInputForm() {
       this.focusForm = false;
     },
+    onClickInputForm() {
+      this.focusInputForm();
+      this.$el.querySelector("input").focus();
+    },
     enterInput() {
       this.inputText = this.inputText.trim();
       var isDuplicate = false;
@@ -54,7 +62,6 @@ export default {
       if (this.inputText != "" && !isDuplicate) {
         let str = this.stringData + `/${this.inputText}`;
         this.$emit("update:stringData", str);
-        console.log(this.stringData);
       } else {
         this.inputText = "";
       }
@@ -64,8 +71,6 @@ export default {
     stringData: function () {
       this.itemData.push(this.inputText);
       this.inputText = "";
-
-      console.log(this.itemData);
     },
   },
   mounted() {
