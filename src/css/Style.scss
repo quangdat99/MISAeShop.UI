@@ -208,6 +208,7 @@ $color-error-3: #fbeae5;
         .dialog-body {
             padding: 8px;
             overflow-y: auto;
+            // overflow-x: inherit;
             .body-item {
                 .label-item {
                     font: 600 15px Roboto !important;
@@ -219,8 +220,11 @@ $color-error-3: #fbeae5;
                     // display: table;
                     // table-layout: fixed;
                     display: flex;
-                    margin: 8px 0;
+                    padding: 4px 0;
                     margin-left: 12px;
+                    &.check {
+                        padding: 16px 0;
+                    }
                     .title-item {
                         padding-top: 8px;
                         padding-right: 5px;
@@ -237,6 +241,11 @@ $color-error-3: #fbeae5;
                     .input {
                         border-radius: 3px;
                         height: 34px;
+                    }
+                    .label-checkbox {
+                        height: 14px;
+                        line-height: 14px;
+                        padding: 0 8px;
                     }
                     .note-item {
                         font: 300 13px Roboto !important;
@@ -319,6 +328,87 @@ $color-error-3: #fbeae5;
                                 &:hover {
                                     background-color: $color-primary-3;
                                 }
+                            }
+                        }
+                    }
+                    .item-combo {
+                        display: flex;
+                        flex-direction: column;
+                        .item-combo-detail {
+                            display: flex;
+                            flex-direction: column;
+                            .label-item-combo {
+                                display: flex;
+                                height: 34px;
+                                line-height: 34px;
+                                .title-item-combo {
+                                    color: grey;
+                                }
+                                .info-item-combo {
+                                    font-weight: 700;
+                                    color: #404040;
+                                }
+                            }
+                            .filter-item-combo {
+                                display: flex;
+                                width: 384px;
+                                justify-content: space-between;
+                                .btn {
+                                    border-radius: 3px;
+                                    height: 34px;
+                                }
+                            }
+                            .grid-item-combo {
+                                margin-top: 8px;
+                                margin-right: 32px;
+                                width: calc(100vw - 380px);
+                                height: 220px;
+                                overflow: auto;
+                                border: 1px solid #dcdcdc;
+                                .table {
+                                    min-width: 980px;
+                                    thead {
+                                        tr {
+                                            th {
+                                                height: 32px;
+                                                background-color: #f0f0f0;
+                                                text-align: center;
+                                            }
+                                        }
+                                    }
+                                    tbody {
+                                        tr {
+                                            &:hover td {
+                                                background-color: #f0f0f0 !important;
+                                            }
+                                            td {
+                                                background-color: #f0f0f0;
+
+                                                &:last-child {
+                                                    display: flex;
+                                                    justify-content: center;
+                                                    align-items: center;
+                                                }
+                                                .icon-copy {
+                                                    cursor: pointer;
+                                                    height: 16px;
+                                                    width: 16px;
+                                                    background-size: contain;
+                                                    background-repeat: no-repeat;
+                                                    background-image: url("./assets/icons/copy-down.png");
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        .add-item-combo {
+                            width: 152px;
+                            margin-top: 24px;
+                            margin-bottom: 8px;
+                            .btn {
+                                border-radius: 3px;
                             }
                         }
                     }
@@ -640,7 +730,7 @@ $color-error-3: #fbeae5;
             background-size: contain;
             background-repeat: no-repeat;
         }
-        &:last-child {
+        &.add {
             top: 1px;
             right: 1px;
             border-left: 1px solid #d2d2d2;
@@ -648,6 +738,16 @@ $color-error-3: #fbeae5;
             img {
                 height: 12px;
                 width: 12px;
+                background-size: contain;
+                background-repeat: no-repeat;
+            }
+        }
+        &.search {
+            top: 1px;
+            right: 1px;
+            img {
+                height: 14px;
+                width: 18px;
                 background-size: contain;
                 background-repeat: no-repeat;
             }

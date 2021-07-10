@@ -4,7 +4,7 @@
       <div class="pagination-btn icon icon-page-first"></div>
       <div class="pagination-btn icon icon-page-prev"></div>
       <div class="pagination-item-label">Trang</div>
-      <input class="input" />
+      <input class="input" type="number" @focus="$event.target.select()" />
       <div class="pagination-item-label">trên 5</div>
       <div class="pagination-btn icon icon-page-next"></div>
       <div class="pagination-btn icon icon-page-last"></div>

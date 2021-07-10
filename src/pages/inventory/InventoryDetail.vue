@@ -51,11 +51,57 @@
           </div>
           <div class="info-item">
             <div class="title-item">Mã vạch</div>
-
             <Input
               style="width: 240px"
               placeholder="Hệ thống tự sinh khi bỏ trống"
             />
+          </div>
+          <div class="info-item">
+            <div class="title-item">Thành phần combo</div>
+            <div class="item-combo">
+              <div class="item-combo-detail">
+                <div class="label-item-combo">
+                  <div class="title-item-combo">Thành phần 1: &nbsp;</div>
+                  <div class="info-item-combo">
+                    Gồm một trong các hàng hóa dưới đây
+                  </div>
+                </div>
+                <div class="filter-item-combo">
+                  <AutoCompleteFilterItemCombo style="width: 284px" />
+                  <Button
+                    text="Đồng ý"
+                    icon="icon-agree-blue"
+                    color="secondary"
+                  />
+                </div>
+                <div class="grid-item-combo">
+                  <table class="table">
+                    <thead>
+                      <tr>
+                        <th>Mã SKU</th>
+                        <th>Tên hàng hóa</th>
+                        <th>Đơn vị tính</th>
+                        <th>Giá mua</th>
+                        <th>Giá bán</th>
+                        <th>Số lượng</th>
+                        <th></th>
+                        <th>Sử dụng</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <ItemCombo />
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              <div class="add-item-combo">
+                <Button
+                  text="Thêm thành phần"
+                  icon="icon-saveadd"
+                  color="secondary"
+                />
+              </div>
+            </div>
           </div>
           <div class="info-item" v-if="isInventory">
             <div class="title-item">
@@ -63,9 +109,29 @@
             </div>
             <Input style="width: 153px" type="number" value="0" />
           </div>
-          <div class="info-item">
+          <div class="info-item" v-if="isInventory">
             <div class="title-item">Giá bán</div>
             <Input style="width: 153px" type="number" value="0" />
+          </div>
+          <div class="info-item" v-if="isCombo">
+            <div class="title-item">Giá bán của combo</div>
+            <Input
+              style="
+                width: 124px;
+                border-top-right-radius: 0px;
+                border-bottom-right-radius: 0px;
+              "
+              placeholder="Tổng giá mua: 0"
+            />
+            <Input
+              style="
+                width: 150px;
+                border-top-left-radius: 0px;
+                border-bottom-left-radius: 0px;
+              "
+              type="number"
+              placeholder="0"
+            />
           </div>
           <div class="info-item">
             <div class="title-item">Đơn vị tính</div>
@@ -89,13 +155,18 @@
               <Input style="width: 60px" type="number" value="0" />
             </div>
           </div>
-          <div class="info-item" v-if="isInventory">
+          <div class="info-item" v-if="isInventory || isCombo">
             <div class="title-item">Vị trí lưu trữ trong kho</div>
             <Input style="width: 240px" />
           </div>
-          <div class="info-item" v-if="isInventory">
+          <div class="info-item" v-if="isInventory || isCombo">
             <div class="title-item">Vĩ trí trưng bày</div>
             <Input style="width: 240px" />
+          </div>
+          <div class="info-item check">
+            <Checkbox />
+            <div class="label-checkbox">Hiển thị trên bàn hình bán hàng</div>
+            <span class="icon icon-question"></span>
           </div>
         </div>
         <div class="body-item">
@@ -205,16 +276,23 @@
 </template>
 
 <script>
+import ItemCombo from "../inventory/ItemCombo.vue";
+
+import Checkbox from "../../components/common/Checkbox.vue";
 import Button from "../../components/common/Button.vue";
 import Input from "../../components/common/Input.vue";
 import Textarea from "../../components/common/Textarea.vue";
 import AutoComplete from "../../components/common/AutoComplete.vue";
+import AutoCompleteFilterItemCombo from "../../components/common/AutoCompleteFilterItemCombo.vue";
 export default {
   components: {
+    ItemCombo,
     Button,
     Input,
     Textarea,
     AutoComplete,
+    AutoCompleteFilterItemCombo,
+    Checkbox,
   },
   props: {
     /**

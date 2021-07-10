@@ -1,7 +1,11 @@
 <template>
   <div class="dropdown autocomplete">
     <div class="dropdown-btn con-input">
-      <input type="text" class="input has-icon" />
+      <input
+        type="text"
+        class="input has-icon"
+        @focus="$event.target.select()"
+      />
       <div
         class="icon-input icon-dropdown-box"
         @mousedown.prevent="toggleOption"

@@ -8,6 +8,7 @@
     :value="value"
     @input="$emit('input', $event.target.value)"
     @blur="$emit('blur')"
+    @focus="$event.target.select()"
   />
   <!-- #endregion -->
 </template>

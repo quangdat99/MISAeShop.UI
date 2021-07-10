@@ -12,8 +12,8 @@
       >
         <img src="../../assets/icons/arrow-down-line.png" alt="" />
       </div>
-      <div class="icon-input icon-dropdown-box add">
-        <img src="../../assets/icons/quick-add.png" alt="" />
+      <div class="icon-input icon-dropdown-box search">
+        <img src="../../assets/icons/Quick-search.png" alt="" />
       </div>
     </div>
 
