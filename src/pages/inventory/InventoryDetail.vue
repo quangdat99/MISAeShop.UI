@@ -35,28 +35,26 @@
             <div class="title-item">
               Tên hàng hóa <span class="require"> *</span>
             </div>
-            <Input style="width: 212px" />
+            <Input style="width: 215px" />
           </div>
           <div class="info-item">
             <div class="title-item">Nhóm hàng hóa</div>
-            <Input />
+            <AutoComplete style="width: 240px" />
           </div>
           <div class="info-item">
             <div class="title-item">Mã SKU</div>
 
             <Input
-              style="width: 238px"
+              style="width: 240px"
               placeholder="Hệ thống tự sinh khi bỏ trống"
-              width="238px"
             />
           </div>
           <div class="info-item">
             <div class="title-item">Mã vạch</div>
 
             <Input
-              style="width: 238px"
+              style="width: 240px"
               placeholder="Hệ thống tự sinh khi bỏ trống"
-              width="238px"
             />
           </div>
           <div class="info-item">
@@ -71,7 +69,7 @@
           </div>
           <div class="info-item">
             <div class="title-item">Đơn vị tính</div>
-            <Input />
+            <AutoComplete style="width: 240px" />
           </div>
           <div class="info-item">
             <div class="title-item">Tồn kho ban đầu</div>
@@ -93,11 +91,11 @@
           </div>
           <div class="info-item">
             <div class="title-item">Vị trí lưu trữ trong kho</div>
-            <Input style="width: 238px" />
+            <Input style="width: 240px" />
           </div>
           <div class="info-item">
             <div class="title-item">Vĩ trí trưng bày</div>
-            <Input style="width: 238px" />
+            <Input style="width: 240px" />
           </div>
         </div>
         <div class="body-item">
@@ -210,11 +208,13 @@
 import Button from "../../components/common/Button.vue";
 import Input from "../../components/common/Input.vue";
 import Textarea from "../../components/common/Textarea.vue";
+import AutoComplete from "../../components/common/AutoComplete.vue";
 export default {
   components: {
     Button,
     Input,
     Textarea,
+    AutoComplete,
   },
   methods: {
     onClickCloseDialog() {

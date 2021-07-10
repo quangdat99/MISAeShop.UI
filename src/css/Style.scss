@@ -213,6 +213,7 @@ $color-error-3: #fbeae5;
                     font: 600 15px Roboto !important;
                     color: $color-text-2;
                     padding: 8px 0;
+                    padding-bottom: 16px;
                 }
                 .info-item {
                     // display: table;
@@ -558,6 +559,80 @@ $color-error-3: #fbeae5;
 
     &.has-error {
         border-color: #f20 !important;
+    }
+}
+.con-input {
+    position: relative;
+    .icon-input {
+        position: absolute;
+        cursor: pointer;
+    }
+}
+/* #endregion */
+
+/* #region dropdown */
+.dropdown {
+    position: relative;
+    .dropdown-content {
+        min-width: 100%;
+        position: absolute;
+        background-color: $color-white;
+        box-shadow: 0px 4px 8px #c0c0c0;
+        z-index: 20;
+        min-width: 100%;
+        border-width: 1px;
+        border-style: solid;
+        border-color: #e1e1e1;
+        white-space: nowrap;
+        border-radius: 3px;
+
+        &.hide {
+            display: none;
+        }
+        .dropdown-item {
+            cursor: pointer;
+            padding: 0 6px;
+            font: 13px Roboto;
+            line-height: 22px;
+            &:hover {
+                background-color: $color-primary-3;
+                color: $color-white;
+            }
+        }
+    }
+}
+/* #endregion */
+
+/* #region autocomplete */
+.autocomplete {
+    .icon-dropdown-box {
+        cursor: pointer;
+        height: 32px;
+        display: flex;
+        width: 24px;
+        justify-content: center;
+        align-items: center;
+        top: 1px;
+        right: 25px;
+
+        img {
+            height: 4px;
+            width: 9px;
+            background-size: contain;
+            background-repeat: no-repeat;
+        }
+        &:last-child {
+            top: 1px;
+            right: 1px;
+            border-left: 1px solid #d2d2d2;
+            background-color: #f5f5f5;
+            img {
+                height: 12px;
+                width: 12px;
+                background-size: contain;
+                background-repeat: no-repeat;
+            }
+        }
     }
 }
 /* #endregion */
