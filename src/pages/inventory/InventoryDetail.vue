@@ -24,7 +24,7 @@
             text="Hủy bỏ"
             icon="icon-cancle"
             color="secondary"
-            @click="onClickCloseDialog"
+            @click="onClickCloseDialogInventory"
           />
         </div>
       </div>
@@ -57,7 +57,7 @@
               placeholder="Hệ thống tự sinh khi bỏ trống"
             />
           </div>
-          <div class="info-item">
+          <div class="info-item" v-if="isInventory">
             <div class="title-item">
               Giá mua <span class="icon icon-question"></span>
             </div>
@@ -71,14 +71,14 @@
             <div class="title-item">Đơn vị tính</div>
             <AutoComplete style="width: 240px" />
           </div>
-          <div class="info-item">
+          <div class="info-item" v-if="isInventory">
             <div class="title-item">Tồn kho ban đầu</div>
             <Input style="width: 101px" type="number" value="0" />
             <div class="note-item">
               Tồn kho ban đầu chỉ được nhập khi thêm mới hàng hóa.
             </div>
           </div>
-          <div class="info-item">
+          <div class="info-item" v-if="isInventory">
             <div class="title-item">Định mức tồn kho</div>
             <div class="label-input-item">
               <div class="title-input-item">Tối thiểu</div>
@@ -89,11 +89,11 @@
               <Input style="width: 60px" type="number" value="0" />
             </div>
           </div>
-          <div class="info-item">
+          <div class="info-item" v-if="isInventory">
             <div class="title-item">Vị trí lưu trữ trong kho</div>
             <Input style="width: 240px" />
           </div>
-          <div class="info-item">
+          <div class="info-item" v-if="isInventory">
             <div class="title-item">Vĩ trí trưng bày</div>
             <Input style="width: 240px" />
           </div>
@@ -117,11 +117,11 @@
         </div>
         <div class="body-item">
           <div class="label-item">THÔNG TIN BỔ SUNG</div>
-          <div class="info-item">
+          <div class="info-item" v-if="isInventory">
             <div class="title-item">Trọng lượng gói hàng (g)</div>
             <Input style="width: 243px" />
           </div>
-          <div class="info-item">
+          <div class="info-item" v-if="isInventory">
             <div class="title-item">Kích thước đóng gói (cm)</div>
             <Input
               style="
@@ -196,7 +196,7 @@
             text="Hủy bỏ"
             icon="icon-cancle"
             color="secondary"
-            @click="onClickCloseDialog"
+            @click="onClickCloseDialogInventory"
           />
         </div>
       </div>
@@ -216,9 +216,32 @@ export default {
     Textarea,
     AutoComplete,
   },
+  props: {
+    /**
+     * Là hàng hóa
+     */
+    isInventory: {
+      type: Boolean,
+      default: false,
+    },
+    /**
+     * Là dịch vụ
+     */
+    isService: {
+      type: Boolean,
+      default: false,
+    },
+    /**
+     * Là combo
+     */
+    isCombo: {
+      type: Boolean,
+      default: false,
+    },
+  },
   methods: {
-    onClickCloseDialog() {
-      this.$emit("closeDialog");
+    onClickCloseDialogInventory() {
+      this.$emit("closeDialogInventory");
     },
   },
 };

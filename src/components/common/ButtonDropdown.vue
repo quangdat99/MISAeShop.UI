@@ -1,11 +1,11 @@
 <template>
   <div>
-    <div
-      :class="['btn', color ? 'btn-' + color : '']"
-      @click.prevent="$emit('click')"
-    >
-      <div :class="['btn-icon icon', icon ? icon : '']"></div>
-      <div class="btn-text">{{ text }}</div>
+    <div :class="['btn', color ? 'btn-' + color : '']">
+      <div class="btn-icon" @click.prevent="$emit('click', 1)">
+        <div :class="['icon', icon ? icon : '']"></div>
+      </div>
+
+      <div class="btn-text" @click.prevent="$emit('click', 1)">{{ text }}</div>
       <div class="btn-option" @click.prevent="toggleOption">
         <div class="option-icon"></div>
       </div>
@@ -17,9 +17,15 @@
       @focusout="closeDropdown"
       v-if="isShow"
     >
-      <div class="dropdown-item">Thêm mới hàng hóa</div>
-      <div class="dropdown-item">Thêm mới combo</div>
-      <div class="dropdown-item">Thêm mới dịch vụ</div>
+      <div class="dropdown-item" @click.prevent="$emit('click', 1)">
+        Thêm mới hàng hóa
+      </div>
+      <div class="dropdown-item" @click.prevent="$emit('click', 3)">
+        Thêm mới combo
+      </div>
+      <div class="dropdown-item" @click.prevent="$emit('click', 2)">
+        Thêm mới dịch vụ
+      </div>
     </div>
   </div>
 </template>

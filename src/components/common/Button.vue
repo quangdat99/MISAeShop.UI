@@ -3,7 +3,8 @@
     :class="['btn', color ? 'btn-' + color : '']"
     @click.prevent="$emit('click')"
   >
-    <div :class="['btn-icon icon', icon ? icon : '']"></div>
+    <div class="btn-icon"><div :class="['icon', icon ? icon : '']"></div></div>
+
     <div class="btn-text">{{ text }}</div>
   </div>
 </template>

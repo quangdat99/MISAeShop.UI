@@ -5,7 +5,7 @@
         <ButtonDropdown
           text="Thêm mới"
           icon="icon-btnnew-white"
-          @click="onClickShowDialog"
+          @click="onClickShowDialogInventory"
         />
       </div>
       <div class="toolbar-btn">
@@ -95,7 +95,7 @@
                 <div>
                   <FilterType :optionFilter="optionFilter" />
                 </div>
-                <div><InputFilter style="width: 120px" /></div>
+                <div><AutoCompleteFilter style="width: 120px" /></div>
               </tr>
             </th>
             <th>
@@ -107,7 +107,7 @@
                 <div>
                   <FilterType :optionFilter="optionFilter" />
                 </div>
-                <div><InputFilter style="width: 100px" /></div>
+                <div><AutoCompleteFilter style="width: 100px" /></div>
               </tr>
             </th>
             <th>
@@ -119,7 +119,7 @@
                 <div>
                   <FilterType :optionFilter="optionFilter" />
                 </div>
-                <div><InputFilter style="width: 100px" /></div>
+                <div><AutoCompleteFilter style="width: 100px" /></div>
               </tr>
             </th>
             <th>
@@ -131,7 +131,7 @@
                 <div>
                   <FilterType :optionFilter="optionFilter" />
                 </div>
-                <div><InputFilter style="width: 100px" /></div>
+                <div><AutoCompleteFilter style="width: 100px" /></div>
               </tr>
             </th>
           </tr>
@@ -145,21 +145,28 @@
         </tbody>
       </table>
     </div>
-    <div class="footer"></div>
-    <InventoryDetail v-if="isShowDialog" @closeDialog="closeDialog" />
+    <div class="footer"><Pagination /></div>
+    <InventoryDetail
+      v-if="inventoryDetailConfig.isShow"
+      :isInventory="inventoryDetailConfig.isInventory"
+      :isService="inventoryDetailConfig.isService"
+      :isCombo="inventoryDetailConfig.isCombo"
+      @closeDialogInventory="closeDialogInventory"
+    />
   </div>
 </template>
 
 <script>
 import InventoryDetail from "../../pages/inventory/InventoryDetail.vue";
 
+import Pagination from "../../components/common/Pagination.vue";
 import Button from "../../components/common/Button.vue";
 import ButtonDropdown from "../../components/common/ButtonDropdown.vue";
 import Checkbox from "../../components/common/Checkbox.vue";
 import FilterType from "../../components/common/FilterType.vue";
 import InputFilter from "../../components/common/InputFilter.vue";
 import InventoryItem from "../../pages/inventory/InventoryItem.vue";
-// import AutoCompleteFilter from "../../components/common/AutoCompleteFilter.vue";
+import AutoCompleteFilter from "../../components/common/AutoCompleteFilter.vue";
 export default {
   components: {
     Button,
@@ -169,24 +176,51 @@ export default {
     InputFilter,
     InventoryItem,
     InventoryDetail,
-    // AutoCompleteFilter,
+    Pagination,
+    AutoCompleteFilter,
   },
   data: () => ({
     optionFilter: [
-      { value: 1, text: "*: Chứa" },
-      { value: 2, text: "=: Bằng" },
-      { value: 3, text: "+: Bắt đầu bằng" },
-      { value: 4, text: "-: Kết thúc bằng" },
-      { value: 5, text: "!: Không chứa" },
+      { value: 1, text: "* : Chứa" },
+      { value: 2, text: "= : Bằng" },
+      { value: 3, text: "+ : Bắt đầu bằng" },
+      { value: 4, text: "- : Kết thúc bằng" },
+      { value: 5, text: "! : Không chứa" },
     ],
-    isShowDialog: false,
+    /**
+     * Cấu hình dialog hàng hóa
+     */
+    inventoryDetailConfig: {
+      isShow: false, // Hiển thị dialog
+      isInventory: false, // Là hàng hóa
+      isService: false, // Là dịch vụ
+      isCombo: false, // Là combo
+    },
   }),
   methods: {
-    closeDialog() {
-      this.isShowDialog = false;
+    /**
+     * Đóng dialog hàng hóa
+     */
+    closeDialogInventory() {
+      this.inventoryDetailConfig.isShow = false;
     },
-    onClickShowDialog() {
-      this.isShowDialog = true;
+    /**
+     * Click show dialog hàng hóa
+     */
+    onClickShowDialogInventory(mode) {
+      this.inventoryDetailConfig = {
+        isShow: true,
+        isInventory: false,
+        isService: false,
+        isCombo: false,
+      };
+      if (mode == 1) {
+        this.inventoryDetailConfig.isInventory = true;
+      } else if (mode == 2) {
+        this.inventoryDetailConfig.isService = true;
+      } else if (mode == 3) {
+        this.inventoryDetailConfig.isCombo = true;
+      }
     },
   },
 };
