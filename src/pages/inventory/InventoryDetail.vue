@@ -56,7 +56,7 @@
               placeholder="Hệ thống tự sinh khi bỏ trống"
             />
           </div>
-          <div class="info-item">
+          <div class="info-item" v-if="isCombo">
             <div class="title-item">Thành phần combo</div>
             <div class="item-combo">
               <div class="item-combo-detail">
@@ -175,7 +175,8 @@
             <div class="title-item">Thuộc tính</div>
             <div class="label-input-item">
               <div class="title-input-item" style="width: 137px">Màu sắc</div>
-              <Input style="width: 295px" placeholder="Xanh, Đỏ, Vàng..." />
+              <!-- <Input style="width: 295px" placeholder="Xanh, Đỏ, Vàng..." /> -->
+              <InputForm :stringData.sync="stringData" />
             </div>
           </div>
           <div class="info-item">
@@ -284,6 +285,7 @@ import Input from "../../components/common/Input.vue";
 import Textarea from "../../components/common/Textarea.vue";
 import AutoComplete from "../../components/common/AutoComplete.vue";
 import AutoCompleteFilterItemCombo from "../../components/common/AutoCompleteFilterItemCombo.vue";
+import InputForm from "../../components/common/InputForm.vue";
 export default {
   components: {
     ItemCombo,
@@ -293,6 +295,7 @@ export default {
     AutoComplete,
     AutoCompleteFilterItemCombo,
     Checkbox,
+    InputForm,
   },
   props: {
     /**
@@ -316,6 +319,11 @@ export default {
       type: Boolean,
       default: false,
     },
+  },
+  data() {
+    return {
+      stringData: "Xanh/Đỏ/Vàng",
+    };
   },
   methods: {
     onClickCloseDialogInventory() {

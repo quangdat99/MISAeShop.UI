@@ -191,6 +191,7 @@ export default {
      * Cấu hình dialog hàng hóa
      */
     inventoryDetailConfig: {
+      mode: null, // 1-Thêm mới, 2-Sửa, 3-Nhân bản
       isShow: false, // Hiển thị dialog
       isInventory: false, // Là hàng hóa
       isService: false, // Là dịch vụ
@@ -214,6 +215,7 @@ export default {
         isService: false,
         isCombo: false,
       };
+      // mode: 1-hàng hóa, 2-dịch vụ, 3-combo
       if (mode == 1) {
         this.inventoryDetailConfig.isInventory = true;
       } else if (mode == 2) {

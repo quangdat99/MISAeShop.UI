@@ -17,11 +17,19 @@
       </div>
     </div>
 
-    <div class="dropdown-content" :class="{ hide: !isShow }">
-      <div class="dropdown-item">item 1</div>
-      <div class="dropdown-item">item 2</div>
-      <div class="dropdown-item">item 3</div>
-      <div class="dropdown-item">item 4</div>
+    <div class="dropdown-content combo" :class="{ hide: !isShow }">
+      <div class="dropdown-item title">
+        <div class="sku-code">Mã SKU</div>
+        <div class="inventory-name">Tên hàng hóa</div>
+      </div>
+      <div class="dropdown-item">
+        <div class="sku-code">SKU</div>
+        <div class="inventory-name">Tên</div>
+      </div>
+      <div class="dropdown-item">
+        <div class="sku-code">SKU</div>
+        <div class="inventory-name">Tên</div>
+      </div>
     </div>
   </div>
 </template>
