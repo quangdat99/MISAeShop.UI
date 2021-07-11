@@ -148,6 +148,7 @@
     <div class="footer"><Pagination /></div>
     <InventoryDetail
       v-if="inventoryDetailConfig.isShow"
+      :inventory.sync="inventoryDetailConfig.inventory"
       :isInventory="inventoryDetailConfig.isInventory"
       :isService="inventoryDetailConfig.isService"
       :isCombo="inventoryDetailConfig.isCombo"
@@ -196,6 +197,7 @@ export default {
       isInventory: false, // Là hàng hóa
       isService: false, // Là dịch vụ
       isCombo: false, // Là combo
+      inventory: {}, // Thông tin hàng hóa
     },
   }),
   methods: {
@@ -214,6 +216,12 @@ export default {
         isInventory: false,
         isService: false,
         isCombo: false,
+        inventory: {
+          color: "Xanh,Đỏ",
+          inventoryItemName: "Áo sơ mi",
+          size: "S,M",
+          skuCode: "ASM01",
+        },
       };
       // mode: 1-hàng hóa, 2-dịch vụ, 3-combo
       if (mode == 1) {

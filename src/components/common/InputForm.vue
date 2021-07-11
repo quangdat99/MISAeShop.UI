@@ -6,7 +6,7 @@
   >
     <div class="item-form" v-for="(item, index) in itemData" :key="index">
       <div class="text-item">{{ item }}</div>
-      <div class="icon-item">
+      <div class="icon-item" @click="onClickDeleteItem(index)">
         <img src="../../assets/icons/icon-delete.png" alt="" />
       </div>
     </div>
@@ -46,6 +46,13 @@ export default {
       this.focusInputForm();
       this.$el.querySelector("input").focus();
     },
+    onClickDeleteItem(index) {
+      this.itemData.splice(index, 1);
+      let str = this.itemData.join(",");
+
+      this.$emit("update:stringData", str);
+      this.$emit("change");
+    },
     enterInput() {
       this.inputText = this.inputText.trim();
       var isDuplicate = false;
@@ -60,8 +67,9 @@ export default {
       }
 
       if (this.inputText != "" && !isDuplicate) {
-        let str = this.stringData + `/${this.inputText}`;
+        let str = this.stringData + `,${this.inputText}`;
         this.$emit("update:stringData", str);
+        this.$emit("change");
       } else {
         this.inputText = "";
       }
@@ -69,12 +77,14 @@ export default {
   },
   watch: {
     stringData: function () {
-      this.itemData.push(this.inputText);
+      if (this.inputText != "") {
+        this.itemData.push(this.inputText);
+      }
       this.inputText = "";
     },
   },
   mounted() {
-    this.itemData = this.stringData.split("/");
+    this.itemData = this.stringData != "" ? this.stringData.split(",") : [];
   },
 };
 </script>

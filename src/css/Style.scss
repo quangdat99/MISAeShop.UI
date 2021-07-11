@@ -412,6 +412,43 @@ $color-error-3: #fbeae5;
                             }
                         }
                     }
+                    .item-detail-grid {
+                        margin-top: 8px;
+                        margin-right: 32px;
+                        width: calc(100vw - 380px);
+                        height: 220px;
+                        overflow: auto;
+                        border: 1px solid #dcdcdc;
+                        .table {
+                            min-width: 980px;
+                            thead {
+                                tr {
+                                    th {
+                                        height: 32px;
+                                        background-color: #f0f0f0;
+                                        text-align: center;
+                                    }
+                                }
+                            }
+                            tbody {
+                                tr {
+                                    td {
+                                        .icon-copy {
+                                            cursor: pointer;
+                                            height: 16px;
+                                            width: 16px;
+                                            background-size: contain;
+                                            background-repeat: no-repeat;
+                                            background-image: url("./assets/icons/copy-down.png");
+                                        }
+                                        .icon-delete {
+                                            cursor: pointer;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }

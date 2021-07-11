@@ -62,6 +62,9 @@ $icon-size-24: 24px;
     &.icon-agree-blue {
         @include icon-bind(-351px -127px);
     }
+    &.icon-delete {
+        @include icon-bind(-2px 0, 20px);
+    }
     /* #endreion */
     /* #region paging */
     &.icon-page-next {

@@ -35,7 +35,7 @@
             <div class="title-item">
               Tên hàng hóa <span class="require"> *</span>
             </div>
-            <Input style="width: 215px" />
+            <Input style="width: 215px" :value="inventory.inventoryItemName" />
           </div>
           <div class="info-item">
             <div class="title-item">Nhóm hàng hóa</div>
@@ -47,6 +47,7 @@
             <Input
               style="width: 240px"
               placeholder="Hệ thống tự sinh khi bỏ trống"
+              :value="inventory.skuCode"
             />
           </div>
           <div class="info-item">
@@ -89,7 +90,7 @@
                       </tr>
                     </thead>
                     <tbody>
-                      <ItemCombo />
+                      <ItemCombo v-for="n in 4" :key="n" />
                     </tbody>
                   </table>
                 </div>
@@ -176,14 +177,57 @@
             <div class="label-input-item">
               <div class="title-input-item" style="width: 137px">Màu sắc</div>
               <!-- <Input style="width: 295px" placeholder="Xanh, Đỏ, Vàng..." /> -->
-              <InputForm :stringData.sync="stringDataColor" />
+              <InputForm
+                :stringData.sync="inventory.color"
+                @update:stringData="
+                  $emit('update:inventory', {
+                    ...inventory,
+                    color: $event,
+                  })
+                "
+                @change="handleAttributeInventory"
+              />
             </div>
           </div>
           <div class="info-item">
             <div class="title-item"></div>
             <div class="label-input-item">
               <div class="title-input-item" style="width: 137px">Size</div>
-              <InputForm :stringData.sync="stringDataSize" />
+              <InputForm
+                :stringData.sync="inventory.size"
+                @update:stringData="
+                  $emit('update:inventory', {
+                    ...inventory,
+                    size: $event,
+                  })
+                "
+                @change="handleAttributeInventory"
+              />
+            </div>
+          </div>
+          <div class="info-item">
+            <div class="title-item">Chi tiết thuộc tính</div>
+            <div class="item-detail-grid">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>Tên hàng hóa</th>
+                    <th>Mã SKU</th>
+                    <th>Mã vạch</th>
+                    <th>Giá mua</th>
+                    <th>Giá bán</th>
+                    <th></th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <ItemDetail
+                    v-for="(item, index) in itemDetails"
+                    :key="index"
+                    :inventory="item"
+                  />
+                </tbody>
+              </table>
             </div>
           </div>
         </div>
@@ -277,7 +321,9 @@
 </template>
 
 <script>
+import { convertString } from "../../utils/helper";
 import ItemCombo from "../inventory/ItemCombo.vue";
+import ItemDetail from "../inventory/ItemDetail.vue";
 
 import Checkbox from "../../components/common/Checkbox.vue";
 import Button from "../../components/common/Button.vue";
@@ -286,9 +332,11 @@ import Textarea from "../../components/common/Textarea.vue";
 import AutoComplete from "../../components/common/AutoComplete.vue";
 import AutoCompleteFilterItemCombo from "../../components/common/AutoCompleteFilterItemCombo.vue";
 import InputForm from "../../components/common/InputForm.vue";
+
 export default {
   components: {
     ItemCombo,
+    ItemDetail,
     Button,
     Input,
     Textarea,
@@ -319,17 +367,52 @@ export default {
       type: Boolean,
       default: false,
     },
+    /**
+     * hàng hóa
+     */
+    inventory: {},
   },
   data() {
     return {
-      stringDataColor: "Xanh/Đỏ/Vàng",
-      stringDataSize: "S/M/L",
+      // stringDataColor: "Xanh/Đỏ/Vàng",
+      // stringDataSize: "S/M/L",
+      itemDetails: [],
     };
   },
   methods: {
     onClickCloseDialogInventory() {
       this.$emit("closeDialogInventory");
     },
+    /**
+     * Xử lý chi tiết thuộc tính hàng hóa
+     */
+    handleAttributeInventory() {
+      this.itemDetails = [];
+      var arrColor = this.inventory.color
+        ? this.inventory.color.split(",")
+        : [];
+      var arrSize = this.inventory.size ? this.inventory.size.split(",") : [];
+
+      for (let i = 0; i < arrColor.length; i++) {
+        for (let j = 0; j < arrSize.length; j++) {
+          var subColor = convertString(arrColor[i], "color");
+          var subSize = convertString(arrSize[j], "size");
+          var itemDetail = {};
+          itemDetail.inventoryItemName = `${this.inventory.inventoryItemName} (${arrColor[i]}/${arrSize[j]})`;
+          itemDetail.skuCode = `${this.inventory.skuCode}-${subColor}-${subSize}`;
+          this.itemDetails.push(itemDetail);
+        }
+      }
+      console.log(this.itemDetails);
+    },
+  },
+  watchs: {
+    inventory: function () {
+      this.handleAttributeInventory();
+    },
+  },
+  mounted() {
+    this.handleAttributeInventory();
   },
 };
 </script>
