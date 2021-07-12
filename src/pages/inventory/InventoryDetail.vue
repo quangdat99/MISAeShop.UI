@@ -39,7 +39,15 @@
           </div>
           <div class="info-item">
             <div class="title-item">Nhóm hàng hóa</div>
-            <AutoComplete style="width: 240px" />
+            <AutoComplete
+              style="width: 240px"
+              :value="'1'"
+              :options="[
+                { value: '1', text: 'Quần áo' },
+                { value: '2', text: 'Hoa quả' },
+                { value: '3', text: 'Sách vở' },
+              ]"
+            />
           </div>
           <div class="info-item">
             <div class="title-item">Mã SKU</div>
@@ -68,7 +76,15 @@
                   </div>
                 </div>
                 <div class="filter-item-combo">
-                  <AutoCompleteFilterItemCombo style="width: 284px" />
+                  <AutoCompleteFilterItemCombo
+                    style="width: 284px"
+                    :value="'2'"
+                    :options="[
+                      { value: '1', text: 'SKU1', name: 'tên hàng hóa 1' },
+                      { value: '2', text: 'SKU2', name: 'tên hàng hóa 2' },
+                      { value: '3', text: 'SKU3', name: 'tên hàng hóa 3' },
+                    ]"
+                  />
                   <Button
                     text="Đồng ý"
                     icon="icon-agree-blue"
@@ -136,7 +152,15 @@
           </div>
           <div class="info-item">
             <div class="title-item">Đơn vị tính</div>
-            <AutoComplete style="width: 240px" />
+            <AutoComplete
+              style="width: 240px"
+              :value="'2'"
+              :options="[
+                { value: '1', text: 'Chiếc' },
+                { value: '2', text: 'Cái' },
+                { value: '3', text: 'Hộp' },
+              ]"
+            />
           </div>
           <div class="info-item" v-if="isInventory">
             <div class="title-item">Tồn kho ban đầu</div>
@@ -377,6 +401,12 @@ export default {
       // stringDataColor: "Xanh/Đỏ/Vàng",
       // stringDataSize: "S/M/L",
       itemDetails: [],
+      value: "1",
+      options: [
+        { value: "1", text: "Quần áo" },
+        { value: "2", text: "Hoa quả" },
+        { value: "3", text: "Sách vở" },
+      ],
     };
   },
   methods: {
@@ -403,7 +433,7 @@ export default {
           this.itemDetails.push(itemDetail);
         }
       }
-      console.log(this.itemDetails);
+      // console.log(this.itemDetails);
     },
   },
   watchs: {

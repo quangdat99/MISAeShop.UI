@@ -21,6 +21,7 @@
 </template>
 
 <script>
+import { removeVietnameseTones } from "../../utils/helper";
 export default {
   props: {
     stringData: {
@@ -59,7 +60,8 @@ export default {
       // Kiểm tra trùng với các giá trị khác
       for (let index = 0; index < this.itemData.length; index++) {
         if (
-          this.inputText.toLowerCase() == this.itemData[index].toLowerCase()
+          removeVietnameseTones(this.inputText.toLowerCase()) ==
+          removeVietnameseTones(this.itemData[index].toLowerCase())
         ) {
           isDuplicate = true;
           break;

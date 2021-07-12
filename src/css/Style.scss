@@ -745,6 +745,10 @@ $color-error-3: #fbeae5;
                 background-color: $color-primary-3;
                 color: $color-white;
             }
+            &.active {
+                background-color: $color-primary-3;
+                color: $color-white;
+            }
         }
         &.combo {
             &.hide {

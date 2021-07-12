@@ -8,6 +8,8 @@
       <div class="pagination-item-label">trên 5</div>
       <div class="pagination-btn icon icon-page-next"></div>
       <div class="pagination-btn icon icon-page-last"></div>
+      <div class="pagination-btn icon icon-page-loading"></div>
+
       <select class="pagination-combo">
         <option value="15">15</option>
         <option value="25">25</option>

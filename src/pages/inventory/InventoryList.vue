@@ -95,7 +95,17 @@
                 <div>
                   <FilterType :optionFilter="optionFilter" />
                 </div>
-                <div><AutoCompleteFilter style="width: 120px" /></div>
+                <div>
+                  <AutoCompleteFilter
+                    style="width: 120px"
+                    :value="'2'"
+                    :options="[
+                      { value: '1', text: 'Chiếc' },
+                      { value: '2', text: 'Cái' },
+                      { value: '3', text: 'Hộp' },
+                    ]"
+                  />
+                </div>
               </tr>
             </th>
             <th>
