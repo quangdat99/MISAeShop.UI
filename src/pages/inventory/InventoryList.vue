@@ -146,8 +146,10 @@
     </div>
     <div class="footer">
       <Pagination
-        :pageNumber.sync="inventoryListConfig.pageNumber"
+        :pageNumber.sync="filterData.pageNumber"
         :totalPage="inventoryListConfig.totalPage"
+        :totalRecord="inventoryListConfig.totalRecord"
+        :pageSize.sync="filterData.pageSize"
       />
     </div>
     <InventoryDetail
@@ -205,13 +207,24 @@ export default {
       isCombo: false, // Là combo
       inventoryItem: {}, // Thông tin hàng hóa
     },
+    /**
+     * Cấu hình list hàng hóa
+     */
     inventoryListConfig: {
-      inventoryItems: [],
-      pageNumber: 3,
-      pageSize: 15,
-      totalPage: 6,
-      filterData: [],
-      totalRecord: 90,
+      inventoryItems: [], // Danh sách hàng hóa
+
+      totalPage: 0, // Tổng số trang
+      totalRecord: 0, // Tổng số bản ghi
+    },
+    /**
+     * Lọc dữ liệu trang
+     */
+    filterData: {
+      pageNumber: 1, // Chỉ số trang
+      pageSize: 15, // Kích thước trang
+      sortProperty: "",
+      sortType: "",
+      dataFilter: [],
     },
   }),
   created() {
@@ -219,13 +232,13 @@ export default {
   },
   methods: {
     getPaging() {
-      getPaging(
-        this.inventoryListConfig.pageNumber,
-        this.inventoryListConfig.pageSize,
-        this.inventoryListConfig.filterData
-      ).then((res) => {
+      getPaging(this.filterData).then((res) => {
         if (res.statusCode == 200) {
           this.inventoryListConfig.totalRecord = res.totalRecord;
+          this.inventoryListConfig.totalPage = Math.ceil(
+            this.inventoryListConfig.totalRecord / this.filterData.pageSize
+          );
+
           this.inventoryListConfig.inventoryItems = res.data;
         }
       });
@@ -263,8 +276,13 @@ export default {
     },
   },
   watch: {
-    "inventoryListConfig.pageNumber": function () {
+    paging: function () {
       this.getPaging();
+    },
+  },
+  computed: {
+    paging: function () {
+      return [this.filterData.pageNumber, this.filterData.pageSize].join();
     },
   },
 };

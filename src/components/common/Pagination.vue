@@ -6,18 +6,22 @@
       <div class="pagination-item-label">Trang</div>
       <input
         class="input"
-        :value="pageIndex"
+        v-model="pageIndex"
         type="number"
         @focus="$event.target.select()"
-        @keydown.enter.prevent="updatePageNumber($event.target.value)"
-        @blur="updatePageNumber($event.target.value)"
+        @keydown.enter.prevent="changePageNumber"
+        @blur.prevent="changePageNumber"
       />
       <div class="pagination-item-label">trên {{ totalPage }}</div>
       <div class="pagination-btn icon icon-page-next"></div>
       <div class="pagination-btn icon icon-page-last"></div>
       <div class="pagination-btn icon icon-page-loading"></div>
 
-      <select class="pagination-combo">
+      <select
+        :value="pageSize"
+        @change="changePageSize($event.target.value)"
+        class="pagination-combo"
+      >
         <option value="15">15</option>
         <option value="25">25</option>
         <option value="50">50</option>
@@ -25,7 +29,9 @@
       </select>
     </div>
     <div class="pagination-right">
-      <div class="pagination-right-info">Hiển thị 1 - 25 trên 36 kết quả</div>
+      <div class="pagination-right-info">
+        Hiển thị 1 - {{ pageSize }} trên {{ totalRecord }} kết quả
+      </div>
     </div>
   </div>
 </template>
@@ -38,29 +44,48 @@ export default {
      */
     pageNumber: {
       type: Number,
-      default: 3,
+      default: 1,
+    },
+    pageSize: {
+      type: Number,
+      default: 15,
     },
     /**
      * Tổng số trang
      */
     totalPage: {
       type: Number,
-      default: 6,
+      default: 1,
+    },
+    /**
+     * Tổng số bản ghi
+     */
+    totalRecord: {
+      type: Number,
+      default: 1,
     },
   },
   data() {
     return {
-      pageIndex: 2,
+      pageIndex: 1,
     };
   },
   methods: {
-    updatePageNumber(value) {
-      console.log(value);
-      if (value >= 1 && value <= this.totalPage) {
-        this.$emit("update:pageNumber", parseInt(value));
+    /**
+     * Thay đổi pageNumber
+     */
+    changePageNumber() {
+      if (this.pageIndex >= 1 && this.pageIndex <= this.totalPage) {
+        this.$emit("update:pageNumber", parseInt(this.pageIndex));
       } else {
         this.pageIndex = this.pageNumber;
       }
+    },
+    /**
+     * Thay đổi pageSize
+     */
+    changePageSize(value) {
+      this.$emit("update:pageSize", parseInt(value));
     },
   },
   mounted() {
