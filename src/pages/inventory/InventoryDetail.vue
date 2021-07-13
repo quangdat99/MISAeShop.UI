@@ -35,7 +35,10 @@
             <div class="title-item">
               Tên hàng hóa <span class="require"> *</span>
             </div>
-            <Input style="width: 215px" :value="inventory.inventoryItemName" />
+            <Input
+              style="width: 215px"
+              :value="inventoryItem.inventoryItemName"
+            />
           </div>
           <div class="info-item">
             <div class="title-item">Nhóm hàng hóa</div>
@@ -55,7 +58,7 @@
             <Input
               style="width: 240px"
               placeholder="Hệ thống tự sinh khi bỏ trống"
-              :value="inventory.skuCode"
+              :value="inventoryItem.skuCode"
             />
           </div>
           <div class="info-item">
@@ -202,7 +205,7 @@
               <div class="title-input-item" style="width: 137px">Màu sắc</div>
               <!-- <Input style="width: 295px" placeholder="Xanh, Đỏ, Vàng..." /> -->
               <InputForm
-                :stringData.sync="inventory.color"
+                :stringData.sync="inventoryItem.color"
                 @update:stringData="
                   $emit('update:inventory', {
                     ...inventory,
@@ -218,7 +221,7 @@
             <div class="label-input-item">
               <div class="title-input-item" style="width: 137px">Size</div>
               <InputForm
-                :stringData.sync="inventory.size"
+                :stringData.sync="inventoryItem.size"
                 @update:stringData="
                   $emit('update:inventory', {
                     ...inventory,
@@ -394,7 +397,7 @@ export default {
     /**
      * hàng hóa
      */
-    inventory: {},
+    inventoryItem: {},
   },
   data() {
     return {
@@ -418,18 +421,20 @@ export default {
      */
     handleAttributeInventory() {
       this.itemDetails = [];
-      var arrColor = this.inventory.color
-        ? this.inventory.color.split(",")
+      var arrColor = this.inventoryItem.color
+        ? this.inventoryItem.color.split(",")
         : [];
-      var arrSize = this.inventory.size ? this.inventory.size.split(",") : [];
+      var arrSize = this.inventoryItem.size
+        ? this.inventoryItem.size.split(",")
+        : [];
 
       for (let i = 0; i < arrColor.length; i++) {
         for (let j = 0; j < arrSize.length; j++) {
           var subColor = convertString(arrColor[i], "color");
           var subSize = convertString(arrSize[j], "size");
           var itemDetail = {};
-          itemDetail.inventoryItemName = `${this.inventory.inventoryItemName} (${arrColor[i]}/${arrSize[j]})`;
-          itemDetail.skuCode = `${this.inventory.skuCode}-${subColor}-${subSize}`;
+          itemDetail.inventoryItemName = `${this.inventoryItem.inventoryItemName} (${arrColor[i]}/${arrSize[j]})`;
+          itemDetail.skuCode = `${this.inventoryItem.skuCode}-${subColor}-${subSize}`;
           this.itemDetails.push(itemDetail);
         }
       }

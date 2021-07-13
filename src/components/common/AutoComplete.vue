@@ -41,7 +41,7 @@
 <script>
 export default {
   mounted() {
-    this.getCurrent();
+    // this.getCurrent();
   },
 
   props: {
@@ -139,7 +139,7 @@ export default {
      */
     down() {
       if (!this.isShow) {
-        // this.getCurrent();
+        this.getCurrent();
         this.showOption();
       } else {
         if (this.current < this.options.length - 1) this.current++;

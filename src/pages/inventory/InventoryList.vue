@@ -93,11 +93,8 @@
               </div>
               <tr>
                 <div>
-                  <FilterType :optionFilter="optionFilter" />
-                </div>
-                <div>
                   <AutoCompleteFilter
-                    style="width: 120px"
+                    style="width: 154px"
                     :value="'2'"
                     :options="[
                       { value: '1', text: 'Chiếc' },
@@ -114,10 +111,7 @@
                 <div>!</div>
               </div>
               <tr>
-                <div>
-                  <FilterType :optionFilter="optionFilter" />
-                </div>
-                <div><AutoCompleteFilter style="width: 100px" /></div>
+                <div><AutoCompleteFilter style="width: 134px" /></div>
               </tr>
             </th>
             <th>
@@ -126,10 +120,7 @@
                 <div>!</div>
               </div>
               <tr>
-                <div>
-                  <FilterType :optionFilter="optionFilter" />
-                </div>
-                <div><AutoCompleteFilter style="width: 100px" /></div>
+                <div><AutoCompleteFilter style="width: 134px" /></div>
               </tr>
             </th>
             <th>
@@ -138,27 +129,30 @@
                 <div>!</div>
               </div>
               <tr>
-                <div>
-                  <FilterType :optionFilter="optionFilter" />
-                </div>
-                <div><AutoCompleteFilter style="width: 100px" /></div>
+                <div><AutoCompleteFilter style="width: 134px" /></div>
               </tr>
             </th>
           </tr>
         </thead>
         <tbody>
           <InventoryItem
-            v-for="n in 20"
-            :key="n"
-            :class="[n % 2 ? 'odd' : 'even']"
+            v-for="(inventoryItem, index) in inventoryListConfig.inventoryItems"
+            :key="index"
+            :class="[index % 2 == 0 ? 'odd' : 'even']"
+            :inventoryItem="inventoryItem"
           />
         </tbody>
       </table>
     </div>
-    <div class="footer"><Pagination /></div>
+    <div class="footer">
+      <Pagination
+        :pageNumber.sync="inventoryListConfig.pageNumber"
+        :totalPage="inventoryListConfig.totalPage"
+      />
+    </div>
     <InventoryDetail
       v-if="inventoryDetailConfig.isShow"
-      :inventory.sync="inventoryDetailConfig.inventory"
+      :inventoryItem.sync="inventoryDetailConfig.inventoryItem"
       :isInventory="inventoryDetailConfig.isInventory"
       :isService="inventoryDetailConfig.isService"
       :isCombo="inventoryDetailConfig.isCombo"
@@ -168,6 +162,8 @@
 </template>
 
 <script>
+import { getPaging } from "../../api/inventoryItem.js";
+
 import InventoryDetail from "../../pages/inventory/InventoryDetail.vue";
 
 import Pagination from "../../components/common/Pagination.vue";
@@ -207,10 +203,33 @@ export default {
       isInventory: false, // Là hàng hóa
       isService: false, // Là dịch vụ
       isCombo: false, // Là combo
-      inventory: {}, // Thông tin hàng hóa
+      inventoryItem: {}, // Thông tin hàng hóa
+    },
+    inventoryListConfig: {
+      inventoryItems: [],
+      pageNumber: 3,
+      pageSize: 15,
+      totalPage: 6,
+      filterData: [],
+      totalRecord: 90,
     },
   }),
+  created() {
+    this.getPaging();
+  },
   methods: {
+    getPaging() {
+      getPaging(
+        this.inventoryListConfig.pageNumber,
+        this.inventoryListConfig.pageSize,
+        this.inventoryListConfig.filterData
+      ).then((res) => {
+        if (res.statusCode == 200) {
+          this.inventoryListConfig.totalRecord = res.totalRecord;
+          this.inventoryListConfig.inventoryItems = res.data;
+        }
+      });
+    },
     /**
      * Đóng dialog hàng hóa
      */
@@ -226,7 +245,7 @@ export default {
         isInventory: false,
         isService: false,
         isCombo: false,
-        inventory: {
+        inventoryItem: {
           color: "Xanh,Đỏ",
           inventoryItemName: "Áo sơ mi",
           size: "S,M",
@@ -243,8 +262,10 @@ export default {
       }
     },
   },
+  watch: {
+    "inventoryListConfig.pageNumber": function () {
+      this.getPaging();
+    },
+  },
 };
 </script>
-
-<style>
-</style>

@@ -145,6 +145,8 @@ $color-error-3: #fbeae5;
         border-width: 1px !important;
         border-style: solid;
         border-color: #e1e1e1;
+        height: 100%;
+        background-color: $color-white;
     }
     .footer {
         height: 53px;
@@ -589,7 +591,7 @@ $color-error-3: #fbeae5;
     }
     tbody tr {
         &:hover td {
-            background-color: #f1f6f7 !important;
+            background-color: #eaeff4 !important;
         }
 
         &.odd {
@@ -609,6 +611,13 @@ $color-error-3: #fbeae5;
             &:first-child {
                 padding-left: 10px;
                 padding-right: 10px;
+            }
+            &.click {
+                color: #636dde;
+                cursor: pointer;
+                &:hover {
+                    text-decoration: underline;
+                }
             }
         }
     }
