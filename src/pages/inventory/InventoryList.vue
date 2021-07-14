@@ -33,9 +33,19 @@
               </div>
               <tr>
                 <div>
-                  <FilterType :optionFilter="optionFilter" />
+                  <FilterType
+                    :optionFilter="optionFilter"
+                    @updatePaging="getPaging"
+                    :value.sync="filterData.dataFilter[0].filterType"
+                  />
                 </div>
-                <div><InputFilter style="width: 60px" /></div>
+                <div>
+                  <InputFilter
+                    style="width: 60px"
+                    :value.sync="filterData.dataFilter[0].filterValue"
+                    @updatePaging="getPaging"
+                  />
+                </div>
               </tr>
             </th>
             <th>
@@ -45,9 +55,19 @@
               </div>
               <tr>
                 <div>
-                  <FilterType :optionFilter="optionFilter" />
+                  <FilterType
+                    :optionFilter="optionFilter"
+                    @updatePaging="getPaging"
+                    :value.sync="filterData.dataFilter[1].filterType"
+                  />
                 </div>
-                <div><InputFilter style="width: 240px" /></div>
+                <div>
+                  <InputFilter
+                    style="width: 240px"
+                    @updatePaging="getPaging"
+                    :value.sync="filterData.dataFilter[1].filterValue"
+                  />
+                </div>
               </tr>
             </th>
             <th>
@@ -57,9 +77,19 @@
               </div>
               <tr>
                 <div>
-                  <FilterType :optionFilter="optionFilter" />
+                  <FilterType
+                    :optionFilter="optionFilter"
+                    @updatePaging="getPaging"
+                    :value.sync="filterData.dataFilter[2].filterType"
+                  />
                 </div>
-                <div><InputFilter style="width: 100px" /></div>
+                <div>
+                  <InputFilter
+                    style="width: 100px"
+                    @updatePaging="getPaging"
+                    :value.sync="filterData.dataFilter[2].filterValue"
+                  />
+                </div>
               </tr>
             </th>
             <th>
@@ -69,9 +99,19 @@
               </div>
               <tr>
                 <div>
-                  <FilterType :optionFilter="optionFilter" />
+                  <FilterType
+                    :optionFilter="optionFilter"
+                    @updatePaging="getPaging"
+                    :value.sync="filterData.dataFilter[3].filterType"
+                  />
                 </div>
-                <div><InputFilter style="width: 80px" /></div>
+                <div>
+                  <InputFilter
+                    style="width: 80px"
+                    @updatePaging="getPaging"
+                    :value.sync="filterData.dataFilter[3].filterValue"
+                  />
+                </div>
               </tr>
             </th>
             <th>
@@ -81,9 +121,20 @@
               </div>
               <tr>
                 <div>
-                  <FilterType :optionFilter="optionFilter" />
+                  <FilterType
+                    :optionFilter="optionFilterNumber"
+                    @updatePaging="getPaging"
+                    :value.sync="filterData.dataFilter[4].filterType"
+                  />
                 </div>
-                <div><InputFilter style="width: 80px" /></div>
+                <div>
+                  <InputFilter
+                    :type="'number'"
+                    style="width: 80px"
+                    @updatePaging="getPaging"
+                    :value.sync="filterData.dataFilter[4].filterValue"
+                  />
+                </div>
               </tr>
             </th>
             <th>
@@ -190,11 +241,18 @@ export default {
   },
   data: () => ({
     optionFilter: [
-      { value: 1, text: "* : Chứa" },
-      { value: 2, text: "= : Bằng" },
-      { value: 3, text: "+ : Bắt đầu bằng" },
-      { value: 4, text: "- : Kết thúc bằng" },
-      { value: 5, text: "! : Không chứa" },
+      { value: 1, text: "* : Chứa", prefix: "*" },
+      { value: 2, text: "= : Bằng", prefix: "=" },
+      { value: 3, text: "+ : Bắt đầu bằng", prefix: "+" },
+      { value: 4, text: "- : Kết thúc bằng", prefix: "-" },
+      { value: 5, text: "! : Không chứa", prefix: "!" },
+    ],
+    optionFilterNumber: [
+      { value: 6, text: "<= : Nhỏ hơn hoặc bằng", prefix: "&le;" },
+      { value: 7, text: "< : Nhỏ hơn", prefix: "<" },
+      { value: 8, text: "= : Bằng", prefix: "=" },
+      { value: 9, text: ">= : Lớn hơn hoặc bằng", prefix: "&ge;" },
+      { value: 10, text: "> : Lớn hơn", prefix: ">" },
     ],
     /**
      * Cấu hình dialog hàng hóa
@@ -224,7 +282,33 @@ export default {
       pageSize: 15, // Kích thước trang
       sortProperty: "",
       sortType: "",
-      dataFilter: [],
+      dataFilter: [
+        {
+          filterProperty: "skuCode",
+          filterType: 1,
+          filterValue: "",
+        },
+        {
+          filterProperty: "inventoryItemName",
+          filterType: 1,
+          filterValue: "",
+        },
+        {
+          filterProperty: "inventoryItemCategoryName",
+          filterType: 1,
+          filterValue: "",
+        },
+        {
+          filterProperty: "unitName",
+          filterType: 1,
+          filterValue: "",
+        },
+        {
+          filterProperty: "costPrice",
+          filterType: 6,
+          filterValue: null,
+        },
+      ],
     },
   }),
   created() {
@@ -233,7 +317,7 @@ export default {
   methods: {
     getPaging() {
       getPaging(this.filterData).then((res) => {
-        if (res.statusCode == 200) {
+        if (res.statusCode == 200 || res.statusCode == 204) {
           this.inventoryListConfig.totalRecord = res.totalRecord;
           this.inventoryListConfig.totalPage = Math.ceil(
             this.inventoryListConfig.totalRecord / this.filterData.pageSize

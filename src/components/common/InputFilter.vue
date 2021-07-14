@@ -6,8 +6,8 @@
     :type="type"
     :placeholder="placeholder"
     :value="value"
-    @input="$emit('input', $event.target.value)"
-    @blur="$emit('blur')"
+    @blur="updateInputFilter($event.target.value)"
+    @keydown.prevent.enter="updateInputFilter($event.target.value)"
     @focus="$event.target.select()"
   />
   <!-- #endregion -->
@@ -46,8 +46,20 @@ export default {
      * Giá trị của input
      */
     value: {
-      type: String,
-      default: "",
+      default: null,
+    },
+  },
+  methods: {
+    updateInputFilter(value) {
+      if (this.type == "text") {
+        value = value.toString();
+      } else if (this.type == "number") {
+        value = parseInt(value);
+      }
+      if (value != this.value) {
+        this.$emit("update:value", value);
+        this.$emit("updatePaging");
+      }
     },
   },
   //#endregion

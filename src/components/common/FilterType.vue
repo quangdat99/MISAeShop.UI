@@ -1,6 +1,20 @@
 <template>
   <div>
-    <div class="filter-type" @click.prevent="toggleOption">
+    <div
+      v-if="curruntText == '&le;'"
+      class="filter-type"
+      @click.prevent="toggleOption"
+    >
+      &le;
+    </div>
+    <div
+      v-else-if="curruntText == '&ge;'"
+      class="filter-type"
+      @click.prevent="toggleOption"
+    >
+      &ge;
+    </div>
+    <div v-else class="filter-type" @click.prevent="toggleOption">
       {{ curruntText }}
     </div>
     <div
@@ -31,6 +45,9 @@ export default {
     optionFilter: {
       type: Array,
     },
+    value: {
+      default: null,
+    },
   },
   data: () => ({
     /**
@@ -54,7 +71,10 @@ export default {
     },
     selectOption(option) {
       this.currunt = option.value;
-      this.curruntText = option.text.slice(0, 1);
+      this.curruntText = option.prefix;
+      this.$emit("update:value", parseInt(option.value));
+      this.$emit("updatePaging");
+
       this.closeDropdown();
     },
   },
@@ -68,7 +88,7 @@ export default {
     },
   },
   mounted() {
-    this.curruntText = this.optionFilter[0].text.slice(0, 1);
+    this.curruntText = this.optionFilter[0].prefix;
   },
 };
 </script>
