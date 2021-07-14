@@ -6,6 +6,7 @@
     :type="type"
     :placeholder="placeholder"
     :value="value"
+    min="0"
     @blur="updateInputFilter($event.target.value)"
     @keydown.prevent.enter="updateInputFilter($event.target.value)"
     @focus="$event.target.select()"

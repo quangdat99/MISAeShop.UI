@@ -55,8 +55,8 @@ export default {
      * Giá trị khởi tạo cho input
      */
     value: {
-      type: String,
-      default: "",
+      type: Number,
+      default: 0,
     },
     /**
      * Attribute thêm cho input
@@ -85,7 +85,7 @@ export default {
       /**
        * Giá trị của input
        */
-      valueInput: "",
+      valueInput: "Tất cả",
     };
   },
   methods: {
@@ -115,10 +115,24 @@ export default {
      * CreatedBy: dqdat (11/6/2021)
      */
     enter() {
-      this.$emit("update:value", this.optionData[this.current].value);
-      this.valueInput = this.optionData[this.current].text;
+      var res = this.options.find((s) => s.text == this.valueInput);
+      if (res) {
+        this.$emit("update:value", parseInt(res.value));
+      } else {
+        if (this.valueInput) {
+          this.valueInput = this.options.find(
+            (s) => s.value == this.value
+          ).text;
+        } else {
+          this.$emit("update:value", 0);
+          this.valueInput = this.options.find((s) => s.value == 0).text;
+        }
+      }
+      if (this.isShow === true) {
+        this.$emit("updatePaging");
+      }
+
       this.isShow = false;
-      this.$el.querySelector("input").blur();
     },
 
     /**
@@ -126,8 +140,13 @@ export default {
      * CreatedBy: dqdat (11/6/2021)
      */
     up() {
-      if (this.current > 0) this.current--;
-      this.valueInput = this.optionData[this.current].text;
+      if (!this.isShow) {
+        this.getCurrent();
+        this.showOption();
+      } else {
+        if (this.current > 0) this.current--;
+        this.valueInput = this.optionData[this.current].text;
+      }
     },
 
     /**
@@ -151,7 +170,8 @@ export default {
     clickoption(option, index) {
       this.current = index;
       this.isShow = false;
-      this.$emit("update:value", option.value);
+      this.$emit("update:value", parseInt(option.value));
+      this.$emit("updatePaging");
       this.valueInput = option.text;
     },
 
@@ -162,13 +182,19 @@ export default {
     onBlur() {
       var res = this.options.find((s) => s.text == this.valueInput);
       if (res) {
-        this.$emit("update:value", res.value);
+        this.$emit("update:value", parseInt(res.value));
       } else {
         if (this.valueInput) {
-          this.$emit("update:value", "");
+          this.valueInput = this.options.find(
+            (s) => s.value == this.value
+          ).text;
         } else {
           this.$emit("update:value", null);
+          this.valueInput = this.options.find((s) => s.value == null).text;
         }
+      }
+      if (this.isShow === true) {
+        this.$emit("updatePaging");
       }
 
       setTimeout(() => {

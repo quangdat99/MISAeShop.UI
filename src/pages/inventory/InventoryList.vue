@@ -27,9 +27,19 @@
           <tr>
             <th><Checkbox /></th>
             <th>
-              <div class="th-title">
+              <div class="th-title" @click="sort('skuCode')">
                 <div>Mã SKU</div>
-                <div>!</div>
+                <div
+                  :class="[
+                    filterData.sortType == 'ASC' &&
+                    filterData.sortProperty == 'skuCode'
+                      ? 'ASC'
+                      : filterData.sortType == 'DESC' &&
+                        filterData.sortProperty == 'skuCode'
+                      ? 'DESC'
+                      : '',
+                  ]"
+                ></div>
               </div>
               <tr>
                 <div>
@@ -49,9 +59,19 @@
               </tr>
             </th>
             <th>
-              <div class="th-title">
+              <div class="th-title" @click="sort('inventoryItemName')">
                 <div>Tên hàng hóa</div>
-                <div>!</div>
+                <div
+                  :class="[
+                    filterData.sortType == 'ASC' &&
+                    filterData.sortProperty == 'inventoryItemName'
+                      ? 'ASC'
+                      : filterData.sortType == 'DESC' &&
+                        filterData.sortProperty == 'inventoryItemName'
+                      ? 'DESC'
+                      : '',
+                  ]"
+                ></div>
               </div>
               <tr>
                 <div>
@@ -71,9 +91,19 @@
               </tr>
             </th>
             <th>
-              <div class="th-title">
+              <div class="th-title" @click="sort('inventoryItemCategoryName')">
                 <div>Nhóm hàng hóa</div>
-                <div>!</div>
+                <div
+                  :class="[
+                    filterData.sortType == 'ASC' &&
+                    filterData.sortProperty == 'inventoryItemCategoryName'
+                      ? 'ASC'
+                      : filterData.sortType == 'DESC' &&
+                        filterData.sortProperty == 'inventoryItemCategoryName'
+                      ? 'DESC'
+                      : '',
+                  ]"
+                ></div>
               </div>
               <tr>
                 <div>
@@ -93,9 +123,19 @@
               </tr>
             </th>
             <th>
-              <div class="th-title">
+              <div class="th-title" @click="sort('unitName')">
                 <div>Đơn vị tính</div>
-                <div>!</div>
+                <div
+                  :class="[
+                    filterData.sortType == 'ASC' &&
+                    filterData.sortProperty == 'unitName'
+                      ? 'ASC'
+                      : filterData.sortType == 'DESC' &&
+                        filterData.sortProperty == 'unitName'
+                      ? 'DESC'
+                      : '',
+                  ]"
+                ></div>
               </div>
               <tr>
                 <div>
@@ -115,9 +155,19 @@
               </tr>
             </th>
             <th>
-              <div class="th-title">
+              <div class="th-title" @click="sort('costPrice')">
                 <div>Giá bán TB</div>
-                <div>!</div>
+                <div
+                  :class="[
+                    filterData.sortType == 'ASC' &&
+                    filterData.sortProperty == 'costPrice'
+                      ? 'ASC'
+                      : filterData.sortType == 'DESC' &&
+                        filterData.sortProperty == 'costPrice'
+                      ? 'DESC'
+                      : '',
+                  ]"
+                ></div>
               </div>
               <tr>
                 <div>
@@ -140,17 +190,17 @@
             <th>
               <div class="th-title">
                 <div>Hiển thị trên MH bán hàng</div>
-                <div>!</div>
               </div>
               <tr>
                 <div>
                   <AutoCompleteFilter
                     style="width: 154px"
-                    :value="'2'"
+                    @updatePaging="getPaging"
+                    :value.sync="filterData.dataFilter[5].filterValue"
                     :options="[
-                      { value: '1', text: 'Chiếc' },
-                      { value: '2', text: 'Cái' },
-                      { value: '3', text: 'Hộp' },
+                      { value: 0, text: 'Tất cả' },
+                      { value: 1, text: 'Có' },
+                      { value: 2, text: 'Không' },
                     ]"
                   />
                 </div>
@@ -159,28 +209,60 @@
             <th>
               <div class="th-title">
                 <div>Loại hàng hóa</div>
-                <div>!</div>
               </div>
               <tr>
-                <div><AutoCompleteFilter style="width: 134px" /></div>
+                <div>
+                  <AutoCompleteFilter
+                    style="width: 134px"
+                    @updatePaging="getPaging"
+                    :value.sync="filterData.dataFilter[6].filterValue"
+                    :options="[
+                      { value: 0, text: 'Tất cả' },
+                      { value: 1, text: 'Hàng hóa' },
+                      { value: 3, text: 'Combo' },
+                      { value: 2, text: 'Dịch vụ' },
+                    ]"
+                  />
+                </div>
               </tr>
             </th>
             <th>
               <div class="th-title">
                 <div>Quản lý theo</div>
-                <div>!</div>
               </div>
               <tr>
-                <div><AutoCompleteFilter style="width: 134px" /></div>
+                <div>
+                  <AutoCompleteFilter
+                    style="width: 134px"
+                    @updatePaging="getPaging"
+                    :value.sync="filterData.dataFilter[7].filterValue"
+                    :options="[
+                      { value: 0, text: 'Tất cả' },
+                      { value: 1, text: 'Khác' },
+                      { value: 2, text: 'Lô/Hạn sử dụng' },
+                      { value: 3, text: 'Serial/IMEI' },
+                    ]"
+                  />
+                </div>
               </tr>
             </th>
             <th>
               <div class="th-title">
                 <div>Trạng thái</div>
-                <div>!</div>
               </div>
               <tr>
-                <div><AutoCompleteFilter style="width: 134px" /></div>
+                <div>
+                  <AutoCompleteFilter
+                    style="width: 134px"
+                    @updatePaging="getPaging"
+                    :value.sync="filterData.dataFilter[8].filterValue"
+                    :options="[
+                      { value: 0, text: 'Tất cả' },
+                      { value: 1, text: 'Đang kinh doanh' },
+                      { value: 2, text: 'Ngừng kinh doanh' },
+                    ]"
+                  />
+                </div>
               </tr>
             </th>
           </tr>
@@ -216,6 +298,8 @@
 
 <script>
 import { getPaging } from "../../api/inventoryItem.js";
+import { getInventoryItemCategorys } from "../../api/inventoryItemCategory.js";
+import { getUnits } from "../../api/unit.js";
 
 import InventoryDetail from "../../pages/inventory/InventoryDetail.vue";
 
@@ -270,7 +354,8 @@ export default {
      */
     inventoryListConfig: {
       inventoryItems: [], // Danh sách hàng hóa
-
+      inventoryItemCategorys: [], // Danh sách nhóm hàng hóa
+      units: [], // Danh sách đơn vị tính
       totalPage: 0, // Tổng số trang
       totalRecord: 0, // Tổng số bản ghi
     },
@@ -308,13 +393,38 @@ export default {
           filterType: 6,
           filterValue: null,
         },
+        {
+          filterProperty: "showInMenu",
+          filterType: 8,
+          filterValue: 0,
+        },
+        {
+          filterProperty: "inventoryItemType",
+          filterType: 8,
+          filterValue: 0,
+        },
+        {
+          filterProperty: "manageType",
+          filterType: 8,
+          filterValue: 0,
+        },
+        {
+          filterProperty: "ii.status",
+          filterType: 8,
+          filterValue: 0,
+        },
       ],
     },
   }),
   created() {
     this.getPaging();
+    this.getInventoryItemCategorys();
+    this.getUnits();
   },
   methods: {
+    /**
+     * Lấy dữ liệu hàng hóa
+     */
     getPaging() {
       getPaging(this.filterData).then((res) => {
         if (res.statusCode == 200 || res.statusCode == 204) {
@@ -324,6 +434,33 @@ export default {
           );
 
           this.inventoryListConfig.inventoryItems = res.data;
+        }
+      });
+    },
+    /**
+     * Lấy dữ liệu Nhóm hàng hóa
+     */
+    getInventoryItemCategorys() {
+      getInventoryItemCategorys().then((res) => {
+        if (res.statusCode == 200 || res.statusCode == 204) {
+          res.data.forEach((item) => {
+            this.inventoryListConfig.inventoryItemCategorys.push({
+              value: item.inventoryItemCategoryID,
+              text: item.inventoryItemCategoryName,
+            });
+          });
+        }
+      });
+    },
+    getUnits() {
+      getUnits().then((res) => {
+        if (res.statusCode == 200 || res.statusCode == 204) {
+          res.data.forEach((item) => {
+            this.inventoryListConfig.units.push({
+              value: item.unitID,
+              text: item.unitName,
+            });
+          });
         }
       });
     },
@@ -357,6 +494,20 @@ export default {
       } else if (mode == 3) {
         this.inventoryDetailConfig.isCombo = true;
       }
+    },
+    /**
+     * Click sắp xếp
+     */
+    sort(propertyName) {
+      this.filterData.sortProperty = propertyName.toString();
+      if (this.filterData.sortType == "ASC") {
+        this.filterData.sortType = "DESC";
+      } else if (this.filterData.sortType == "DESC") {
+        this.filterData.sortType = "ASC";
+      } else {
+        this.filterData.sortType = "ASC";
+      }
+      this.getPaging();
     },
   },
   watch: {

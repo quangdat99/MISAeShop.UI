@@ -550,6 +550,7 @@ $color-error-3: #fbeae5;
             white-space: nowrap;
             position: sticky;
             top: 0px;
+
             &:first-child {
                 padding-left: 10px;
                 padding-right: 10px;
@@ -562,6 +563,20 @@ $color-error-3: #fbeae5;
                 display: flex;
                 div {
                     display: inline-block;
+                    &.ASC {
+                        background-image: url("./assets/icons/up-arrow.png");
+                        height: 12px;
+                        width: 12px;
+                        background-repeat: no-repeat;
+                        background-size: contain;
+                    }
+                    &.DESC {
+                        background-image: url("./assets/icons/down-arrow-2.png");
+                        height: 12px;
+                        width: 12px;
+                        background-repeat: no-repeat;
+                        background-size: contain;
+                    }
                 }
             }
             tr {
