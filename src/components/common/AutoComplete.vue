@@ -40,10 +40,6 @@
 
 <script>
 export default {
-  mounted() {
-    // this.getCurrent();
-  },
-
   props: {
     /**
      * Danh sách option của AutoComplete
@@ -118,10 +114,20 @@ export default {
      * CreatedBy: dqdat (11/6/2021)
      */
     enter() {
-      this.$emit("update:value", this.optionData[this.current].value);
-      this.valueInput = this.optionData[this.current].text;
+      // this.$emit("update:value", this.optionData[this.current].value);
+      // this.valueInput = this.optionData[this.current].text;
+      var res = this.options.find((s) => s.text == this.valueInput);
+      if (res) {
+        this.$emit("update:value", res.value);
+      } else {
+        if (this.valueInput) {
+          this.$emit("update:value", "");
+        } else {
+          this.$emit("update:value", null);
+        }
+      }
       this.isShow = false;
-      this.$el.querySelector("input").blur();
+      // this.$el.querySelector("input").blur();
     },
 
     /**
@@ -129,8 +135,13 @@ export default {
      * CreatedBy: dqdat (11/6/2021)
      */
     up() {
-      if (this.current > 0) this.current--;
-      this.valueInput = this.optionData[this.current].text;
+      if (!this.isShow) {
+        this.getCurrent();
+        this.showOption();
+      } else {
+        if (this.current > 0) this.current--;
+        this.valueInput = this.optionData[this.current].text;
+      }
     },
 
     /**
@@ -142,7 +153,7 @@ export default {
         this.getCurrent();
         this.showOption();
       } else {
-        if (this.current < this.options.length - 1) this.current++;
+        if (this.current < this.optionData.length - 1) this.current++;
         this.valueInput = this.optionData[this.current].text;
       }
     },
@@ -200,7 +211,7 @@ export default {
       this.optionData = this.options;
 
       // Khởi tạo trạng thái active option ban đầu
-      let index = this.optionData.findIndex((s) => s.value === this.value);
+      let index = this.optionData.findIndex((s) => s.value == this.value);
       if (index >= 0) {
         this.current = index;
         this.valueInput = this.optionData[this.current].text;
@@ -208,6 +219,11 @@ export default {
         this.current = 0;
         this.valueInput = "";
       }
+    },
+  },
+  watch: {
+    options: function () {
+      this.getCurrent();
     },
   },
 };

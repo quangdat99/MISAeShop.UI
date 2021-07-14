@@ -189,8 +189,8 @@ export default {
             (s) => s.value == this.value
           ).text;
         } else {
-          this.$emit("update:value", null);
-          this.valueInput = this.options.find((s) => s.value == null).text;
+          this.$emit("update:value", 0);
+          this.valueInput = this.options.find((s) => s.value == 0).text;
         }
       }
       if (this.isShow === true) {

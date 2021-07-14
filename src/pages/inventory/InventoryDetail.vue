@@ -44,12 +44,8 @@
             <div class="title-item">Nhóm hàng hóa</div>
             <AutoComplete
               style="width: 240px"
-              :value="'1'"
-              :options="[
-                { value: '1', text: 'Quần áo' },
-                { value: '2', text: 'Hoa quả' },
-                { value: '3', text: 'Sách vở' },
-              ]"
+              :value.sync="inventoryItem.inventoryItemCategoryID"
+              :options="inventoryItemCategorys"
             />
           </div>
           <div class="info-item">
@@ -157,12 +153,8 @@
             <div class="title-item">Đơn vị tính</div>
             <AutoComplete
               style="width: 240px"
-              :value="'2'"
-              :options="[
-                { value: '1', text: 'Chiếc' },
-                { value: '2', text: 'Cái' },
-                { value: '3', text: 'Hộp' },
-              ]"
+              :value.sync="inventoryItem.UnitID"
+              :options="units"
             />
           </div>
           <div class="info-item" v-if="isInventory">
@@ -349,6 +341,9 @@
 
 <script>
 import { convertString } from "../../utils/helper";
+import { getInventoryItemCategorys } from "../../api/inventoryItemCategory.js";
+import { getUnits } from "../../api/unit.js";
+
 import ItemCombo from "../inventory/ItemCombo.vue";
 import ItemDetail from "../inventory/ItemDetail.vue";
 
@@ -410,9 +405,43 @@ export default {
         { value: "2", text: "Hoa quả" },
         { value: "3", text: "Sách vở" },
       ],
+      inventoryItemCategorys: [], // Dữ liệu nhóm hàng hóa
+      units: [], // Dữ liệu đơn vị tính
     };
   },
+  created() {
+    this.getInventoryItemCategorys();
+    this.getUnits();
+  },
   methods: {
+    /**
+     * Lấy dữ liệu Nhóm hàng hóa
+     */
+    getInventoryItemCategorys() {
+      getInventoryItemCategorys().then((res) => {
+        if (res.statusCode == 200 || res.statusCode == 204) {
+          res.data.forEach((item) => {
+            this.inventoryItemCategorys.push({
+              value: item.inventoryItemCategoryID,
+              text: item.inventoryItemCategoryName,
+            });
+          });
+          console.log(this.inventoryItemCategorys);
+        }
+      });
+    },
+    getUnits() {
+      getUnits().then((res) => {
+        if (res.statusCode == 200 || res.statusCode == 204) {
+          res.data.forEach((item) => {
+            this.units.push({
+              value: item.unitID,
+              text: item.unitName,
+            });
+          });
+        }
+      });
+    },
     onClickCloseDialogInventory() {
       this.$emit("closeDialogInventory");
     },

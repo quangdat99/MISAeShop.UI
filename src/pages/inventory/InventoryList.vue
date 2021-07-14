@@ -298,8 +298,6 @@
 
 <script>
 import { getPaging } from "../../api/inventoryItem.js";
-import { getInventoryItemCategorys } from "../../api/inventoryItemCategory.js";
-import { getUnits } from "../../api/unit.js";
 
 import InventoryDetail from "../../pages/inventory/InventoryDetail.vue";
 
@@ -418,8 +416,6 @@ export default {
   }),
   created() {
     this.getPaging();
-    this.getInventoryItemCategorys();
-    this.getUnits();
   },
   methods: {
     /**
@@ -434,33 +430,6 @@ export default {
           );
 
           this.inventoryListConfig.inventoryItems = res.data;
-        }
-      });
-    },
-    /**
-     * Lấy dữ liệu Nhóm hàng hóa
-     */
-    getInventoryItemCategorys() {
-      getInventoryItemCategorys().then((res) => {
-        if (res.statusCode == 200 || res.statusCode == 204) {
-          res.data.forEach((item) => {
-            this.inventoryListConfig.inventoryItemCategorys.push({
-              value: item.inventoryItemCategoryID,
-              text: item.inventoryItemCategoryName,
-            });
-          });
-        }
-      });
-    },
-    getUnits() {
-      getUnits().then((res) => {
-        if (res.statusCode == 200 || res.statusCode == 204) {
-          res.data.forEach((item) => {
-            this.inventoryListConfig.units.push({
-              value: item.unitID,
-              text: item.unitName,
-            });
-          });
         }
       });
     },
@@ -484,6 +453,8 @@ export default {
           inventoryItemName: "Áo sơ mi",
           size: "S,M",
           skuCode: "ASM01",
+          inventoryItemCategoryID: "9b86e9d5-e324-11eb-87b7-00163e047e89",
+          inventoryItemCategoryName: "Quần áo",
         },
       };
       // mode: 1-hàng hóa, 2-dịch vụ, 3-combo
