@@ -396,15 +396,7 @@ export default {
   },
   data() {
     return {
-      // stringDataColor: "Xanh/Đỏ/Vàng",
-      // stringDataSize: "S/M/L",
-      itemDetails: [],
-      value: "1",
-      options: [
-        { value: "1", text: "Quần áo" },
-        { value: "2", text: "Hoa quả" },
-        { value: "3", text: "Sách vở" },
-      ],
+      itemDetails: [], // Thành phần thuộc tính hàng hóa (màu sắc)
       inventoryItemCategorys: [], // Dữ liệu nhóm hàng hóa
       units: [], // Dữ liệu đơn vị tính
     };
@@ -426,10 +418,12 @@ export default {
               text: item.inventoryItemCategoryName,
             });
           });
-          console.log(this.inventoryItemCategorys);
         }
       });
     },
+    /**
+     * Lấy dữ liệu đơn vị tính
+     */
     getUnits() {
       getUnits().then((res) => {
         if (res.statusCode == 200 || res.statusCode == 204) {
@@ -442,6 +436,9 @@ export default {
         }
       });
     },
+    /**
+     * Click đóng dialog
+     */
     onClickCloseDialogInventory() {
       this.$emit("closeDialogInventory");
     },
