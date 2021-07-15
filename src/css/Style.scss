@@ -601,6 +601,9 @@ $color-error-3: #fbeae5;
                     display: flex;
                     .input {
                         border: 1px solid #e1e1e1;
+                        &:focus {
+                            border-color: #636dde;
+                        }
                     }
                     .icon-dropdown-box {
                         right: 1px;

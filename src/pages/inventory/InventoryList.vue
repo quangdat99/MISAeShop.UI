@@ -315,6 +315,7 @@
       @closeDialogInventory="closeDialogInventory"
       @onSave="onClickBtnSave"
     />
+    <Loading v-if="inventoryListConfig.isShowLoading" />
   </div>
 </template>
 
@@ -326,7 +327,7 @@ import {
 } from "../../api/inventoryItem.js";
 
 import InventoryDetail from "../../pages/inventory/InventoryDetail.vue";
-
+import Loading from "../../components/common/Loading";
 import Pagination from "../../components/common/Pagination.vue";
 import Button from "../../components/common/Button.vue";
 import ButtonDropdown from "../../components/common/ButtonDropdown.vue";
@@ -342,6 +343,7 @@ export default {
     Checkbox,
     FilterType,
     InputFilter,
+    Loading,
     InventoryItem,
     InventoryDetail,
     Pagination,
@@ -377,6 +379,7 @@ export default {
      * Cấu hình list hàng hóa
      */
     inventoryListConfig: {
+      isShowLoading: false,
       inventoryItems: [], // Danh sách hàng hóa
       inventoryItemCategorys: [], // Danh sách nhóm hàng hóa
       units: [], // Danh sách đơn vị tính
@@ -453,16 +456,22 @@ export default {
      * Lấy dữ liệu hàng hóa
      */
     getPaging() {
-      getPaging(this.filterData).then((res) => {
-        if (res.statusCode == 200 || res.statusCode == 204) {
-          this.inventoryListConfig.totalRecord = res.totalRecord;
-          this.inventoryListConfig.totalPage = Math.ceil(
-            this.inventoryListConfig.totalRecord / this.filterData.pageSize
-          );
+      this.inventoryListConfig.isShowLoading = true;
+      getPaging(this.filterData)
+        .then((res) => {
+          if (res.statusCode == 200 || res.statusCode == 204) {
+            this.inventoryListConfig.totalRecord = res.totalRecord;
+            this.inventoryListConfig.totalPage = Math.ceil(
+              this.inventoryListConfig.totalRecord / this.filterData.pageSize
+            );
 
-          this.inventoryListConfig.inventoryItems = res.data;
-        }
-      });
+            this.inventoryListConfig.inventoryItems = res.data;
+            this.inventoryListConfig.isShowLoading = false;
+          }
+        })
+        .catch(() => {
+          this.inventoryListConfig.isShowLoading = false;
+        });
     },
     /**
      * Click Nạp để load lại dữ liệu mới
@@ -550,16 +559,18 @@ export default {
       }
     },
 
-    onClickDelete() {
+    async onClickDelete() {
       let arrID = this.inventoryListConfig.selectionListID;
       if (arrID.length > 0) {
         for (let i = 0; i < arrID.length; i++) {
           let Id = arrID[i];
-          delInventoryItem(Id).then((res) => {
+          await delInventoryItem(Id).then((res) => {
             console.log(res);
+            this.updateSelectionListID(Id, false);
           });
         }
       }
+      this.getPaging();
     },
   },
 
