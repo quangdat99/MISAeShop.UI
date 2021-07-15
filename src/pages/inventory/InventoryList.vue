@@ -9,23 +9,42 @@
         />
       </div>
       <div class="toolbar-btn">
-        <Button text="Nhân bản" icon="icon-btnclone-white" />
+        <Button
+          text="Nhân bản"
+          icon="icon-btnclone-white"
+          :class="[
+            inventoryListConfig.isDisableButtonDuplicate ? 'disable' : '',
+          ]"
+        />
       </div>
       <div class="toolbar-btn">
-        <Button text="Sửa" icon="icon-btnedit-white" />
+        <Button
+          text="Sửa"
+          icon="icon-btnedit-white"
+          :class="[inventoryListConfig.isDisableButtonEdit ? 'disable' : '']"
+        />
       </div>
       <div class="toolbar-btn">
-        <Button text="Xóa" icon="icon-btndel-white" />
+        <Button
+          text="Xóa"
+          icon="icon-btndel-white"
+          :class="[inventoryListConfig.isDisableButtonDelete ? 'disable' : '']"
+          @click="onClickDelete"
+        />
       </div>
       <div class="toolbar-btn">
-        <Button text="Nạp" icon="icon-btnrefresh-white" />
+        <Button
+          text="Nạp"
+          icon="icon-btnrefresh-white"
+          @click="onClickBtnRefresh"
+        />
       </div>
     </div>
     <div class="grid">
       <table class="table">
         <thead>
           <tr>
-            <th><Checkbox /></th>
+            <th><Checkbox :value.sync="inventoryListConfig.isSelectAll" /></th>
             <th>
               <div class="th-title" @click="sort('skuCode')">
                 <div>Mã SKU</div>
@@ -270,10 +289,11 @@
         <tbody>
           <InventoryItem
             v-for="(inventoryItem, index) in inventoryListConfig.inventoryItems"
-            :key="index"
+            :key="inventoryItem.inventoryItemID"
             :class="[index % 2 == 0 ? 'odd' : 'even']"
             :inventoryItem="inventoryItem"
             @click="onClickInventoryItem"
+            @select="updateSelectionListID"
           />
         </tbody>
       </table>
@@ -299,7 +319,11 @@
 </template>
 
 <script>
-import { getPaging, saveInventoryItem } from "../../api/inventoryItem.js";
+import {
+  getPaging,
+  saveInventoryItem,
+  delInventoryItem,
+} from "../../api/inventoryItem.js";
 
 import InventoryDetail from "../../pages/inventory/InventoryDetail.vue";
 
@@ -343,7 +367,7 @@ export default {
      */
     inventoryDetailConfig: {
       inventoryItem: {}, // Thông tin hàng hóa
-      mode: null, // 1-Thêm mới, 2-Sửa, 3-Nhân bản
+      isInsert: null, // 1-Thêm mới, 2-Sửa, 3-Nhân bản
       isShow: false, // Hiển thị dialog
       isInventory: false, // Là hàng hóa
       isService: false, // Là dịch vụ
@@ -356,8 +380,13 @@ export default {
       inventoryItems: [], // Danh sách hàng hóa
       inventoryItemCategorys: [], // Danh sách nhóm hàng hóa
       units: [], // Danh sách đơn vị tính
+      isSelectAll: false,
+      selectionListID: [], // Danh sách ID được lựa chọn
       totalPage: 0, // Tổng số trang
       totalRecord: 0, // Tổng số bản ghi
+      isDisableButtonDelete: true, // disable nút xóa
+      isDisableButtonDuplicate: true, // Disable nút nhân bản
+      isDisableButtonEdit: true, // Disable nút sửa
     },
     /**
      * Lọc dữ liệu trang
@@ -436,6 +465,13 @@ export default {
       });
     },
     /**
+     * Click Nạp để load lại dữ liệu mới
+     */
+    onClickBtnRefresh() {
+      this.inventoryDetailConfig.pageNumber = 1;
+      this.getPaging();
+    },
+    /**
      * Đóng dialog hàng hóa
      */
     closeDialogInventory() {
@@ -445,6 +481,7 @@ export default {
      * Click show dialog hàng hóa
      */
     onClickShowDialogInventory(mode) {
+      this.inventoryDetailConfig.isInsert = true;
       this.inventoryDetailConfig.isShow = true;
       this.inventoryDetailConfig.isInventory = false;
       this.inventoryDetailConfig.isService = false;
@@ -474,15 +511,18 @@ export default {
      */
     onClickInventoryItem(inventoryItem) {
       this.onClickShowDialogInventory(inventoryItem.inventoryItemType);
+      this.inventoryDetailConfig.isInsert = false;
       this.inventoryDetailConfig.inventoryItem = inventoryItem;
     },
     onClickBtnSave() {
-      console.log(this.inventoryDetailConfig.inventoryItem);
-      saveInventoryItem(this.inventoryDetailConfig.inventoryItem, true).then(
-        (res) => {
-          console.log(res);
-        }
-      );
+      saveInventoryItem(
+        this.inventoryDetailConfig.inventoryItem,
+        this.inventoryDetailConfig.isInsert
+      ).then((res) => {
+        console.log(res);
+        this.inventoryDetailConfig.isShow = false;
+        this.getPaging();
+      });
     },
     /**
      * Click sắp xếp
@@ -498,10 +538,60 @@ export default {
       }
       this.getPaging();
     },
+    /**
+     * Cập nhật lại Danh sách ID được chọn
+     */
+    updateSelectionListID(ID, isSelect) {
+      if (isSelect == true) {
+        this.inventoryListConfig.selectionListID.push(ID.toString());
+      } else {
+        this.inventoryListConfig.selectionListID =
+          this.inventoryListConfig.selectionListID.filter((s) => s != ID);
+      }
+    },
+
+    onClickDelete() {
+      let arrID = this.inventoryListConfig.selectionListID;
+      if (arrID.length > 0) {
+        for (let i = 0; i < arrID.length; i++) {
+          let Id = arrID[i];
+          delInventoryItem(Id).then((res) => {
+            console.log(res);
+          });
+        }
+      }
+    },
   },
+
   watch: {
     paging: function () {
       this.getPaging();
+    },
+    "inventoryListConfig.selectionListID": function (arrID) {
+      if (arrID.length > 0) {
+        this.inventoryListConfig.isDisableButtonDelete = false;
+        if (arrID.length == this.inventoryListConfig.inventoryItems.length) {
+          this.inventoryListConfig.isSelectAll = true;
+        }
+      } else if (arrID.length == 0) {
+        this.inventoryListConfig.isDisableButtonDelete = true;
+        this.inventoryListConfig.isSelectAll = false;
+      }
+    },
+    "inventoryListConfig.isSelectAll": function (value) {
+      console.log("abc");
+      if (value == true) {
+        this.inventoryListConfig.inventoryItems.forEach((item) => {
+          item.isSelect = true;
+          // this.inventoryListConfig.selectionListID = [];
+          // this.inventoryListConfig.selectionListID.push(item.inventoryItemID);
+        });
+      } else {
+        this.inventoryListConfig.inventoryItems.forEach((item) => {
+          item.isSelect = false;
+          this.inventoryListConfig.selectionListID = [];
+        });
+      }
     },
   },
   computed: {

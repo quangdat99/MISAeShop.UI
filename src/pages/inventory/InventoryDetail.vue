@@ -44,6 +44,7 @@
               "
               style="width: 215px"
               :value="inventoryItem && inventoryItem.inventoryItemName"
+              @blur="handleAttributeInventoryItem"
             />
           </div>
           <div class="info-item">
@@ -73,6 +74,7 @@
               style="width: 240px"
               placeholder="Hệ thống tự sinh khi bỏ trống"
               :value="inventoryItem && inventoryItem.skuCode"
+              @blur="handleAttributeInventoryItem"
             />
           </div>
           <div class="info-item">
@@ -305,31 +307,16 @@
               <InputForm
                 :stringData="inventoryItem.color"
                 @update:stringData="
-                  $emit('update:inventory', {
-                    ...inventory,
+                  $emit('update:inventoryItem', {
+                    ...inventoryItem,
                     color: $event,
                   })
                 "
-                @change="handleAttributeInventory"
+                @change="handleAttributeInventoryItem"
               />
             </div>
           </div>
-          <div class="info-item">
-            <div class="title-item"></div>
-            <div class="label-input-item">
-              <div class="title-input-item" style="width: 137px">Size</div>
-              <InputForm
-                :stringData="inventoryItem.size"
-                @update:stringData="
-                  $emit('update:inventory', {
-                    ...inventory,
-                    size: $event,
-                  })
-                "
-                @change="handleAttributeInventory"
-              />
-            </div>
-          </div>
+
           <div class="info-item">
             <div class="title-item">Chi tiết thuộc tính</div>
             <div class="item-detail-grid">
@@ -554,13 +541,6 @@ export default {
     this.getUnits();
   },
   methods: {
-    update(a) {
-      console.log(this.inventoryItem);
-      this.$emit("update:inventoryItem", {
-        ...this.inventoryItem,
-        inventoryItemName: a,
-      });
-    },
     /**
      * Lấy dữ liệu Nhóm hàng hóa
      */
@@ -597,43 +577,71 @@ export default {
     onClickCloseDialogInventory() {
       this.$emit("closeDialogInventory");
     },
+    /**
+     * Click Lưu
+     */
     onClickSave() {
       this.$emit("onSave");
-      console.log(this.inventoryItem);
     },
     /**
      * Xử lý chi tiết thuộc tính hàng hóa
      */
-    handleAttributeInventory() {
+    handleAttributeInventoryItem() {
+      // console.log(this.inventoryItem.color);
       this.itemDetails = [];
-      var arrColor = this.inventoryItem.color
-        ? this.inventoryItem.color.split(",")
-        : [];
-      var arrSize = this.inventoryItem.size
-        ? this.inventoryItem.size.split(",")
-        : [];
+      let arrColor = [];
+      if (this.inventoryItem.color == null || this.inventoryItem.color == "") {
+        this.inventoryItem.color = "";
+        arrColor = [];
+      } else if (this.inventoryItem.color.includes(",") == false) {
+        arrColor.push(this.inventoryItem.color);
+      } else {
+        arrColor = this.inventoryItem.color.split(",");
+      }
 
       for (let i = 0; i < arrColor.length; i++) {
-        for (let j = 0; j < arrSize.length; j++) {
-          var subColor = convertString(arrColor[i], "color");
-          var subSize = convertString(arrSize[j], "size");
-          var itemDetail = {};
-          itemDetail.inventoryItemName = `${this.inventoryItem.inventoryItemName} (${arrColor[i]}/${arrSize[j]})`;
-          itemDetail.skuCode = `${this.inventoryItem.skuCode}-${subColor}-${subSize}`;
-          this.itemDetails.push(itemDetail);
+        var subColor = convertString(arrColor[i], "color");
+        var itemDetail = {};
+        if (this.inventoryItem.inventoryItemName) {
+          itemDetail.inventoryItemName = `${this.inventoryItem.inventoryItemName} (${arrColor[i]})`;
+        } else {
+          itemDetail.inventoryItemName = `(${arrColor[i]})`;
         }
+        if (this.inventoryItem.skuCode) {
+          itemDetail.skuCode = `${this.inventoryItem.skuCode}-${subColor}`;
+        } else {
+          itemDetail.skuCode = `${subColor}`;
+        }
+
+        this.itemDetails.push(itemDetail);
       }
-      // console.log(this.itemDetails);
     },
   },
-  // watchs: {
-  //   inventory: function () {
-  //     this.handleAttributeInventory();
+  // computed: {
+  //   updateAttributeInventoryITem: function () {
+  //     console.log("change");
+  //     return [
+  //       this.inventoryItem.color,
+  //       this.inventoryItem.inventoryItemName,
+  //       this.inventoryItem.skuCode,
+  //     ].join();
   //   },
   // },
-  // mounted() {
-  //   this.handleAttributeInventory();
+  // watchs: {
+  //   "inventoryItem.color": function () {
+  //     this.handleAttributeInventoryItem();
+  //   },
+  //   "inventoryItem.inventoryItemName": function () {
+  //     console.log("change name");
+  //     this.handleAttributeInventoryItem();
+  //   },
+  //   "inventoryItem.skuCode": function () {
+  //     this.handleAttributeInventoryItem();
+  //   },
   // },
+  mounted() {
+    this.handleAttributeInventoryItem();
+  },
 };
 </script>
 

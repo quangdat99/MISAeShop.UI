@@ -52,7 +52,10 @@ export default {
       let str = this.itemData.join(",");
 
       this.$emit("update:stringData", str);
-      this.$emit("change");
+
+      setTimeout(() => {
+        this.$emit("change");
+      }, 100);
     },
     enterInput() {
       this.inputText = this.inputText.trim();
@@ -69,9 +72,17 @@ export default {
       }
 
       if (this.inputText != "" && !isDuplicate) {
-        let str = this.stringData + `,${this.inputText}`;
+        let str = "";
+        if (this.stringData == null || this.stringData == "") {
+          str = `${this.inputText}`;
+        } else {
+          str = this.stringData + `,${this.inputText}`;
+        }
+
         this.$emit("update:stringData", str);
-        this.$emit("change");
+        setTimeout(() => {
+          this.$emit("change");
+        }, 100);
       } else {
         this.inputText = "";
       }

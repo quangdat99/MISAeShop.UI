@@ -1,6 +1,6 @@
 <template>
   <tr>
-    <td><Checkbox /></td>
+    <td><Checkbox :value.sync="inventoryItem.isSelect" /></td>
     <td>{{ inventoryItem.skuCode }}</td>
     <td class="click" @click="$emit('click', inventoryItem)">
       {{ inventoryItem.inventoryItemName }}
@@ -27,6 +27,25 @@ export default {
      */
     inventoryItem: {
       type: Object,
+    },
+  },
+  data() {
+    return {
+      isSelect: false,
+    };
+  },
+  // methods: {
+  //   select(ID) {
+  //     this.$emit("select", ID);
+  //   },
+  // },
+  watch: {
+    "inventoryItem.isSelect": function () {
+      this.$emit(
+        "select",
+        this.inventoryItem.inventoryItemID,
+        this.inventoryItem.isSelect
+      );
     },
   },
 

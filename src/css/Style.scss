@@ -467,11 +467,24 @@ $color-error-3: #fbeae5;
     padding-left: 8px;
     padding-right: 8px;
     cursor: pointer;
+    position: relative;
     &.btn-primary {
         background-color: $color-primary-2;
         color: $color-white;
-        &:hover {
+        &:hover:not(.disable) {
             background-color: $color-primary-3;
+        }
+        &.disable {
+            &::after {
+                content: "";
+                height: 36px;
+                width: -webkit-fill-available;
+                background-color: #2b3173a1;
+                z-index: 50;
+                position: absolute;
+                left: 0px;
+                cursor: default;
+            }
         }
     }
     &.btn-secondary {
