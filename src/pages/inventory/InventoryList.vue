@@ -273,6 +273,7 @@
             :key="index"
             :class="[index % 2 == 0 ? 'odd' : 'even']"
             :inventoryItem="inventoryItem"
+            @click="onClickInventoryItem"
           />
         </tbody>
       </table>
@@ -292,12 +293,13 @@
       :isService="inventoryDetailConfig.isService"
       :isCombo="inventoryDetailConfig.isCombo"
       @closeDialogInventory="closeDialogInventory"
+      @onSave="onClickBtnSave"
     />
   </div>
 </template>
 
 <script>
-import { getPaging } from "../../api/inventoryItem.js";
+import { getPaging, saveInventoryItem } from "../../api/inventoryItem.js";
 
 import InventoryDetail from "../../pages/inventory/InventoryDetail.vue";
 
@@ -340,12 +342,12 @@ export default {
      * Cấu hình dialog hàng hóa
      */
     inventoryDetailConfig: {
+      inventoryItem: {}, // Thông tin hàng hóa
       mode: null, // 1-Thêm mới, 2-Sửa, 3-Nhân bản
       isShow: false, // Hiển thị dialog
       isInventory: false, // Là hàng hóa
       isService: false, // Là dịch vụ
       isCombo: false, // Là combo
-      inventoryItem: {}, // Thông tin hàng hóa
     },
     /**
      * Cấu hình list hàng hóa
@@ -443,28 +445,44 @@ export default {
      * Click show dialog hàng hóa
      */
     onClickShowDialogInventory(mode) {
-      this.inventoryDetailConfig = {
-        isShow: true,
-        isInventory: false,
-        isService: false,
-        isCombo: false,
-        inventoryItem: {
-          color: "Xanh,Đỏ",
-          inventoryItemName: "Áo sơ mi",
-          size: "S,M",
-          skuCode: "ASM01",
-          inventoryItemCategoryID: "9b86e9d5-e324-11eb-87b7-00163e047e89",
-          inventoryItemCategoryName: "Quần áo",
-        },
-      };
+      this.inventoryDetailConfig.isShow = true;
+      this.inventoryDetailConfig.isInventory = false;
+      this.inventoryDetailConfig.isService = false;
+      this.inventoryDetailConfig.isCombo = false;
+      this.inventoryDetailConfig.inventoryItem = {};
+
       // mode: 1-hàng hóa, 2-dịch vụ, 3-combo
       if (mode == 1) {
         this.inventoryDetailConfig.isInventory = true;
+        this.inventoryDetailConfig.inventoryItem.unitID =
+          "7e29381f-e31b-11eb-87b7-00163e047e89";
+        this.inventoryDetailConfig.inventoryItem.inventoryItemType = 1;
       } else if (mode == 2) {
         this.inventoryDetailConfig.isService = true;
+        this.inventoryDetailConfig.inventoryItem.unitID =
+          "49ed48ec-e324-11eb-87b7-00163e047e89";
+        this.inventoryDetailConfig.inventoryItem.inventoryItemType = 2;
       } else if (mode == 3) {
         this.inventoryDetailConfig.isCombo = true;
+        this.inventoryDetailConfig.inventoryItem.unitID =
+          "45810740-e324-11eb-87b7-00163e047e89";
+        this.inventoryDetailConfig.inventoryItem.inventoryItemType = 3;
       }
+    },
+    /**
+     * Click inventoryItem
+     */
+    onClickInventoryItem(inventoryItem) {
+      this.onClickShowDialogInventory(inventoryItem.inventoryItemType);
+      this.inventoryDetailConfig.inventoryItem = inventoryItem;
+    },
+    onClickBtnSave() {
+      console.log(this.inventoryDetailConfig.inventoryItem);
+      saveInventoryItem(this.inventoryDetailConfig.inventoryItem, true).then(
+        (res) => {
+          console.log(res);
+        }
+      );
     },
     /**
      * Click sắp xếp

@@ -50,8 +50,7 @@ export default {
      * CreatedBy: dqdat (11/6/2021)
      */
     value: {
-      type: String,
-      default: "",
+      default: null,
     },
   },
   //#endregion

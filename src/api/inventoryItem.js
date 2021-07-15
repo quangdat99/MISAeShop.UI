@@ -15,3 +15,12 @@ export const getPaging = (filterData) =>
         .then(res => Promise.resolve(res.data))
         .catch(err => Promise.reject(err));
 
+export const saveInventoryItem = (data, isInsert = true) =>
+    req({
+        url: isInsert ? `${PREFIX_URL}` : `${PREFIX_URL}/${data.employeeId}`,
+        data: data,
+        method: isInsert ? 'POST' : 'PUT'
+    })
+        .then(res => Promise.resolve(res.data)
+        )
+        .catch(err => Promise.reject(err));

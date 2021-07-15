@@ -3,7 +3,7 @@
     <div class="dialog-content">
       <div class="dialog-header">
         <div class="dialog-btn">
-          <Button text="Lưu" icon="icon-save" />
+          <Button text="Lưu" icon="icon-save" @click="onClickSave" />
         </div>
         <div class="dialog-btn">
           <Button
@@ -36,15 +36,27 @@
               Tên hàng hóa <span class="require"> *</span>
             </div>
             <Input
+              @input="
+                $emit('update:inventoryItem', {
+                  ...inventoryItem,
+                  inventoryItemName: $event,
+                })
+              "
               style="width: 215px"
-              :value="inventoryItem.inventoryItemName"
+              :value="inventoryItem && inventoryItem.inventoryItemName"
             />
           </div>
           <div class="info-item">
             <div class="title-item">Nhóm hàng hóa</div>
             <AutoComplete
+              @update:value="
+                $emit('update:inventoryItem', {
+                  ...inventoryItem,
+                  inventoryItemCategoryID: $event,
+                })
+              "
               style="width: 240px"
-              :value.sync="inventoryItem.inventoryItemCategoryID"
+              :value="inventoryItem && inventoryItem.inventoryItemCategoryID"
               :options="inventoryItemCategorys"
             />
           </div>
@@ -52,16 +64,29 @@
             <div class="title-item">Mã SKU</div>
 
             <Input
+              @input="
+                $emit('update:inventoryItem', {
+                  ...inventoryItem,
+                  skuCode: $event,
+                })
+              "
               style="width: 240px"
               placeholder="Hệ thống tự sinh khi bỏ trống"
-              :value="inventoryItem.skuCode"
+              :value="inventoryItem && inventoryItem.skuCode"
             />
           </div>
           <div class="info-item">
             <div class="title-item">Mã vạch</div>
             <Input
+              @input="
+                $emit('update:inventoryItem', {
+                  ...inventoryItem,
+                  barCode: $event,
+                })
+              "
               style="width: 240px"
               placeholder="Hệ thống tự sinh khi bỏ trống"
+              :value="inventoryItem && inventoryItem.barCode"
             />
           </div>
           <div class="info-item" v-if="isCombo">
@@ -123,11 +148,31 @@
             <div class="title-item">
               Giá mua <span class="icon icon-question"></span>
             </div>
-            <Input style="width: 153px" type="number" value="0" />
+            <Input
+              @input="
+                $emit('update:inventoryItem', {
+                  ...inventoryItem,
+                  buyPrice: $event,
+                })
+              "
+              style="width: 153px"
+              type="number"
+              :value="inventoryItem && inventoryItem.buyPrice"
+            />
           </div>
           <div class="info-item" v-if="isInventory">
             <div class="title-item">Giá bán</div>
-            <Input style="width: 153px" type="number" value="0" />
+            <Input
+              @input="
+                $emit('update:inventoryItem', {
+                  ...inventoryItem,
+                  costPrice: $event,
+                })
+              "
+              style="width: 153px"
+              type="number"
+              :value="inventoryItem && inventoryItem.costPrice"
+            />
           </div>
           <div class="info-item" v-if="isCombo">
             <div class="title-item">Giá bán của combo</div>
@@ -140,6 +185,12 @@
               placeholder="Tổng giá mua: 0"
             />
             <Input
+              @input="
+                $emit('update:inventoryItem', {
+                  ...inventoryItem,
+                  costPrice: $event,
+                })
+              "
               style="
                 width: 150px;
                 border-top-left-radius: 0px;
@@ -147,19 +198,36 @@
               "
               type="number"
               placeholder="0"
+              :value="inventoryItem && inventoryItem.costPrice"
             />
           </div>
           <div class="info-item">
             <div class="title-item">Đơn vị tính</div>
             <AutoComplete
+              @update:value="
+                $emit('update:inventoryItem', {
+                  ...inventoryItem,
+                  unitID: $event,
+                })
+              "
               style="width: 240px"
-              :value.sync="inventoryItem.UnitID"
+              :value="inventoryItem && inventoryItem.unitID"
               :options="units"
             />
           </div>
           <div class="info-item" v-if="isInventory">
             <div class="title-item">Tồn kho ban đầu</div>
-            <Input style="width: 101px" type="number" value="0" />
+            <Input
+              @input="
+                $emit('update:inventoryItem', {
+                  ...inventoryItem,
+                  firstStock: $event,
+                })
+              "
+              style="width: 101px"
+              type="number"
+              :value="inventoryItem && inventoryItem.firstStock"
+            />
             <div class="note-item">
               Tồn kho ban đầu chỉ được nhập khi thêm mới hàng hóa.
             </div>
@@ -168,20 +236,58 @@
             <div class="title-item">Định mức tồn kho</div>
             <div class="label-input-item">
               <div class="title-input-item">Tối thiểu</div>
-              <Input style="width: 70px" type="number" value="0" />
+              <Input
+                @input="
+                  $emit('update:inventoryItem', {
+                    ...inventoryItem,
+                    minimumStock: $event,
+                  })
+                "
+                style="width: 70px"
+                type="number"
+                :value="inventoryItem && inventoryItem.minimumStock"
+              />
             </div>
             <div class="label-input-item">
               <div class="title-input-item">Tối đa</div>
-              <Input style="width: 60px" type="number" value="0" />
+              <Input
+                @input="
+                  $emit('update:inventoryItem', {
+                    ...inventoryItem,
+                    maximumStock: $event,
+                  })
+                "
+                style="width: 60px"
+                type="number"
+                :value="inventoryItem && inventoryItem.maximumStock"
+              />
             </div>
           </div>
           <div class="info-item" v-if="isInventory || isCombo">
             <div class="title-item">Vị trí lưu trữ trong kho</div>
-            <Input style="width: 240px" />
+            <Input
+              @input="
+                $emit('update:inventoryItem', {
+                  ...inventoryItem,
+                  stockLocation: $event,
+                })
+              "
+              style="width: 240px"
+              :value="inventoryItem && inventoryItem.stockLocation"
+            />
           </div>
           <div class="info-item" v-if="isInventory || isCombo">
             <div class="title-item">Vĩ trí trưng bày</div>
-            <Input style="width: 240px" />
+            <Input
+              @input="
+                $emit('update:inventoryItem', {
+                  ...inventoryItem,
+                  showLocation: $event,
+                })
+              "
+              style="width: 240px"
+              :value="inventoryItem && inventoryItem.showLocation"
+            />
           </div>
           <div class="info-item check">
             <Checkbox />
@@ -197,7 +303,7 @@
               <div class="title-input-item" style="width: 137px">Màu sắc</div>
               <!-- <Input style="width: 295px" placeholder="Xanh, Đỏ, Vàng..." /> -->
               <InputForm
-                :stringData.sync="inventoryItem.color"
+                :stringData="inventoryItem.color"
                 @update:stringData="
                   $emit('update:inventory', {
                     ...inventory,
@@ -213,7 +319,7 @@
             <div class="label-input-item">
               <div class="title-input-item" style="width: 137px">Size</div>
               <InputForm
-                :stringData.sync="inventoryItem.size"
+                :stringData="inventoryItem.size"
                 @update:stringData="
                   $emit('update:inventory', {
                     ...inventory,
@@ -254,34 +360,73 @@
           <div class="label-item">THÔNG TIN BỔ SUNG</div>
           <div class="info-item" v-if="isInventory">
             <div class="title-item">Trọng lượng gói hàng (g)</div>
-            <Input style="width: 243px" />
+            <Input
+              @input="
+                $emit('update:inventoryItem', {
+                  ...inventoryItem,
+                  weight: $event,
+                })
+              "
+              style="width: 243px"
+              :value="inventoryItem && inventoryItem.weight"
+            />
           </div>
           <div class="info-item" v-if="isInventory">
             <div class="title-item">Kích thước đóng gói (cm)</div>
             <Input
+              @input="
+                $emit('update:inventoryItem', {
+                  ...inventoryItem,
+                  length: $event,
+                })
+              "
               style="
                 width: 77px;
                 border-top-right-radius: 0px;
                 border-bottom-right-radius: 0px;
               "
               placeholder="Chiều dài"
+              :value="inventoryItem && inventoryItem.length"
             />
             <Input
+              @input="
+                $emit('update:inventoryItem', {
+                  ...inventoryItem,
+                  width: $event,
+                })
+              "
               style="width: 87px; border-radius: 0px"
               placeholder="Chiều rộng"
+              :value="inventoryItem && inventoryItem.width"
             />
             <Input
+              @input="
+                $emit('update:inventoryItem', {
+                  ...inventoryItem,
+                  height: $event,
+                })
+              "
               style="
                 width: 79px;
                 border-top-left-radius: 0px;
                 border-bottom-left-radius: 0px;
               "
               placeholder="Chiều cao"
+              :value="inventoryItem && inventoryItem.height"
             />
           </div>
           <div class="info-item">
             <div class="title-item">Mô tả</div>
-            <Textarea style="width: 438px; height: 80px" />
+            <Textarea
+              style="width: 438px; height: 80px"
+              :value="inventoryItem && inventoryItem.description"
+              @input="
+                $emit('update:inventoryItem', {
+                  ...inventoryItem,
+                  description: $event,
+                })
+              "
+            />
           </div>
           <div class="info-item">
             <div class="title-item">Ảnh hàng hóa</div>
@@ -310,7 +455,7 @@
       </div>
       <div class="dialog-footer">
         <div class="dialog-btn">
-          <Button text="Lưu" icon="icon-save" />
+          <Button text="Lưu" icon="icon-save" @click="onClickSave" />
         </div>
         <div class="dialog-btn">
           <Button
@@ -392,7 +537,10 @@ export default {
     /**
      * hàng hóa
      */
-    inventoryItem: {},
+    inventoryItem: {
+      type: Object,
+      default: null,
+    },
   },
   data() {
     return {
@@ -406,6 +554,13 @@ export default {
     this.getUnits();
   },
   methods: {
+    update(a) {
+      console.log(this.inventoryItem);
+      this.$emit("update:inventoryItem", {
+        ...this.inventoryItem,
+        inventoryItemName: a,
+      });
+    },
     /**
      * Lấy dữ liệu Nhóm hàng hóa
      */
@@ -442,6 +597,10 @@ export default {
     onClickCloseDialogInventory() {
       this.$emit("closeDialogInventory");
     },
+    onClickSave() {
+      this.$emit("onSave");
+      console.log(this.inventoryItem);
+    },
     /**
      * Xử lý chi tiết thuộc tính hàng hóa
      */
@@ -467,14 +626,14 @@ export default {
       // console.log(this.itemDetails);
     },
   },
-  watchs: {
-    inventory: function () {
-      this.handleAttributeInventory();
-    },
-  },
-  mounted() {
-    this.handleAttributeInventory();
-  },
+  // watchs: {
+  //   inventory: function () {
+  //     this.handleAttributeInventory();
+  //   },
+  // },
+  // mounted() {
+  //   this.handleAttributeInventory();
+  // },
 };
 </script>
 

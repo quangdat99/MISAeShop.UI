@@ -86,7 +86,10 @@ export default {
     },
   },
   mounted() {
-    this.itemData = this.stringData != "" ? this.stringData.split(",") : [];
+    this.itemData =
+      this.stringData != "" && this.stringData != null
+        ? this.stringData.split(",")
+        : [];
   },
 };
 </script>

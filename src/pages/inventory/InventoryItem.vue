@@ -2,7 +2,9 @@
   <tr>
     <td><Checkbox /></td>
     <td>{{ inventoryItem.skuCode }}</td>
-    <td class="click">{{ inventoryItem.inventoryItemName }}</td>
+    <td class="click" @click="$emit('click', inventoryItem)">
+      {{ inventoryItem.inventoryItemName }}
+    </td>
     <td>{{ inventoryItem.inventoryItemCategoryName }}</td>
     <td>{{ inventoryItem.unitName }}</td>
     <td>{{ inventoryItem.costPrice }}</td>
@@ -27,6 +29,7 @@ export default {
       type: Object,
     },
   },
+
   computed: {
     // Hiển thị trên màn hình bán hàng
     ShowInMenu: function () {
