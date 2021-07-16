@@ -31,6 +31,33 @@
       <div class="dialog-body">
         <div class="body-item">
           <div class="label-item">THÔNG TIN CƠ BẢN</div>
+          <div class="info-item" v-if="inventoryItem.status">
+            <div class="title-item">Trạng thái kinh doanh</div>
+            <div style="display: flex; padding-top: 6px">
+              <Radio
+                name="Đang kinh doanh"
+                :value="1"
+                :checked="inventoryItem && inventoryItem.status == 1"
+                @change="
+                  $emit('update:inventoryItem', {
+                    ...inventoryItem,
+                    status: parseInt($event),
+                  })
+                "
+              />
+              <Radio
+                name="Ngừng kinh doanh"
+                :value="2"
+                :checked="inventoryItem && inventoryItem.status == 2"
+                @change="
+                  $emit('update:inventoryItem', {
+                    ...inventoryItem,
+                    status: parseInt($event),
+                  })
+                "
+              />
+            </div>
+          </div>
           <div class="info-item">
             <div class="title-item">
               Tên hàng hóa <span class="require"> *</span>
@@ -292,7 +319,7 @@
             />
           </div>
           <div class="info-item check">
-            <Checkbox />
+            <Checkbox :value.sync="ShowInMenu" />
             <div class="label-checkbox">Hiển thị trên bàn hình bán hàng</div>
             <span class="icon icon-question"></span>
           </div>
@@ -336,7 +363,7 @@
                   <ItemDetail
                     v-for="(item, index) in itemDetails"
                     :key="index"
-                    :inventory="item"
+                    :inventoryItem="item"
                   />
                 </tbody>
               </table>
@@ -479,6 +506,7 @@ import { getUnits } from "../../api/unit.js";
 import ItemCombo from "../inventory/ItemCombo.vue";
 import ItemDetail from "../inventory/ItemDetail.vue";
 
+import Radio from "../../components/common/Radio.vue";
 import Checkbox from "../../components/common/Checkbox.vue";
 import Button from "../../components/common/Button.vue";
 import Input from "../../components/common/Input.vue";
@@ -497,6 +525,7 @@ export default {
     AutoComplete,
     AutoCompleteFilterItemCombo,
     Checkbox,
+    Radio,
     InputForm,
   },
   props: {
@@ -641,6 +670,24 @@ export default {
   // },
   mounted() {
     this.handleAttributeInventoryItem();
+  },
+  computed: {
+    ShowInMenu: {
+      get: function () {
+        if (this.inventoryItem.showInMenu == 1) {
+          return true;
+        } else if (this.inventoryItem.showInMenu == 2) {
+          return false;
+        } else return false;
+      },
+      set: function (value) {
+        if (value == true) {
+          this.inventoryItem.showInMenu = 1;
+        } else {
+          this.inventoryItem.showInMenu = 2;
+        }
+      },
+    },
   },
 };
 </script>

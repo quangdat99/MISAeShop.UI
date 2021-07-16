@@ -1,10 +1,60 @@
 <template>
   <tr>
-    <td>{{ inventory.inventoryItemName }}</td>
-    <td>{{ inventory.skuCode }}</td>
-    <td>Mã vạch</td>
-    <td>Giá mua</td>
-    <td>Giá bán</td>
+    <td>
+      <Input
+        @input="
+          $emit('update:inventoryItem', {
+            ...inventoryItem,
+            inventoryItemName: $event,
+          })
+        "
+        :value="inventoryItem && inventoryItem.inventoryItemName"
+      />
+    </td>
+    <td style="width: 220px">
+      <Input
+        @input="
+          $emit('update:inventoryItem', {
+            ...inventoryItem,
+            skuCode: $event,
+          })
+        "
+        :value="inventoryItem && inventoryItem.skuCode"
+      />
+    </td>
+    <td style="width: 180px">
+      <Input
+        @input="
+          $emit('update:inventoryItem', {
+            ...inventoryItem,
+            barCode: $event,
+          })
+        "
+        :value="inventoryItem && inventoryItem.barCode"
+      />
+    </td>
+    <td style="width: 100px">
+      <Input
+        @input="
+          $emit('update:inventoryItem', {
+            ...inventoryItem,
+            buyPrice: $event,
+          })
+        "
+        :value="inventoryItem && inventoryItem.buyPrice"
+      />
+    </td>
+    <td style="width: 100px">
+      <Input
+        @input="
+          $emit('update:inventoryItem', {
+            ...inventoryItem,
+            costPrice: $event,
+          })
+        "
+        :value="inventoryItem && inventoryItem.costPrice"
+      />
+    </td>
     <td style="width: 54px; padding: 0px 19px">
       <div class="icon-copy"></div>
     </td>
@@ -15,9 +65,13 @@
 </template>
 
 <script>
+import Input from "../../components/common/Input.vue";
 export default {
+  components: {
+    Input,
+  },
   props: {
-    inventory: {
+    inventoryItem: {
       type: Object,
       default: Object,
     },

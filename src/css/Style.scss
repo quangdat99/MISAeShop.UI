@@ -435,6 +435,8 @@ $color-error-3: #fbeae5;
                             tbody {
                                 tr {
                                     td {
+                                        padding-left: 0px;
+                                        padding-right: 0px;
                                         .icon-copy {
                                             cursor: pointer;
                                             height: 16px;
@@ -445,6 +447,14 @@ $color-error-3: #fbeae5;
                                         }
                                         .icon-delete {
                                             cursor: pointer;
+                                        }
+                                        .input {
+                                            width: 100%;
+                                            background: transparent;
+                                            border: 1px solid transparent;
+                                            &:focus {
+                                                border-color: #636dde;
+                                            }
                                         }
                                     }
                                 }
@@ -958,6 +968,66 @@ $color-error-3: #fbeae5;
         width: 50px;
         outline: none;
         border: none;
+    }
+}
+/* #endregion */
+
+/* #region Radio */
+.radio {
+    // display: none;
+    position: absolute;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    top: 0;
+    left: 0;
+    width: 16px;
+    height: 16px;
+    z-index: 20;
+    opacity: 0;
+
+    & + label {
+        width: 16px;
+        border-radius: 50px;
+        display: inline-block;
+        position: relative;
+        top: 0px;
+        left: 0px;
+        background-color: #fafafa;
+        border: 2px solid #cacece;
+        height: 16px;
+    }
+
+    &:checked {
+        & + label {
+            border: 2px solid $color-primary-2;
+
+            &::before {
+                content: " ";
+                width: 8px;
+                top: 2px;
+                background: $color-primary-2;
+                left: 2px;
+                height: 8px;
+                border-radius: 50px;
+                position: absolute;
+            }
+        }
+    }
+
+    &:focus {
+        & + label {
+            &::after {
+                content: " ";
+                width: 18px;
+                height: 18px;
+                border-radius: 50px;
+                border: 1px solid #97cefc7e;
+                position: absolute;
+                top: -3px;
+                left: -3px;
+            }
+        }
     }
 }
 /* #endregion */

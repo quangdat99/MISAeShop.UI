@@ -514,6 +514,7 @@ export default {
           "45810740-e324-11eb-87b7-00163e047e89";
         this.inventoryDetailConfig.inventoryItem.inventoryItemType = 3;
       }
+      this.inventoryDetailConfig.inventoryItem.showInMenu = 1;
     },
     /**
      * Click inventoryItem
