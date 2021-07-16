@@ -524,15 +524,25 @@ export default {
       this.inventoryDetailConfig.isInsert = false;
       this.inventoryDetailConfig.inventoryItem = inventoryItem;
     },
-    onClickBtnSave() {
-      saveInventoryItem(
+    async onClickBtnSave(rule, arrObj) {
+      await saveInventoryItem(
         this.inventoryDetailConfig.inventoryItem,
         this.inventoryDetailConfig.isInsert
-      ).then((res) => {
-        console.log(res);
-        this.inventoryDetailConfig.isShow = false;
-        this.getPaging();
-      });
+      )
+        .then((res) => {
+          console.log(res);
+          this.inventoryDetailConfig.isShow = false;
+          this.getPaging();
+          return res.statusCode;
+        })
+        .then((statusCode) => {
+          if (statusCode == 200) {
+            if (rule == 1 && arrObj.length > 0) {
+              console.log(rule);
+              console.log(arrObj);
+            }
+          }
+        });
     },
     /**
      * Click sắp xếp

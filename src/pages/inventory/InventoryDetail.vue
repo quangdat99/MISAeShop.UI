@@ -363,7 +363,9 @@
                   <ItemDetail
                     v-for="(item, index) in itemDetails"
                     :key="index"
+                    :index="index"
                     :inventoryItem="item"
+                    @updateItemDetail="updateItemDetail"
                   />
                 </tbody>
               </table>
@@ -610,7 +612,7 @@ export default {
      * Click Lưu
      */
     onClickSave() {
-      this.$emit("onSave");
+      this.$emit("onSave", 1, this.itemDetails);
     },
     /**
      * Xử lý chi tiết thuộc tính hàng hóa
@@ -645,29 +647,25 @@ export default {
         this.itemDetails.push(itemDetail);
       }
     },
+
+    updateItemDetail(inventoryItem, index, property) {
+      this.itemDetails[index][property] = inventoryItem[property];
+    },
   },
-  // computed: {
-  //   updateAttributeInventoryITem: function () {
-  //     console.log("change");
-  //     return [
-  //       this.inventoryItem.color,
-  //       this.inventoryItem.inventoryItemName,
-  //       this.inventoryItem.skuCode,
-  //     ].join();
-  //   },
-  // },
-  // watchs: {
-  //   "inventoryItem.color": function () {
-  //     this.handleAttributeInventoryItem();
-  //   },
-  //   "inventoryItem.inventoryItemName": function () {
-  //     console.log("change name");
-  //     this.handleAttributeInventoryItem();
-  //   },
-  //   "inventoryItem.skuCode": function () {
-  //     this.handleAttributeInventoryItem();
-  //   },
-  // },
+
+  watchs: {
+    // "inventoryItem.color": function () {
+    //   this.handleAttributeInventoryItem();
+    // },
+    // "inventoryItem.inventoryItemName": function () {
+    //   console.log("change name");
+    //   this.handleAttributeInventoryItem();
+    // },
+    // "inventoryItem.skuCode": function () {
+    //   this.handleAttributeInventoryItem();
+    // },
+    itemDetails: function () {},
+  },
   mounted() {
     this.handleAttributeInventoryItem();
   },

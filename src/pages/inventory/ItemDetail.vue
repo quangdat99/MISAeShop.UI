@@ -3,32 +3,49 @@
     <td>
       <Input
         @input="
-          $emit('update:inventoryItem', {
-            ...inventoryItem,
-            inventoryItemName: $event,
-          })
+          $emit(
+            'updateItemDetail',
+            {
+              ...inventoryItem,
+              inventoryItemName: $event,
+            },
+            index,
+            'inventoryItemName'
+          )
         "
+        readonly
         :value="inventoryItem && inventoryItem.inventoryItemName"
       />
     </td>
     <td style="width: 220px">
       <Input
         @input="
-          $emit('update:inventoryItem', {
-            ...inventoryItem,
-            skuCode: $event,
-          })
+          $emit(
+            'updateItemDetail',
+            {
+              ...inventoryItem,
+              skuCode: $event,
+            },
+            index,
+            'skuCode'
+          )
         "
+        readonly
         :value="inventoryItem && inventoryItem.skuCode"
       />
     </td>
     <td style="width: 180px">
       <Input
         @input="
-          $emit('update:inventoryItem', {
-            ...inventoryItem,
-            barCode: $event,
-          })
+          $emit(
+            'updateItemDetail',
+            {
+              ...inventoryItem,
+              barCode: $event,
+            },
+            index,
+            'barCode'
+          )
         "
         :value="inventoryItem && inventoryItem.barCode"
       />
@@ -36,23 +53,35 @@
     <td style="width: 100px">
       <Input
         @input="
-          $emit('update:inventoryItem', {
-            ...inventoryItem,
-            buyPrice: $event,
-          })
+          $emit(
+            'updateItemDetail',
+            {
+              ...inventoryItem,
+              buyPrice: $event,
+            },
+            index,
+            'buyPrice'
+          )
         "
         :value="inventoryItem && inventoryItem.buyPrice"
+        :type="'number'"
       />
     </td>
     <td style="width: 100px">
       <Input
         @input="
-          $emit('update:inventoryItem', {
-            ...inventoryItem,
-            costPrice: $event,
-          })
+          $emit(
+            'updateItemDetail',
+            {
+              ...inventoryItem,
+              costPrice: $event,
+            },
+            index,
+            'costPrice'
+          )
         "
         :value="inventoryItem && inventoryItem.costPrice"
+        :type="'number'"
       />
     </td>
     <td style="width: 54px; padding: 0px 19px">
@@ -71,6 +100,10 @@ export default {
     Input,
   },
   props: {
+    index: {
+      type: Number,
+      default: null,
+    },
     inventoryItem: {
       type: Object,
       default: Object,
