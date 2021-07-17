@@ -71,7 +71,7 @@
               "
               style="width: 215px"
               :value="inventoryItem && inventoryItem.inventoryItemName"
-              @blur="handleAttributeInventoryItem"
+              @blur="onBlurInputName"
             />
           </div>
           <div class="info-item">
@@ -101,7 +101,7 @@
               style="width: 240px"
               placeholder="Hệ thống tự sinh khi bỏ trống"
               :value="inventoryItem && inventoryItem.skuCode"
-              @blur="handleAttributeInventoryItem"
+              @blur="onBlurInputSKUCode"
             />
           </div>
           <div class="info-item">
@@ -332,6 +332,7 @@
               <div class="title-input-item" style="width: 137px">Màu sắc</div>
               <!-- <Input style="width: 295px" placeholder="Xanh, Đỏ, Vàng..." /> -->
               <InputForm
+                ref="inputForm"
                 :stringData="inventoryItem.color"
                 @update:stringData="
                   $emit('update:inventoryItem', {
@@ -340,6 +341,7 @@
                   })
                 "
                 @change="handleAttributeInventoryItem"
+                @delete="deleteItemColor"
               />
             </div>
           </div>
@@ -366,6 +368,7 @@
                     :index="index"
                     :inventoryItem="item"
                     @updateItemDetail="updateItemDetail"
+                    @delete="deleteItemDetail"
                   />
                 </tbody>
               </table>
@@ -501,9 +504,10 @@
 </template>
 
 <script>
-import { convertString } from "../../utils/helper";
+import { convertString, findIndexWithAttr } from "../../utils/helper";
 import { getInventoryItemCategorys } from "../../api/inventoryItemCategory.js";
 import { getUnits } from "../../api/unit.js";
+import { getInventorysByParentID } from "../../api/inventoryItem";
 
 import ItemCombo from "../inventory/ItemCombo.vue";
 import ItemDetail from "../inventory/ItemDetail.vue";
@@ -570,6 +574,9 @@ export default {
   created() {
     this.getInventoryItemCategorys();
     this.getUnits();
+    if (this.inventoryItem && this.inventoryItem.inventoryItemName) {
+      this.getItemDetail();
+    }
   },
   methods: {
     /**
@@ -602,6 +609,25 @@ export default {
         }
       });
     },
+    getItemDetail() {
+      getInventorysByParentID(this.inventoryItem.inventoryItemID).then(
+        (res) => {
+          if (res.statusCode == 200) {
+            this.itemDetails = res.data;
+          }
+        }
+      );
+    },
+    onBlurInputName() {
+      setTimeout(() => {
+        this.handleAttributeInventoryItem();
+      }, 200);
+    },
+    onBlurInputSKUCode() {
+      setTimeout(() => {
+        this.handleAttributeInventoryItem();
+      }, 200);
+    },
     /**
      * Click đóng dialog
      */
@@ -619,11 +645,16 @@ export default {
      */
     handleAttributeInventoryItem() {
       // console.log(this.inventoryItem.color);
-      this.itemDetails = [];
+      // this.itemDetails = [];
       let arrColor = [];
+      this.itemDetails.forEach((item) => {
+        if (item.color != null && item.color != "") {
+          arrColor.push(item.color);
+        }
+      });
       if (this.inventoryItem.color == null || this.inventoryItem.color == "") {
         this.inventoryItem.color = "";
-        arrColor = [];
+        // arrColor = [];
       } else if (this.inventoryItem.color.includes(",") == false) {
         arrColor.push(this.inventoryItem.color);
       } else {
@@ -631,8 +662,8 @@ export default {
       }
 
       for (let i = 0; i < arrColor.length; i++) {
-        var subColor = convertString(arrColor[i], "color");
-        var itemDetail = {};
+        let subColor = convertString(arrColor[i], "color");
+        let itemDetail = {};
         if (this.inventoryItem.inventoryItemName) {
           itemDetail.inventoryItemName = `${this.inventoryItem.inventoryItemName} (${arrColor[i]})`;
         } else {
@@ -643,29 +674,45 @@ export default {
         } else {
           itemDetail.skuCode = `${subColor}`;
         }
-
-        this.itemDetails.push(itemDetail);
+        itemDetail.color = `${arrColor[i]}`;
+        let index = findIndexWithAttr(
+          this.itemDetails,
+          "color",
+          itemDetail.color.toString()
+        );
+        if (index >= 0) {
+          this.itemDetails[index].skuCode = itemDetail.skuCode;
+          this.itemDetails[index].inventoryItemName =
+            itemDetail.inventoryItemName;
+        } else {
+          this.itemDetails.push(itemDetail);
+        }
       }
     },
+    /**
+     * xóa 1 item màu sắc
+     */
+    deleteItemColor(strColor) {
+      let index = findIndexWithAttr(
+        this.itemDetails,
+        "color",
+        strColor.toString()
+      );
+      if (this.itemDetails[index].inventoryItemID) {
+        this.$emit("updateListID", this.itemDetails[index].inventoryItemID);
+      }
+      this.itemDetails.splice(index, 1);
+      this.handleAttributeInventoryItem();
+    },
 
+    deleteItemDetail(color) {
+      this.$refs.inputForm.onClickDeleteItem(color);
+    },
     updateItemDetail(inventoryItem, index, property) {
       this.itemDetails[index][property] = inventoryItem[property];
     },
   },
 
-  watchs: {
-    // "inventoryItem.color": function () {
-    //   this.handleAttributeInventoryItem();
-    // },
-    // "inventoryItem.inventoryItemName": function () {
-    //   console.log("change name");
-    //   this.handleAttributeInventoryItem();
-    // },
-    // "inventoryItem.skuCode": function () {
-    //   this.handleAttributeInventoryItem();
-    // },
-    itemDetails: function () {},
-  },
   mounted() {
     this.handleAttributeInventoryItem();
   },

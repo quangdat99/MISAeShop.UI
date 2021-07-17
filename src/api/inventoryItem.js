@@ -36,7 +36,7 @@ export const saveInventoryItem = (data, isInsert = true) =>
 * @returns 
 * CreatedBy: dqdat (15/07/2021)
 */
-export const delInventoryItem = (inventoryItemID) =>
+export const deleteInventoryItemByID = (inventoryItemID) =>
     req.delete(`${PREFIX_URL}/${inventoryItemID}`)
         .then(res => Promise.resolve(res.data))
         .catch(err => Promise.reject(err));
@@ -47,7 +47,41 @@ export const delInventoryItem = (inventoryItemID) =>
 * @returns 
 * CreatedBy: dqdat (15/07/2021)
 */
-export const getInventory = (inventoryItemID) =>
+export const getInventoryByID = (inventoryItemID) =>
     req.get(`${PREFIX_URL}/${inventoryItemID}`)
+        .then(res => Promise.resolve(res.data))
+        .catch(err => Promise.reject(err));
+
+
+/**
+* Lấy thông tin một hàng hóa theo skuCode
+* @param {}  
+* @returns 
+* CreatedBy: dqdat (17/07/2021)
+*/
+export const getInventoryBySKUCode = (skuCode) =>
+    req.get(`${PREFIX_URL}/GetInventoryItemBySKUCode/${skuCode}`)
+        .then(res => Promise.resolve(res.data))
+        .catch(err => Promise.reject(err));
+
+/**
+* Lấy thông tin một hàng hóa theo parentID
+* @param {}  
+* @returns 
+* CreatedBy: dqdat (17/07/2021)
+*/
+export const getInventorysByParentID = (parentID) =>
+    req.get(`${PREFIX_URL}/GetInventoryItemsByParentID/${parentID}`)
+        .then(res => Promise.resolve(res.data))
+        .catch(err => Promise.reject(err));
+
+/**
+* Xóa thông tin hàng hóa theo parentID
+* @param {}  
+* @returns 
+* CreatedBy: dqdat (17/07/2021)
+*/
+export const deleteInventoryItemByParentID = (parentID) =>
+    req.delete(`${PREFIX_URL}/DeleteInventoryItemByParentID/${parentID}`)
         .then(res => Promise.resolve(res.data))
         .catch(err => Promise.reject(err));

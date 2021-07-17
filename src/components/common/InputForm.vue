@@ -6,7 +6,7 @@
   >
     <div class="item-form" v-for="(item, index) in itemData" :key="index">
       <div class="text-item">{{ item }}</div>
-      <div class="icon-item" @click="onClickDeleteItem(index)">
+      <div class="icon-item" @click="onClickDeleteItem(item)">
         <img src="../../assets/icons/icon-delete.png" alt="" />
       </div>
     </div>
@@ -47,14 +47,16 @@ export default {
       this.focusInputForm();
       this.$el.querySelector("input").focus();
     },
-    onClickDeleteItem(index) {
+    onClickDeleteItem(strColor) {
+      // let strColor = this.itemData[index];
+      let index = this.itemData.indexOf(strColor);
       this.itemData.splice(index, 1);
       let str = this.itemData.join(",");
 
       this.$emit("update:stringData", str);
 
       setTimeout(() => {
-        this.$emit("change");
+        this.$emit("delete", strColor.toString());
       }, 100);
     },
     enterInput() {

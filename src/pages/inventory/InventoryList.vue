@@ -307,6 +307,7 @@
       />
     </div>
     <InventoryDetail
+      ref="inventoryDetail"
       v-if="inventoryDetailConfig.isShow"
       :inventoryItem.sync="inventoryDetailConfig.inventoryItem"
       :isInventory="inventoryDetailConfig.isInventory"
@@ -314,6 +315,7 @@
       :isCombo="inventoryDetailConfig.isCombo"
       @closeDialogInventory="closeDialogInventory"
       @onSave="onClickBtnSave"
+      @updateListID="updateInventoryItemIDList"
     />
     <Loading v-if="inventoryListConfig.isShowLoading" />
   </div>
@@ -323,7 +325,9 @@
 import {
   getPaging,
   saveInventoryItem,
-  delInventoryItem,
+  getInventoryBySKUCode,
+  deleteInventoryItemByID,
+  // deleteInventoryItemByParentID,
 } from "../../api/inventoryItem.js";
 
 import InventoryDetail from "../../pages/inventory/InventoryDetail.vue";
@@ -379,11 +383,12 @@ export default {
      * Cấu hình list hàng hóa
      */
     inventoryListConfig: {
-      isShowLoading: false,
+      inventoryItemIDList: [], // Danh sách ID hàng hóa
+      isShowLoading: false, // Trạng thái loading
       inventoryItems: [], // Danh sách hàng hóa
       inventoryItemCategorys: [], // Danh sách nhóm hàng hóa
       units: [], // Danh sách đơn vị tính
-      isSelectAll: false,
+      isSelectAll: false, // Trạng thái chọn tất cả bản ghi
       selectionListID: [], // Danh sách ID được lựa chọn
       totalPage: 0, // Tổng số trang
       totalRecord: 0, // Tổng số bản ghi
@@ -530,19 +535,56 @@ export default {
         this.inventoryDetailConfig.isInsert
       )
         .then((res) => {
-          console.log(res);
-          this.inventoryDetailConfig.isShow = false;
-          this.getPaging();
           return res.statusCode;
         })
         .then((statusCode) => {
           if (statusCode == 200) {
             if (rule == 1 && arrObj.length > 0) {
-              console.log(rule);
-              console.log(arrObj);
+              getInventoryBySKUCode(
+                this.inventoryDetailConfig.inventoryItem.skuCode
+              )
+                .then((res) => {
+                  console.log(res);
+
+                  if (res.statusCode == 200) {
+                    console.log(this.inventoryListConfig.inventoryItemIDList);
+                    this.inventoryListConfig.inventoryItemIDList.forEach(
+                      (ID) => {
+                        deleteInventoryItemByID(ID).then((res) => {
+                          console.log(res);
+                        });
+                      }
+                    );
+                    return res;
+                  }
+                })
+                .then((res) => {
+                  if (res.statusCode == 200) {
+                    arrObj.forEach((item) => {
+                      item.inventoryItemType = res.data.inventoryItemType;
+                      if (item.parentID == null) {
+                        item.parentID = res.data.inventoryItemID;
+                        saveInventoryItem(item, true).then(() => {
+                          // console.log(res);
+                        });
+                      } else {
+                        item.parentID = res.data.inventoryItemID;
+                        saveInventoryItem(item, true).then(() => {
+                          // console.log(res);
+                        });
+                      }
+                    });
+                  }
+                });
             }
           }
         });
+      this.inventoryDetailConfig.isShow = false;
+      this.getPaging();
+    },
+    updateInventoryItemIDList(ID) {
+      console.log(ID);
+      this.inventoryListConfig.inventoryItemIDList.push(ID);
     },
     /**
      * Click sắp xếp
@@ -575,7 +617,7 @@ export default {
       if (arrID.length > 0) {
         for (let i = 0; i < arrID.length; i++) {
           let Id = arrID[i];
-          await delInventoryItem(Id).then((res) => {
+          await deleteInventoryItemByID(Id).then((res) => {
             console.log(res);
             this.updateSelectionListID(Id, false);
           });

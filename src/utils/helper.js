@@ -59,3 +59,20 @@ export const
         // str = str.replace(/!|@|%|\^|\*|\(|\)|\+|\=|\<|\>|\?|\/|,|\.|\:|\;|\'|\"|\&|\#|\[|\]|~|\$|_|`|-|{|}|\||\\/g, " ");
         return str;
     }
+
+/**
+* Lấy vị trí của object trong array bằng property, value
+* @param {}  
+* @returns 
+* CreatedBy: dqdat (17/07/2021)
+*/
+export const findIndexWithAttr = (array, attr, value) => {
+    for (var i = 0; i < array.length; i += 1) {
+        // console.log(array[i][attr]);
+        // console.log(value);
+        if (array[i][attr] == value) {
+            return i;
+        }
+    }
+    return -1;
+}

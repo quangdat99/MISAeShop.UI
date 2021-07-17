@@ -110,7 +110,9 @@ export default {
     },
   },
   methods: {
-    onClickDeleteItemDetail() {},
+    onClickDeleteItemDetail() {
+      this.$emit("delete", this.inventoryItem.color.toString());
+    },
   },
 };
 </script>
