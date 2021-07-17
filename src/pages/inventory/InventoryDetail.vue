@@ -63,6 +63,7 @@
               Tên hàng hóa <span class="require"> *</span>
             </div>
             <Input
+              ref="inputInventoryItemName"
               @input="
                 $emit('update:inventoryItem', {
                   ...inventoryItem,
@@ -500,6 +501,7 @@
         </div>
       </div>
     </div>
+    <Loading v-if="isShowLoading" :top="'112px'" />
   </div>
 </template>
 
@@ -520,6 +522,7 @@ import Textarea from "../../components/common/Textarea.vue";
 import AutoComplete from "../../components/common/AutoComplete.vue";
 import AutoCompleteFilterItemCombo from "../../components/common/AutoCompleteFilterItemCombo.vue";
 import InputForm from "../../components/common/InputForm.vue";
+import Loading from "../../components/common/Loading.vue";
 
 export default {
   components: {
@@ -533,6 +536,7 @@ export default {
     Checkbox,
     Radio,
     InputForm,
+    Loading,
   },
   props: {
     /**
@@ -569,6 +573,7 @@ export default {
       itemDetails: [], // Thành phần thuộc tính hàng hóa (màu sắc)
       inventoryItemCategorys: [], // Dữ liệu nhóm hàng hóa
       units: [], // Dữ liệu đơn vị tính
+      isShowLoading: false, // trạng thái loading
     };
   },
   created() {
@@ -583,40 +588,58 @@ export default {
      * Lấy dữ liệu Nhóm hàng hóa
      */
     getInventoryItemCategorys() {
-      getInventoryItemCategorys().then((res) => {
-        if (res.statusCode == 200 || res.statusCode == 204) {
-          res.data.forEach((item) => {
-            this.inventoryItemCategorys.push({
-              value: item.inventoryItemCategoryID,
-              text: item.inventoryItemCategoryName,
+      this.isShowLoading = true;
+      getInventoryItemCategorys()
+        .then((res) => {
+          if (res.statusCode == 200 || res.statusCode == 204) {
+            res.data.forEach((item) => {
+              this.inventoryItemCategorys.push({
+                value: item.inventoryItemCategoryID,
+                text: item.inventoryItemCategoryName,
+              });
             });
-          });
-        }
-      });
+            this.isShowLoading = false;
+          }
+        })
+        .catch(() => {
+          this.isShowLoading = false;
+        });
     },
     /**
      * Lấy dữ liệu đơn vị tính
      */
     getUnits() {
-      getUnits().then((res) => {
-        if (res.statusCode == 200 || res.statusCode == 204) {
-          res.data.forEach((item) => {
-            this.units.push({
-              value: item.unitID,
-              text: item.unitName,
+      this.isShowLoading = true;
+
+      getUnits()
+        .then((res) => {
+          if (res.statusCode == 200 || res.statusCode == 204) {
+            res.data.forEach((item) => {
+              this.units.push({
+                value: item.unitID,
+                text: item.unitName,
+              });
             });
-          });
-        }
-      });
+          }
+          this.isShowLoading = false;
+        })
+        .catch(() => {
+          this.isShowLoading = false;
+        });
     },
     getItemDetail() {
-      getInventorysByParentID(this.inventoryItem.inventoryItemID).then(
-        (res) => {
+      this.isShowLoading = true;
+
+      getInventorysByParentID(this.inventoryItem.inventoryItemID)
+        .then((res) => {
           if (res.statusCode == 200) {
             this.itemDetails = res.data;
           }
-        }
-      );
+          this.isShowLoading = false;
+        })
+        .catch(() => {
+          this.isShowLoading = false;
+        });
     },
     onBlurInputName() {
       setTimeout(() => {
@@ -698,7 +721,7 @@ export default {
         "color",
         strColor.toString()
       );
-      if (this.itemDetails[index].inventoryItemID) {
+      if (index >= 0 && this.itemDetails[index].inventoryItemID) {
         this.$emit("updateListID", this.itemDetails[index].inventoryItemID);
       }
       this.itemDetails.splice(index, 1);
@@ -715,6 +738,7 @@ export default {
 
   mounted() {
     this.handleAttributeInventoryItem();
+    this.$refs.inputInventoryItemName.$el.focus();
   },
   computed: {
     ShowInMenu: {

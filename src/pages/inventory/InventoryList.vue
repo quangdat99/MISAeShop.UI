@@ -534,52 +534,47 @@ export default {
         this.inventoryDetailConfig.inventoryItem,
         this.inventoryDetailConfig.isInsert
       )
-        .then((res) => {
-          return res.statusCode;
+        .then(async (res) => {
+          return await res.statusCode;
         })
-        .then((statusCode) => {
+        .then(async (statusCode) => {
           if (statusCode == 200) {
-            if (rule == 1 && arrObj.length > 0) {
-              getInventoryBySKUCode(
+            if (
+              rule == 1 &&
+              (arrObj.length > 0 ||
+                this.inventoryListConfig.inventoryItemIDList.length > 0)
+            ) {
+              await getInventoryBySKUCode(
                 this.inventoryDetailConfig.inventoryItem.skuCode
-              )
-                .then((res) => {
-                  console.log(res);
-
+              ).then(async (res) => {
+                if (res.statusCode == 200) {
+                  this.inventoryListConfig.inventoryItemIDList.forEach(
+                    async (ID) => {
+                      await deleteInventoryItemByID(ID).then(() => {
+                        // console.log(res);
+                      });
+                    }
+                  );
                   if (res.statusCode == 200) {
-                    console.log(this.inventoryListConfig.inventoryItemIDList);
-                    this.inventoryListConfig.inventoryItemIDList.forEach(
-                      (ID) => {
-                        deleteInventoryItemByID(ID).then((res) => {
-                          console.log(res);
-                        });
-                      }
-                    );
-                    return res;
-                  }
-                })
-                .then((res) => {
-                  if (res.statusCode == 200) {
-                    arrObj.forEach((item) => {
+                    arrObj.forEach(async (item) => {
                       item.inventoryItemType = res.data.inventoryItemType;
                       if (item.parentID == null) {
                         item.parentID = res.data.inventoryItemID;
-                        saveInventoryItem(item, true).then(() => {
-                          // console.log(res);
-                        });
+                        await saveInventoryItem(item, true).then(() => {});
                       } else {
                         item.parentID = res.data.inventoryItemID;
-                        saveInventoryItem(item, true).then(() => {
-                          // console.log(res);
-                        });
+                        await saveInventoryItem(item, false).then(() => {});
                       }
                     });
                   }
-                });
+                }
+              });
             }
           }
         });
+
       this.inventoryDetailConfig.isShow = false;
+
       this.getPaging();
     },
     updateInventoryItemIDList(ID) {
@@ -643,7 +638,6 @@ export default {
       }
     },
     "inventoryListConfig.isSelectAll": function (value) {
-      console.log("abc");
       if (value == true) {
         this.inventoryListConfig.inventoryItems.forEach((item) => {
           item.isSelect = true;

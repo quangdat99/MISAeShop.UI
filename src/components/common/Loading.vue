@@ -1,6 +1,6 @@
 <template>
   <!-- #region dialog loading -->
-  <div class="dialog">
+  <div class="dialog" :style="{ top: top }">
     <div class="dialog-background">
       <div class="dialog-content"></div>
       <div>Đang lấy dữ liệu...</div>
@@ -11,7 +11,14 @@
 
 <script>
 //#region  export
-export default {};
+export default {
+  props: {
+    top: {
+      type: String,
+      default: "169px",
+    },
+  },
+};
 //#endregion
 </script>
 
