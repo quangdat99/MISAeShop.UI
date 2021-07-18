@@ -399,6 +399,14 @@ $color-error-3: #fbeae5;
                                                     background-repeat: no-repeat;
                                                     background-image: url("./assets/icons/copy-down.png");
                                                 }
+                                                .input {
+                                                    width: 100%;
+                                                    background: transparent;
+                                                    border: 1px solid transparent;
+                                                    &:focus {
+                                                        border-color: #636dde;
+                                                    }
+                                                }
                                             }
                                         }
                                     }

@@ -578,7 +578,6 @@ export default {
       this.getPaging();
     },
     updateInventoryItemIDList(ID) {
-      console.log(ID);
       this.inventoryListConfig.inventoryItemIDList.push(ID);
     },
     /**

@@ -347,7 +347,7 @@
             </div>
           </div>
 
-          <div class="info-item">
+          <div class="info-item" v-if="inventoryItem.color">
             <div class="title-item">Chi tiết thuộc tính</div>
             <div class="item-detail-grid">
               <table class="table">
