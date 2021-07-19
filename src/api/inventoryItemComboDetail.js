@@ -9,7 +9,7 @@ const PREFIX_URL = "api/v1/inventoryItemComboDetails";
 */
 export const saveInventoryItemComboDetail = (data, isInsert = true) =>
     req({
-        url: isInsert ? `${PREFIX_URL}` : `${PREFIX_URL}/${data.inventoryItemID}`,
+        url: isInsert ? `${PREFIX_URL}` : `${PREFIX_URL}/${data.inventoryItemComboDetailID}`,
         data: data,
         method: isInsert ? 'POST' : 'PUT'
     })

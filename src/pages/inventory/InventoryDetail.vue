@@ -138,7 +138,7 @@
                 <div class="filter-item-combo">
                   <AutoCompleteFilterItemCombo
                     style="width: 284px"
-                    :value="combo.inventoryItemID"
+                    :value="null"
                     :placeholder="'Tìm mã hoặc tên hàng hóa'"
                     :options="inventoryItemOptionCombo"
                     @update:value="
@@ -168,9 +168,12 @@
                     </thead>
                     <tbody>
                       <ItemCombo
-                        v-for="(data, index) in combo.data"
-                        :key="index"
+                        v-for="(data, indexCombo) in combo.data"
+                        :key="indexCombo"
+                        :indexCombo="indexCombo"
+                        :indexData="index"
                         :inventoryItem="data"
+                        @updatequantity="updatequantity"
                       />
                     </tbody>
                   </table>
@@ -181,6 +184,7 @@
                   text="Thêm thành phần"
                   icon="icon-saveadd"
                   color="secondary"
+                  @click="addItemCombo"
                 />
               </div>
             </div>
@@ -600,12 +604,8 @@ export default {
           componentID: 1,
           data: [],
         },
-        {
-          inventoryItemID: null,
-          componentID: 2,
-          data: [],
-        },
       ], // Các thành phần combo
+      componentID: 1, // ID nhóm thành phần hàng hóa của combo
       isShowLoading: false, // trạng thái loading
     };
   },
@@ -617,10 +617,13 @@ export default {
     }
     if (this.inventoryItem && this.inventoryItem.inventoryItemType == 3) {
       this.getInventoryItemsOptionCombo();
-      this.getInventoryItemComboDetails();
+      if (this.inventoryItem.inventoryItemID) {
+        this.getInventoryItemComboDetails();
+      }
     }
   },
   methods: {
+    //#region Lấy dữ liệu từ API
     /**
      * Lấy dữ liệu Nhóm hàng hóa
      */
@@ -711,6 +714,14 @@ export default {
       getInventoryItemComboDetails(this.inventoryItem.inventoryItemID)
         .then((res) => {
           if (res.statusCode == 200) {
+            this.componentID = Math.max.apply(
+              Math,
+              res.data.map(function (o) {
+                return o.componentID;
+              })
+            );
+
+            // Xủ lý binding dữ liệu các thành phần combo
             let groups = res.data.reduce((r, a) => {
               r[a.componentID] = [...(r[a.componentID] || []), a];
               return r;
@@ -721,11 +732,10 @@ export default {
               let obj = {};
               obj.data = groups[key];
               obj.componentID = obj.data[0].componentID;
-              obj.inventoryItemID = obj.data[0].inventoryItemID;
+              obj.inventoryItemID = obj.data[0].parentID;
               arr.push(obj);
             }
             this.itemCombo = arr;
-            console.log(arr);
           }
           this.isShowLoading = false;
         })
@@ -733,17 +743,12 @@ export default {
           this.isShowLoading = false;
         });
     },
-    /**
-     * cập nhật ID thành phân combo
-     */
-    updateInventoryItemIDItemCombo(ID, index) {
-      // console.log(ID);
-      // console.log(index);
-      this.itemCombo[index].inventoryItemID = ID;
-    },
 
+    /**
+     * Lấy dữ liệu cho thành phần hàng hóa combo đã đc chọn
+     */
     getInventoryItemCombo(ID, index) {
-      if (ID != null) {
+      if (ID != null && ID != "") {
         getInventoryItemSelectOptionComboByParentID(ID).then((res) => {
           if (res.statusCode == 200) {
             this.itemCombo[index].data = res.data;
@@ -755,6 +760,31 @@ export default {
           }
         });
       }
+    },
+    //#endregion
+
+    /**
+     * cập nhật ID thành phân combo
+     */
+    updateInventoryItemIDItemCombo(ID, index) {
+      this.itemCombo[index].inventoryItemID = ID;
+    },
+    /**
+     * cập nhật số lượng hàng hóa thành phần của combo
+     */
+    updatequantity(value, indexData, indexCombo) {
+      this.itemCombo[indexData].data[indexCombo].quantity = parseInt(value);
+    },
+    /**
+     * Thêm một thành phần mới cho combo
+     */
+    addItemCombo() {
+      this.componentID = this.componentID + 1;
+      this.itemCombo.push({
+        inventoryItemID: null,
+        componentID: this.componentID,
+        data: [],
+      });
     },
 
     onBlurInputName() {
@@ -783,6 +813,7 @@ export default {
         this.$emit("onSave", 1, this.itemDetails);
       }
     },
+    //#region Thành phần thuộc tính của hàng hóa
     /**
      * Xử lý chi tiết thuộc tính hàng hóa
      */
@@ -864,6 +895,7 @@ export default {
     updateItemDetail(inventoryItem, index, property) {
       this.itemDetails[index][property] = inventoryItem[property];
     },
+    //#endregion
   },
 
   mounted() {

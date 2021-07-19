@@ -9,6 +9,7 @@
       <Input
         :type="'number'"
         :value="inventoryItem && inventoryItem.quantity"
+        @input="updatequantity"
       />
     </td>
     <td style="width: 54px; padding: 0px 19px; background-color: #fff">
@@ -30,6 +31,22 @@ export default {
     inventoryItem: {
       type: Object,
       default: null,
+    },
+    indexCombo: {
+      type: Number,
+      default: null,
+    },
+    indexData: {
+      type: Number,
+      default: null,
+    },
+  },
+  methods: {
+    /**
+     * Cập nhật số lượng hàng hóa combo
+     */
+    updatequantity(value) {
+      this.$emit("updatequantity", value, this.indexData, this.indexCombo);
     },
   },
 };

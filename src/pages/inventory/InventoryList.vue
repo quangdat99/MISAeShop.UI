@@ -600,15 +600,26 @@ export default {
                     combo.data.forEach(async (item) => {
                       let obj = {};
                       obj.componentID = combo.componentID;
-                      obj.inventoryItemComboDetailID = res.data.inventoryItemID;
                       obj.childID = item.inventoryItemID;
                       obj.quantity = item.quantity;
 
-                      await saveInventoryItemComboDetail(obj, true).then(
-                        (res) => {
-                          console.log(res);
-                        }
-                      );
+                      if (item.inventoryItemComboDetailID == null) {
+                        obj.inventoryItemComboDetailID =
+                          res.data.inventoryItemID;
+                        await saveInventoryItemComboDetail(obj, true).then(
+                          (res) => {
+                            console.log(res);
+                          }
+                        );
+                      } else {
+                        obj.inventoryItemComboDetailID =
+                          res.data.inventoryItemID;
+                        await saveInventoryItemComboDetail(obj, false).then(
+                          (res) => {
+                            console.log(res);
+                          }
+                        );
+                      }
                     });
                   });
                 }
