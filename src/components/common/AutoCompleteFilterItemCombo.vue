@@ -134,7 +134,7 @@ export default {
      */
     enter() {
       // this.$emit("update:value", this.optionData[this.current].value);
-      // this.valueInput = this.optionData[this.current].text;
+      this.valueInput = this.optionData[this.current].text;
       var res = this.options.find((s) => s.text == this.valueInput);
       if (res) {
         this.$emit("update:value", res.value);
@@ -219,8 +219,10 @@ export default {
       this.valueInput = val;
       this.current = 0;
       if (this.options) {
-        this.optionData = this.options.filter((s) =>
-          s.text.toLowerCase().includes(val.toLowerCase())
+        this.optionData = this.options.filter(
+          (s) =>
+            s.text.toLowerCase().includes(val.toLowerCase()) ||
+            s.name.toLowerCase().includes(val.toLowerCase())
         );
         this.isShow = true;
       }

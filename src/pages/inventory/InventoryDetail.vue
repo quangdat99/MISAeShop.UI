@@ -198,11 +198,7 @@
               "
               style="width: 153px"
               type="number"
-              :value="[
-                inventoryItem && inventoryItem.buyPrice
-                  ? inventoryItem.buyPrice
-                  : 0,
-              ]"
+              :value="[inventoryItem && inventoryItem.buyPrice]"
             />
           </div>
           <div class="info-item" v-if="isInventory || isService">
@@ -216,11 +212,7 @@
               "
               style="width: 153px"
               type="number"
-              :value="[
-                inventoryItem && inventoryItem.costPrice
-                  ? inventoryItem.costPrice
-                  : 0,
-              ]"
+              :value="[inventoryItem && inventoryItem.costPrice]"
             />
           </div>
           <div class="info-item" v-if="isCombo">
@@ -247,11 +239,7 @@
               "
               type="number"
               placeholder="0"
-              :value="[
-                inventoryItem && inventoryItem.costPrice
-                  ? inventoryItem.costPrice
-                  : 0,
-              ]"
+              :value="[inventoryItem && inventoryItem.costPrice]"
             />
           </div>
           <div class="info-item">
@@ -279,11 +267,7 @@
               "
               style="width: 101px"
               type="number"
-              :value="[
-                inventoryItem && inventoryItem.firstStock
-                  ? inventoryItem.firstStock
-                  : 0,
-              ]"
+              :value="[inventoryItem && inventoryItem.firstStock]"
             />
             <div class="note-item">
               Tồn kho ban đầu chỉ được nhập khi thêm mới hàng hóa.
@@ -302,11 +286,7 @@
                 "
                 style="width: 70px"
                 type="number"
-                :value="[
-                  inventoryItem && inventoryItem.minimumStock
-                    ? inventoryItem.minimumStock
-                    : 0,
-                ]"
+                :value="[inventoryItem && inventoryItem.minimumStock]"
               />
             </div>
             <div class="label-input-item">
@@ -320,11 +300,7 @@
                 "
                 style="width: 60px"
                 type="number"
-                :value="[
-                  inventoryItem && inventoryItem.maximumStock
-                    ? inventoryItem.maximumStock
-                    : 0,
-                ]"
+                :value="[inventoryItem && inventoryItem.maximumStock]"
               />
             </div>
           </div>
@@ -739,8 +715,11 @@ export default {
         getInventoryItemSelectOptionComboByParentID(ID).then((res) => {
           if (res.statusCode == 200) {
             this.itemCombo[index].data = res.data;
-            console.log(ID);
-            console.log(res.data);
+            this.itemCombo[index].data.forEach((item) => {
+              if (item.quantity == null) {
+                item.quantity = 1;
+              }
+            });
           }
         });
       }
@@ -766,7 +745,11 @@ export default {
      * Click Lưu
      */
     onClickSave() {
-      this.$emit("onSave", 1, this.itemDetails);
+      if (this.inventoryItem.inventoryItemType == 3) {
+        this.$emit("onSave", 3, this.itemCombo);
+      } else {
+        this.$emit("onSave", 1, this.itemDetails);
+      }
     },
     /**
      * Xử lý chi tiết thuộc tính hàng hóa
@@ -802,6 +785,11 @@ export default {
         } else {
           itemDetail.skuCode = `${subColor}`;
         }
+        itemDetail.buyPrice = this.inventoryItem.buyPrice;
+        itemDetail.costPrice = this.inventoryItem.costPrice;
+        itemDetail.unitID = this.inventoryItem.unitID;
+        itemDetail.inventoryItemCategoryID =
+          this.inventoryItem.inventoryItemCategoryID;
         itemDetail.color = `${arrColor[i]}`;
         let index = findIndexWithAttr(
           this.itemDetails,

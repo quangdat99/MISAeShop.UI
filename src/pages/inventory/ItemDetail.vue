@@ -63,7 +63,7 @@
             'buyPrice'
           )
         "
-        :value="inventoryItem && inventoryItem.buyPrice"
+        :value="[inventoryItem && inventoryItem.buyPrice]"
         :type="'number'"
       />
     </td>
@@ -80,7 +80,7 @@
             'costPrice'
           )
         "
-        :value="inventoryItem && inventoryItem.costPrice"
+        :value="[inventoryItem && inventoryItem.costPrice]"
         :type="'number'"
       />
     </td>

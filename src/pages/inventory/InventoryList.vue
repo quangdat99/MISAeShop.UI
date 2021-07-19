@@ -330,6 +330,8 @@ import {
   // deleteInventoryItemByParentID,
 } from "../../api/inventoryItem.js";
 
+import { saveInventoryItemComboDetail } from "../../api/inventoryItemComboDetail.js";
+
 import InventoryDetail from "../../pages/inventory/InventoryDetail.vue";
 import Loading from "../../components/common/Loading";
 import Pagination from "../../components/common/Pagination.vue";
@@ -520,6 +522,21 @@ export default {
         this.inventoryDetailConfig.inventoryItem.inventoryItemType = 3;
       }
       this.inventoryDetailConfig.inventoryItem.showInMenu = 1;
+      if (this.inventoryDetailConfig.inventoryItem.buyPrice == null) {
+        this.inventoryDetailConfig.inventoryItem.buyPrice = 0;
+      }
+      if (this.inventoryDetailConfig.inventoryItem.costPrice == null) {
+        this.inventoryDetailConfig.inventoryItem.costPrice = 0;
+      }
+      if (this.inventoryDetailConfig.inventoryItem.firstStock == null) {
+        this.inventoryDetailConfig.inventoryItem.firstStock = 0;
+      }
+      if (this.inventoryDetailConfig.inventoryItem.minimumStock == null) {
+        this.inventoryDetailConfig.inventoryItem.minimumStock = 0;
+      }
+      if (this.inventoryDetailConfig.inventoryItem.maximumStock == null) {
+        this.inventoryDetailConfig.inventoryItem.maximumStock = 0;
+      }
     },
     /**
      * Click inventoryItem
@@ -530,6 +547,8 @@ export default {
       this.inventoryDetailConfig.inventoryItem = inventoryItem;
     },
     async onClickBtnSave(rule, arrObj) {
+      console.log(rule);
+      console.log(arrObj);
       await saveInventoryItem(
         this.inventoryDetailConfig.inventoryItem,
         this.inventoryDetailConfig.isInsert
@@ -539,6 +558,7 @@ export default {
         })
         .then(async (statusCode) => {
           if (statusCode == 200) {
+            // Lưu thông tin hàng hóa loại thông thường và dịch vụ
             if (
               rule == 1 &&
               (arrObj.length > 0 ||
@@ -567,6 +587,30 @@ export default {
                       }
                     });
                   }
+                }
+              });
+            }
+            // Lưu thông tin hàng hóa loại combo
+            if (rule == 3 && arrObj.length >= 0) {
+              await getInventoryBySKUCode(
+                this.inventoryDetailConfig.inventoryItem.skuCode
+              ).then(async (res) => {
+                if (res.statusCode == 200) {
+                  arrObj.forEach(async (combo) => {
+                    combo.data.forEach(async (item) => {
+                      let obj = {};
+                      obj.componentID = combo.componentID;
+                      obj.inventoryItemComboDetailID = res.data.inventoryItemID;
+                      obj.childID = item.inventoryItemID;
+                      obj.quantity = item.quantity;
+
+                      await saveInventoryItemComboDetail(obj, true).then(
+                        (res) => {
+                          console.log(res);
+                        }
+                      );
+                    });
+                  });
                 }
               });
             }

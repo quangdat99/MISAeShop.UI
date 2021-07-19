@@ -115,6 +115,7 @@ export default {
      * CreatedBy: dqdat (11/6/2021)
      */
     enter() {
+      this.valueInput = this.optionData[this.current].text;
       var res = this.options.find((s) => s.text == this.valueInput);
       if (res) {
         this.$emit("update:value", parseInt(res.value));
