@@ -85,3 +85,37 @@ export const deleteInventoryItemByParentID = (parentID) =>
     req.delete(`${PREFIX_URL}/DeleteInventoryItemByParentID/${parentID}`)
         .then(res => Promise.resolve(res.data))
         .catch(err => Promise.reject(err));
+
+/**
+* Lấy danh sách hàng hóa làm thành phần cho combo
+* @param {}  
+* @returns 
+* CreatedBy: dqdat (17/07/2021)
+*/
+export const getInventoryItemsOptionCombo = () =>
+    req.get(`${PREFIX_URL}/GetInventoryItemsOptionCombo`)
+        .then(res => Promise.resolve(res.data))
+        .catch(err => Promise.reject(err));
+
+/**
+* Lấy danh sách hàng hóa làm thành phần cho combo
+* @param {}  
+* @returns 
+* CreatedBy: dqdat (17/07/2021)
+*/
+export const getInventoryItemSelectOptionComboByParentID = (parentID) =>
+    req.get(`${PREFIX_URL}/GetInventoryItemSelectOptionComboByParentID/${parentID}`)
+        .then(res => Promise.resolve(res.data))
+        .catch(err => Promise.reject(err));
+
+
+/**
+* Lấy toàn bộ thông tin thành phần hàng hóa của combo
+* @param {}  
+* @returns 
+* CreatedBy: dqdat (17/07/2021)
+*/
+export const getInventoryItemComboDetails = (inventoryItemComboID) =>
+    req.get(`${PREFIX_URL}/GetInventoryItemComboDetails/${inventoryItemComboID}`)
+        .then(res => Promise.resolve(res.data))
+        .catch(err => Promise.reject(err));

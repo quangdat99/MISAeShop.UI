@@ -122,9 +122,15 @@
           <div class="info-item" v-if="isCombo">
             <div class="title-item">Thành phần combo</div>
             <div class="item-combo">
-              <div class="item-combo-detail">
+              <div
+                class="item-combo-detail"
+                v-for="(combo, index) in itemCombo"
+                :key="index"
+              >
                 <div class="label-item-combo">
-                  <div class="title-item-combo">Thành phần 1: &nbsp;</div>
+                  <div class="title-item-combo">
+                    Thành phần {{ index + 1 }}: &nbsp;
+                  </div>
                   <div class="info-item-combo">
                     Gồm một trong các hàng hóa dưới đây
                   </div>
@@ -132,17 +138,18 @@
                 <div class="filter-item-combo">
                   <AutoCompleteFilterItemCombo
                     style="width: 284px"
-                    :value="'2'"
-                    :options="[
-                      { value: '1', text: 'SKU1', name: 'tên hàng hóa 1' },
-                      { value: '2', text: 'SKU2', name: 'tên hàng hóa 2' },
-                      { value: '3', text: 'SKU3', name: 'tên hàng hóa 3' },
-                    ]"
+                    :value="combo.inventoryItemID"
+                    :placeholder="'Tìm mã hoặc tên hàng hóa'"
+                    :options="inventoryItemOptionCombo"
+                    @update:value="
+                      updateInventoryItemIDItemCombo($event, index)
+                    "
                   />
                   <Button
                     text="Đồng ý"
                     icon="icon-agree-blue"
                     color="secondary"
+                    @click="getInventoryItemCombo(combo.inventoryItemID, index)"
                   />
                 </div>
                 <div class="grid-item-combo">
@@ -160,7 +167,11 @@
                       </tr>
                     </thead>
                     <tbody>
-                      <ItemCombo v-for="n in 4" :key="n" />
+                      <ItemCombo
+                        v-for="(data, index) in combo.data"
+                        :key="index"
+                        :inventoryItem="data"
+                      />
                     </tbody>
                   </table>
                 </div>
@@ -187,10 +198,14 @@
               "
               style="width: 153px"
               type="number"
-              :value="inventoryItem && inventoryItem.buyPrice"
+              :value="[
+                inventoryItem && inventoryItem.buyPrice
+                  ? inventoryItem.buyPrice
+                  : 0,
+              ]"
             />
           </div>
-          <div class="info-item" v-if="isInventory">
+          <div class="info-item" v-if="isInventory || isService">
             <div class="title-item">Giá bán</div>
             <Input
               @input="
@@ -201,7 +216,11 @@
               "
               style="width: 153px"
               type="number"
-              :value="inventoryItem && inventoryItem.costPrice"
+              :value="[
+                inventoryItem && inventoryItem.costPrice
+                  ? inventoryItem.costPrice
+                  : 0,
+              ]"
             />
           </div>
           <div class="info-item" v-if="isCombo">
@@ -228,7 +247,11 @@
               "
               type="number"
               placeholder="0"
-              :value="inventoryItem && inventoryItem.costPrice"
+              :value="[
+                inventoryItem && inventoryItem.costPrice
+                  ? inventoryItem.costPrice
+                  : 0,
+              ]"
             />
           </div>
           <div class="info-item">
@@ -256,7 +279,11 @@
               "
               style="width: 101px"
               type="number"
-              :value="inventoryItem && inventoryItem.firstStock"
+              :value="[
+                inventoryItem && inventoryItem.firstStock
+                  ? inventoryItem.firstStock
+                  : 0,
+              ]"
             />
             <div class="note-item">
               Tồn kho ban đầu chỉ được nhập khi thêm mới hàng hóa.
@@ -275,7 +302,11 @@
                 "
                 style="width: 70px"
                 type="number"
-                :value="inventoryItem && inventoryItem.minimumStock"
+                :value="[
+                  inventoryItem && inventoryItem.minimumStock
+                    ? inventoryItem.minimumStock
+                    : 0,
+                ]"
               />
             </div>
             <div class="label-input-item">
@@ -289,7 +320,11 @@
                 "
                 style="width: 60px"
                 type="number"
-                :value="inventoryItem && inventoryItem.maximumStock"
+                :value="[
+                  inventoryItem && inventoryItem.maximumStock
+                    ? inventoryItem.maximumStock
+                    : 0,
+                ]"
               />
             </div>
           </div>
@@ -325,7 +360,7 @@
             <span class="icon icon-question"></span>
           </div>
         </div>
-        <div class="body-item">
+        <div class="body-item" v-if="!isCombo">
           <div class="label-item">THÔNG TIN THUỘC TÍNH</div>
           <div class="info-item">
             <div class="title-item">Thuộc tính</div>
@@ -388,6 +423,7 @@
                 })
               "
               style="width: 243px"
+              type="number"
               :value="inventoryItem && inventoryItem.weight"
             />
           </div>
@@ -406,6 +442,7 @@
                 border-bottom-right-radius: 0px;
               "
               placeholder="Chiều dài"
+              type="number"
               :value="inventoryItem && inventoryItem.length"
             />
             <Input
@@ -417,6 +454,7 @@
               "
               style="width: 87px; border-radius: 0px"
               placeholder="Chiều rộng"
+              type="number"
               :value="inventoryItem && inventoryItem.width"
             />
             <Input
@@ -432,6 +470,7 @@
                 border-bottom-left-radius: 0px;
               "
               placeholder="Chiều cao"
+              type="number"
               :value="inventoryItem && inventoryItem.height"
             />
           </div>
@@ -509,7 +548,11 @@
 import { convertString, findIndexWithAttr } from "../../utils/helper";
 import { getInventoryItemCategorys } from "../../api/inventoryItemCategory.js";
 import { getUnits } from "../../api/unit.js";
-import { getInventorysByParentID } from "../../api/inventoryItem";
+import {
+  getInventorysByParentID,
+  getInventoryItemsOptionCombo,
+  getInventoryItemSelectOptionComboByParentID,
+} from "../../api/inventoryItem";
 
 import ItemCombo from "../inventory/ItemCombo.vue";
 import ItemDetail from "../inventory/ItemDetail.vue";
@@ -573,14 +616,30 @@ export default {
       itemDetails: [], // Thành phần thuộc tính hàng hóa (màu sắc)
       inventoryItemCategorys: [], // Dữ liệu nhóm hàng hóa
       units: [], // Dữ liệu đơn vị tính
+      inventoryItemOptionCombo: [], // Danh sách hàng hóa option làm thành phần cho combo
+      itemCombo: [
+        {
+          inventoryItemID: null,
+          componentID: 1,
+          data: [],
+        },
+        {
+          inventoryItemID: null,
+          componentID: 2,
+          data: [],
+        },
+      ], // Các thành phần combo
       isShowLoading: false, // trạng thái loading
     };
   },
   created() {
     this.getInventoryItemCategorys();
     this.getUnits();
-    if (this.inventoryItem && this.inventoryItem.inventoryItemName) {
+    if (this.inventoryItem && this.inventoryItem.color) {
       this.getItemDetail();
+    }
+    if (this.inventoryItem && this.inventoryItem.inventoryItemType == 3) {
+      this.getInventoryItemsOptionCombo();
     }
   },
   methods: {
@@ -627,6 +686,9 @@ export default {
           this.isShowLoading = false;
         });
     },
+    /**
+     * Lấy thành phần thuộc tính của hàng hóa
+     */
     getItemDetail() {
       this.isShowLoading = true;
 
@@ -641,6 +703,49 @@ export default {
           this.isShowLoading = false;
         });
     },
+    /**
+     * Lấy danh sách hàng hóa làm thành phần cho combo
+     */
+    getInventoryItemsOptionCombo() {
+      this.isShowLoading = true;
+      getInventoryItemsOptionCombo()
+        .then((res) => {
+          if (res.statusCode == 200 || res.statusCode == 204) {
+            res.data.forEach((item) => {
+              this.inventoryItemOptionCombo.push({
+                value: item.inventoryItemID,
+                text: item.skuCode,
+                name: item.inventoryItemName,
+              });
+            });
+          }
+          this.isShowLoading = false;
+        })
+        .catch(() => {
+          this.isShowLoading = false;
+        });
+    },
+    /**
+     * cập nhật ID thành phân combo
+     */
+    updateInventoryItemIDItemCombo(ID, index) {
+      // console.log(ID);
+      // console.log(index);
+      this.itemCombo[index].inventoryItemID = ID;
+    },
+
+    getInventoryItemCombo(ID, index) {
+      if (ID != null) {
+        getInventoryItemSelectOptionComboByParentID(ID).then((res) => {
+          if (res.statusCode == 200) {
+            this.itemCombo[index].data = res.data;
+            console.log(ID);
+            console.log(res.data);
+          }
+        });
+      }
+    },
+
     onBlurInputName() {
       setTimeout(() => {
         this.handleAttributeInventoryItem();
@@ -727,10 +832,15 @@ export default {
       this.itemDetails.splice(index, 1);
       this.handleAttributeInventoryItem();
     },
-
+    /**
+     * Xóa 1 item màu sắc
+     */
     deleteItemDetail(color) {
       this.$refs.inputForm.onClickDeleteItem(color);
     },
+    /**
+     * cập nhật item
+     */
     updateItemDetail(inventoryItem, index, property) {
       this.itemDetails[index][property] = inventoryItem[property];
     },

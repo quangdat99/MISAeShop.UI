@@ -339,6 +339,7 @@ $color-error-3: #fbeae5;
                         .item-combo-detail {
                             display: flex;
                             flex-direction: column;
+                            padding-bottom: 10px;
                             .label-item-combo {
                                 display: flex;
                                 height: 34px;
@@ -363,7 +364,7 @@ $color-error-3: #fbeae5;
                             .grid-item-combo {
                                 margin-top: 8px;
                                 margin-right: 32px;
-                                width: calc(100vw - 380px);
+                                width: calc(100vw - 400px);
                                 height: 220px;
                                 overflow: auto;
                                 border: 1px solid #dcdcdc;
@@ -382,6 +383,10 @@ $color-error-3: #fbeae5;
                                         tr {
                                             &:hover td {
                                                 background-color: #f0f0f0 !important;
+                                                &:last-child,
+                                                &:nth-last-child(2) {
+                                                    background-color: #fff !important;
+                                                }
                                             }
                                             td {
                                                 background-color: #f0f0f0;
@@ -401,7 +406,8 @@ $color-error-3: #fbeae5;
                                                 }
                                                 .input {
                                                     width: 100%;
-                                                    background: transparent;
+                                                    height: 100%;
+                                                    // background: transparent;
                                                     border: 1px solid transparent;
                                                     &:focus {
                                                         border-color: #636dde;
@@ -415,7 +421,7 @@ $color-error-3: #fbeae5;
                         }
                         .add-item-combo {
                             width: 152px;
-                            margin-top: 24px;
+                            margin-top: 12px;
                             margin-bottom: 8px;
                             .btn {
                                 border-radius: 3px;
@@ -430,7 +436,7 @@ $color-error-3: #fbeae5;
                         overflow: auto;
                         border: 1px solid #dcdcdc;
                         .table {
-                            min-width: 980px;
+                            min-width: 960px;
                             thead {
                                 tr {
                                     th {
@@ -831,6 +837,11 @@ $color-error-3: #fbeae5;
                 }
                 .sku-code {
                     min-width: 100px;
+                    border-right: 1px solid $color-text-5;
+                    line-height: 34px;
+                }
+                .inventory-name {
+                    padding-left: 6px;
                 }
             }
         }
