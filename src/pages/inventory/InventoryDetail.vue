@@ -528,6 +528,7 @@ import {
   getInventorysByParentID,
   getInventoryItemsOptionCombo,
   getInventoryItemSelectOptionComboByParentID,
+  getInventoryItemComboDetails,
 } from "../../api/inventoryItem";
 
 import ItemCombo from "../inventory/ItemCombo.vue";
@@ -616,6 +617,7 @@ export default {
     }
     if (this.inventoryItem && this.inventoryItem.inventoryItemType == 3) {
       this.getInventoryItemsOptionCombo();
+      this.getInventoryItemComboDetails();
     }
   },
   methods: {
@@ -694,6 +696,36 @@ export default {
                 name: item.inventoryItemName,
               });
             });
+          }
+          this.isShowLoading = false;
+        })
+        .catch(() => {
+          this.isShowLoading = false;
+        });
+    },
+    /**
+     * Lấy danh sách hàng hóa thành phần của combo
+     */
+    getInventoryItemComboDetails() {
+      this.isShowLoading = true;
+      getInventoryItemComboDetails(this.inventoryItem.inventoryItemID)
+        .then((res) => {
+          if (res.statusCode == 200) {
+            let groups = res.data.reduce((r, a) => {
+              r[a.componentID] = [...(r[a.componentID] || []), a];
+              return r;
+            }, {});
+
+            let arr = [];
+            for (let key in groups) {
+              let obj = {};
+              obj.data = groups[key];
+              obj.componentID = obj.data[0].componentID;
+              obj.inventoryItemID = obj.data[0].inventoryItemID;
+              arr.push(obj);
+            }
+            this.itemCombo = arr;
+            console.log(arr);
           }
           this.isShowLoading = false;
         })

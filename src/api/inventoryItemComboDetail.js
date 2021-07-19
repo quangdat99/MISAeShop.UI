@@ -15,3 +15,5 @@ export const saveInventoryItemComboDetail = (data, isInsert = true) =>
     })
         .then(res => Promise.resolve(res.data))
         .catch(err => Promise.reject(err));
+
+
