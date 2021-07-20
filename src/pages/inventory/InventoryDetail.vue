@@ -757,6 +757,15 @@ export default {
      * Lấy dữ liệu cho thành phần hàng hóa combo đã đc chọn
      */
     getInventoryItemCombo(ID, index) {
+      this.itemCombo[index].data.forEach((item) => {
+        if (item.inventoryItemComboDetailID != null) {
+          this.$emit("updateItemComboListID", {
+            childID: item.inventoryItemID,
+            componentID: item.componentID,
+            inventoryItemComboDetailID: item.inventoryItemComboDetailID,
+          });
+        }
+      });
       if (ID != null && ID != "") {
         getInventoryItemSelectOptionComboByParentID(ID).then((res) => {
           if (res.statusCode == 200) {
@@ -808,7 +817,6 @@ export default {
     deleteItemCombo(index) {
       this.itemCombo[index].data.forEach((item) => {
         if (item.inventoryItemComboDetailID != null) {
-          console.log("thêm");
           this.$emit("updateItemComboListID", {
             childID: item.inventoryItemID,
             componentID: item.componentID,

@@ -604,9 +604,8 @@ export default {
                 if (res.statusCode == 200) {
                   this.inventoryListConfig.inventoryItemComboIDList.forEach(
                     async (objID) => {
-                      console.log(objID);
-                      await deleteInventoryItemCombo(objID).then((res) => {
-                        console.log(res);
+                      await deleteInventoryItemCombo(objID).then(() => {
+                        // console.log(res);
                       });
                     }
                   );
@@ -623,16 +622,16 @@ export default {
                         obj.inventoryItemComboDetailID =
                           res.data.inventoryItemID;
                         await saveInventoryItemComboDetail(obj, true).then(
-                          (res) => {
-                            console.log(res);
+                          () => {
+                            // console.log(res);
                           }
                         );
                       } else {
                         obj.inventoryItemComboDetailID =
                           res.data.inventoryItemID;
                         await saveInventoryItemComboDetail(obj, false).then(
-                          (res) => {
-                            console.log(res);
+                          () => {
+                            // console.log(res);
                           }
                         );
                       }
@@ -686,8 +685,8 @@ export default {
       if (arrID.length > 0) {
         for (let i = 0; i < arrID.length; i++) {
           let Id = arrID[i];
-          await deleteInventoryItemByID(Id).then((res) => {
-            console.log(res);
+          await deleteInventoryItemByID(Id).then(() => {
+            // console.log(res);
             this.updateSelectionListID(Id, false);
           });
         }
