@@ -34,11 +34,7 @@ export default {
       isSelect: false,
     };
   },
-  // methods: {
-  //   select(ID) {
-  //     this.$emit("select", ID);
-  //   },
-  // },
+
   watch: {
     "inventoryItem.isSelect": function () {
       this.$emit(

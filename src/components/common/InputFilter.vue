@@ -51,6 +51,10 @@ export default {
     },
   },
   methods: {
+    /**
+     * Cập nhật filter
+     * CreatedBy: dqdat (20/07/2021)
+     */
     updateInputFilter(value) {
       if (this.type == "text") {
         value = value.toString();

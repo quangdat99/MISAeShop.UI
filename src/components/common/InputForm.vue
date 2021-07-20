@@ -37,16 +37,35 @@ export default {
     };
   },
   methods: {
+    /**
+     * focus ô input
+     * CreatedBy: dqdat (20/07/2021)
+     */
     focusInputForm() {
       this.focusForm = true;
     },
+
+    /**
+     * Blur ô input
+     * CreatedBy: dqdat (20/07/2021)
+     */
     blurInputForm() {
       this.focusForm = false;
     },
+
+    /**
+     * Click vào ô input
+     * CreatedBy: dqdat (20/07/2021)
+     */
     onClickInputForm() {
       this.focusInputForm();
       this.$el.querySelector("input").focus();
     },
+
+    /**
+     * Xóa 1 thành phần
+     * CreatedBy: dqdat (20/07/2021)
+     */
     onClickDeleteItem(strColor) {
       // let strColor = this.itemData[index];
       let index = this.itemData.indexOf(strColor);
@@ -59,6 +78,11 @@ export default {
         this.$emit("delete", strColor.toString());
       }, 100);
     },
+
+    /**
+     * Click enter
+     * CreatedBy: dqdat (20/07/2021)
+     */
     enterInput() {
       this.inputText = this.inputText.trim();
       var isDuplicate = false;
@@ -99,6 +123,7 @@ export default {
     },
   },
   mounted() {
+    // Khởi tạo giá trị dữ liệu
     this.itemData =
       this.stringData != "" && this.stringData != null
         ? this.stringData.split(",")

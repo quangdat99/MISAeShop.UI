@@ -610,9 +610,9 @@ export default {
       inventoryItemOptionCombo: [], // Danh sách hàng hóa option làm thành phần cho combo
       itemCombo: [
         {
-          inventoryItemID: null,
-          componentID: 1,
-          data: [],
+          inventoryItemID: null, // ID của mẫu hàng hóa
+          componentID: 1, // Vị trí thành phần combo
+          data: [], // Dữ liệu hàng hóa của thành phần combo
         },
       ], // Các thành phần combo
       componentID: 1, // ID nhóm thành phần hàng hóa của combo
@@ -789,21 +789,31 @@ export default {
 
     /**
      * cập nhật ID thành phân combo
+     * CreatedBy: dqdat (20/07/2021)
      */
     updateInventoryItemIDItemCombo(ID, index) {
       this.itemCombo[index].inventoryItemID = ID;
     },
+
     /**
      * cập nhật số lượng hàng hóa thành phần của combo
+     * CreatedBy: dqdat (20/07/2021)
      */
     updateQuantity(value, indexData, indexCombo) {
       this.itemCombo[indexData].data[indexCombo].quantity = parseInt(value);
     },
+
+    /**
+     * Click xác nhận đồng ý thành phần combo
+     * CreatedBy: dqdat (20/07/2021)
+     */
     updateIsSelected(value, indexData, indexCombo) {
       this.itemCombo[indexData].data[indexCombo].isSelected = value;
     },
+
     /**
      * Thêm một thành phần mới cho combo
+     * CreatedBy: dqdat (20/07/2021)
      */
     addItemCombo() {
       this.componentID = this.componentID + 1;
@@ -815,6 +825,7 @@ export default {
     },
     /**
      * Xóa một thành phần của combo
+     * CreatedBy: dqdat (20/07/2021)
      */
     deleteItemCombo(index) {
       this.itemCombo[index].data.forEach((item) => {
@@ -829,6 +840,9 @@ export default {
       this.itemCombo.splice(index, 1);
     },
 
+    /**
+     * Blur ô nhập tên hàng hóa
+     */
     onBlurInputName() {
       // Lấy mã sku mới từ hệ thống
       getNewCode("InventoryItem", "SKUCode").then((res) => {
@@ -849,6 +863,11 @@ export default {
         this.handleAttributeInventoryItem();
       }, 200);
     },
+
+    /**
+     * Blur ô nhập mã sku
+     * CreatedBy: dqdat (20/07/2021)
+     */
     onBlurInputSKUCode() {
       setTimeout(() => {
         this.handleAttributeInventoryItem();
@@ -856,12 +875,14 @@ export default {
     },
     /**
      * Click đóng dialog
+     * CreatedBy: dqdat (20/07/2021)
      */
     onClickCloseDialogInventory() {
       this.$emit("closeDialogInventory");
     },
     /**
      * Click Lưu
+     * CreatedBy: dqdat (20/07/2021)
      */
     onClickSave() {
       if (this.inventoryItem.inventoryItemType == 3) {
@@ -873,6 +894,7 @@ export default {
     //#region Thành phần thuộc tính của hàng hóa
     /**
      * Xử lý chi tiết thuộc tính hàng hóa
+     * CreatedBy: dqdat (20/07/2021)
      */
     handleAttributeInventoryItem() {
       // console.log(this.inventoryItem.color);
@@ -927,6 +949,7 @@ export default {
     },
     /**
      * xóa 1 item màu sắc
+     * CreatedBy: dqdat (20/07/2021)
      */
     deleteItemColor(strColor) {
       let index = findIndexWithAttr(
@@ -942,12 +965,14 @@ export default {
     },
     /**
      * Xóa 1 item màu sắc
+     * CreatedBy: dqdat (20/07/2021)
      */
     deleteItemDetail(color) {
       this.$refs.inputForm.onClickDeleteItem(color);
     },
     /**
      * cập nhật item
+     * CreatedBy: dqdat (20/07/2021)
      */
     updateItemDetail(inventoryItem, index, property) {
       this.itemDetails[index][property] = inventoryItem[property];

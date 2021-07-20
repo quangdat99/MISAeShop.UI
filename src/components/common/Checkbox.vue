@@ -23,6 +23,10 @@ export default {
     };
   },
   methods: {
+    /**
+     * Thay đổi trạng thái ô checkbox
+     * CreatedBy: dqdat (20/07/2021)
+     */
     check(value) {
       setTimeout(() => {
         this.$emit("update:value", !value);

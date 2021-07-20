@@ -66,10 +66,15 @@ export default {
   methods: {
     /**
      * Thay đổi trạng thái dropdown
+     * CreatedBy: dqdat (20/07/2021)
      */
     toggleOption() {
       this.isShow = !this.isShow;
     },
+    /**
+     * Đóng dropdown
+     * CreatedBy: dqdat (20/07/2021)
+     */
     closeDropdown() {
       setTimeout(() => {
         this.isShow = false;

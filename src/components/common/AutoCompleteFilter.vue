@@ -91,6 +91,7 @@ export default {
   methods: {
     /**
      * Thay đổi trạng thái popup
+     * CreatedBy: dqdat (20/07/2021)
      */
     toggleOption() {
       if (this.isShow) {
@@ -103,7 +104,7 @@ export default {
     },
     /**
      * Hiển thị popup
-     * CreatedBy: dqdat (11/6/2021)
+     * CreatedBy: dqdat (20/07/2021)
      */
     showOption() {
       this.$el.querySelector("input").focus();
@@ -112,7 +113,7 @@ export default {
 
     /**
      * Nhấn enter
-     * CreatedBy: dqdat (11/6/2021)
+     * CreatedBy: dqdat (20/07/2021)
      */
     enter() {
       this.valueInput = this.optionData[this.current].text;
@@ -138,7 +139,7 @@ export default {
 
     /**
      * Nhấn up
-     * CreatedBy: dqdat (11/6/2021)
+     * CreatedBy: dqdat (20/07/2021)
      */
     up() {
       if (!this.isShow) {
@@ -152,7 +153,7 @@ export default {
 
     /**
      * Nhấn down
-     * CreatedBy: dqdat (11/6/2021)
+     * CreatedBy: dqdat (20/07/2021)
      */
     down() {
       if (!this.isShow) {
@@ -166,7 +167,7 @@ export default {
 
     /**
      * Chọn một option
-     * CreatedBy: dqdat (11/6/2021)
+     * CreatedBy: dqdat (20/07/2021)
      */
     clickoption(option, index) {
       this.current = index;
@@ -178,7 +179,7 @@ export default {
 
     /**
      * Blur input
-     * CreatedBy: dqdat (11/6/2021)
+     * CreatedBy: dqdat (20/07/2021)
      */
     onBlur() {
       var res = this.options.find((s) => s.text == this.valueInput);
@@ -206,7 +207,7 @@ export default {
 
     /**
      * Nhập vào input
-     * CreatedBy: dqdat (11/6/2021)
+     * CreatedBy: dqdat (20/07/2021)
      */
     onInput(e) {
       let val = e.target.value;

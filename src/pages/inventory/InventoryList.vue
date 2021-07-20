@@ -366,14 +366,14 @@ export default {
       { value: 3, text: "+ : Bắt đầu bằng", prefix: "+" },
       { value: 4, text: "- : Kết thúc bằng", prefix: "-" },
       { value: 5, text: "! : Không chứa", prefix: "!" },
-    ],
+    ], // kiểu lọc option text
     optionFilterNumber: [
       { value: 6, text: "<= : Nhỏ hơn hoặc bằng", prefix: "&le;" },
       { value: 7, text: "< : Nhỏ hơn", prefix: "<" },
       { value: 8, text: "= : Bằng", prefix: "=" },
       { value: 9, text: ">= : Lớn hơn hoặc bằng", prefix: "&ge;" },
       { value: 10, text: "> : Lớn hơn", prefix: ">" },
-    ],
+    ], // kiểu lọc option number
     /**
      * Cấu hình dialog hàng hóa
      */
@@ -409,8 +409,8 @@ export default {
     filterData: {
       pageNumber: 1, // Chỉ số trang
       pageSize: 15, // Kích thước trang
-      sortProperty: "",
-      sortType: "",
+      sortProperty: "", // Trường được sắp xếp
+      sortType: "", // Kiểu sắp xếp: ASC/ DESC
       dataFilter: [
         {
           filterProperty: "skuCode",
@@ -457,7 +457,7 @@ export default {
           filterType: 8,
           filterValue: 0,
         },
-      ],
+      ], // Dữ liệu để tìm kiếm, sắp xếp,...
     },
   }),
   created() {
@@ -466,6 +466,7 @@ export default {
   methods: {
     /**
      * Lấy dữ liệu hàng hóa
+     * CreatedBy: dqdat (20/07/2021)
      */
     getPaging() {
       this.inventoryListConfig.isShowLoading = true;
@@ -487,6 +488,7 @@ export default {
     },
     /**
      * Click Nạp để load lại dữ liệu mới
+     * CreatedBy: dqdat (20/07/2021)
      */
     onClickBtnRefresh() {
       this.inventoryDetailConfig.pageNumber = 1;
@@ -494,12 +496,14 @@ export default {
     },
     /**
      * Đóng dialog hàng hóa
+     * CreatedBy: dqdat (20/07/2021)
      */
     closeDialogInventory() {
       this.inventoryDetailConfig.isShow = false;
     },
     /**
      * Click show dialog hàng hóa
+     * CreatedBy: dqdat (20/07/2021)
      */
     onClickShowDialogInventory(mode) {
       this.inventoryDetailConfig.isInsert = true;
@@ -545,12 +549,17 @@ export default {
     },
     /**
      * Click inventoryItem
+     * CreatedBy: dqdat (20/07/2021)
      */
     onClickInventoryItem(inventoryItem) {
       this.onClickShowDialogInventory(inventoryItem.inventoryItemType);
       this.inventoryDetailConfig.isInsert = false;
       this.inventoryDetailConfig.inventoryItem = inventoryItem;
     },
+    /**
+     * Click button lưu
+     * CreatedBy: dqdat (20/07/2021)
+     */
     async onClickBtnSave(rule, arrObj) {
       // console.log(rule);
       // console.log(arrObj);
@@ -565,16 +574,20 @@ export default {
           if (statusCode == 200) {
             // Lưu thông tin hàng hóa loại thông thường và dịch vụ
             if (
+              // rule = 1: đối với hàng hóa thông thường và dịch vụ
+              // arrobj: dữ liệu thành phần thuộc tính
               rule == 1 &&
               (arrObj.length > 0 ||
                 this.inventoryListConfig.inventoryItemIDList.length > 0)
             ) {
+              // Lấy dữ liệu theo mã sku
               await getInventoryBySKUCode(
                 this.inventoryDetailConfig.inventoryItem.skuCode
               ).then(async (res) => {
                 if (res.statusCode == 200) {
                   this.inventoryListConfig.inventoryItemIDList.forEach(
                     async (ID) => {
+                      // Xóa hàng hóa theo ID
                       await deleteInventoryItemByID(ID).then(() => {
                         // console.log(res);
                       });
@@ -585,9 +598,11 @@ export default {
                     arrObj.forEach(async (item) => {
                       item.inventoryItemType = res.data.inventoryItemType;
                       if (item.parentID == null) {
+                        // Thực hiện thêm mới dữ liệu
                         item.parentID = res.data.inventoryItemID;
                         await saveInventoryItem(item, true).then(() => {});
                       } else {
+                        // Thực hiện sửa dữ liệu
                         item.parentID = res.data.inventoryItemID;
                         await saveInventoryItem(item, false).then(() => {});
                       }
@@ -598,12 +613,16 @@ export default {
             }
             // Lưu thông tin hàng hóa loại combo
             if (rule == 3 && arrObj.length >= 0) {
+              // rule = 3: đối với hàng hóa loại combo
+              // arrObj: dữ liệu thành phần hàng hóa của conbo
               await getInventoryBySKUCode(
+                // Lấy dữ liệu theo mã sku
                 this.inventoryDetailConfig.inventoryItem.skuCode
               ).then(async (res) => {
                 if (res.statusCode == 200) {
                   this.inventoryListConfig.inventoryItemComboIDList.forEach(
                     async (objID) => {
+                      // Xóa dữ liệu theo dữ liệu ID các trường
                       await deleteInventoryItemCombo(objID).then(() => {
                         // console.log(res);
                       });
@@ -619,6 +638,7 @@ export default {
                       obj.isSelected = item.isSelected;
 
                       if (item.inventoryItemComboDetailID == null) {
+                        // Thực hiện thêm mới thành phần hàng hóa của combo
                         obj.inventoryItemComboDetailID =
                           res.data.inventoryItemID;
                         await saveInventoryItemComboDetail(obj, true).then(
@@ -627,6 +647,7 @@ export default {
                           }
                         );
                       } else {
+                        // Thực hiện sửa thành phần hàng hóa của combo
                         obj.inventoryItemComboDetailID =
                           res.data.inventoryItemID;
                         await saveInventoryItemComboDetail(obj, false).then(
@@ -644,18 +665,26 @@ export default {
         });
 
       this.inventoryDetailConfig.isShow = false;
-
       this.getPaging();
     },
+    /**
+     * update danh sách ID hàng hóa thuộc tính chi tiết
+     * CreatedBy: dqdat (20/07/2021)
+     */
     updateInventoryItemIDList(ID) {
       this.inventoryListConfig.inventoryItemIDList.push(ID);
     },
 
+    /**
+     * update danh sách ID hàng hóa thành phần của combo
+     * CreatedBy: dqdat (20/07/2021)
+     */
     updateItemComboListID(objID) {
       this.inventoryListConfig.inventoryItemComboIDList.push(objID);
     },
     /**
      * Click sắp xếp
+     * CreatedBy: dqdat (20/07/2021)
      */
     sort(propertyName) {
       this.filterData.sortProperty = propertyName.toString();
@@ -670,6 +699,7 @@ export default {
     },
     /**
      * Cập nhật lại Danh sách ID được chọn
+     * CreatedBy: dqdat (20/07/2021)
      */
     updateSelectionListID(ID, isSelect) {
       if (isSelect == true) {
@@ -680,6 +710,10 @@ export default {
       }
     },
 
+    /**
+     * Xóa hàng hóa theo checkbox được chọn
+     * CreatedBy: dqdat (20/07/2021)
+     */
     async onClickDelete() {
       let arrID = this.inventoryListConfig.selectionListID;
       if (arrID.length > 0) {

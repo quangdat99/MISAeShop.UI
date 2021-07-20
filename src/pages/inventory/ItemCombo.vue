@@ -30,14 +30,23 @@ export default {
     Input,
   },
   props: {
+    /**
+     * hàng hóa
+     */
     inventoryItem: {
       type: Object,
       default: null,
     },
+    /**
+     * Chỉ số combo
+     */
     indexCombo: {
       type: Number,
       default: null,
     },
+    /**
+     * chỉ số data
+     */
     indexData: {
       type: Number,
       default: null,
@@ -46,6 +55,7 @@ export default {
   methods: {
     /**
      * Cập nhật số lượng hàng hóa combo
+     * CreatedBy: dqdat (20/07/2021)
      */
     updateQuantity(value) {
       this.$emit("updateQuantity", value, this.indexData, this.indexCombo);

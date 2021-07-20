@@ -73,6 +73,7 @@ export default {
   methods: {
     /**
      * Thay đổi pageNumber
+     * CreatedBy: dqdat (20/07/2021)
      */
     changePageNumber() {
       if (this.pageIndex >= 1 && this.pageIndex <= this.totalPage) {
@@ -83,6 +84,7 @@ export default {
     },
     /**
      * Thay đổi pageSize
+     * CreatedBy: dqdat (20/07/2021)
      */
     changePageSize(value) {
       this.$emit("update:pageSize", parseInt(value));

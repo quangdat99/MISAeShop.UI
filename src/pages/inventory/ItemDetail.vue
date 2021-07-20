@@ -100,16 +100,26 @@ export default {
     Input,
   },
   props: {
+    /**
+     * chỉ số
+     */
     index: {
       type: Number,
       default: null,
     },
+    /**
+     * hàng hóa
+     */
     inventoryItem: {
       type: Object,
       default: Object,
     },
   },
   methods: {
+    /**
+     * Xóa hàng hóa chi tiết
+     * CreatedBy: dqdat (20/07/2021)
+     */
     onClickDeleteItemDetail() {
       this.$emit("delete", this.inventoryItem.color.toString());
     },

@@ -7,11 +7,11 @@ Vue.use(VueRouter);
 const routes = [
     {
         path: '/',
-        name: 'overview',
+        name: 'overview', // Tổng quan
     },
     {
         path: '/inventory',
-        name: 'inventory',
+        name: 'inventory', // Hàng hóa
         component: InventoryList
     }
 ];
