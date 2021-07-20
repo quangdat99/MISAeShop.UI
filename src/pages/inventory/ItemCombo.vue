@@ -9,13 +9,15 @@
       <Input
         :type="'number'"
         :value="inventoryItem && inventoryItem.quantity"
-        @input="updatequantity"
+        @input="updateQuantity"
       />
     </td>
     <td style="width: 54px; padding: 0px 19px; background-color: #fff">
       <div class="icon-copy"></div>
     </td>
-    <td style="background-color: #fff"><Checkbox :value="true" /></td>
+    <td style="background-color: #fff">
+      <Checkbox :value.sync="inventoryItem.isSelected" />
+    </td>
   </tr>
 </template>
 
@@ -45,8 +47,18 @@ export default {
     /**
      * Cập nhật số lượng hàng hóa combo
      */
-    updatequantity(value) {
-      this.$emit("updatequantity", value, this.indexData, this.indexCombo);
+    updateQuantity(value) {
+      this.$emit("updateQuantity", value, this.indexData, this.indexCombo);
+    },
+  },
+  watch: {
+    "inventoryItem.isSelected": function () {
+      this.$emit(
+        "updateIsSelected",
+        this.inventoryItem.isSelected,
+        this.indexData,
+        this.indexCombo
+      );
     },
   },
 };

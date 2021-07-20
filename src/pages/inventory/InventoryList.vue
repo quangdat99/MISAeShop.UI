@@ -316,6 +316,7 @@
       @closeDialogInventory="closeDialogInventory"
       @onSave="onClickBtnSave"
       @updateListID="updateInventoryItemIDList"
+      @updateItemComboListID="updateItemComboListID"
     />
     <Loading v-if="inventoryListConfig.isShowLoading" />
   </div>
@@ -330,7 +331,10 @@ import {
   // deleteInventoryItemByParentID,
 } from "../../api/inventoryItem.js";
 
-import { saveInventoryItemComboDetail } from "../../api/inventoryItemComboDetail.js";
+import {
+  saveInventoryItemComboDetail,
+  deleteInventoryItemCombo,
+} from "../../api/inventoryItemComboDetail.js";
 
 import InventoryDetail from "../../pages/inventory/InventoryDetail.vue";
 import Loading from "../../components/common/Loading";
@@ -385,7 +389,8 @@ export default {
      * Cấu hình list hàng hóa
      */
     inventoryListConfig: {
-      inventoryItemIDList: [], // Danh sách ID hàng hóa
+      inventoryItemIDList: [], // Danh sách ID hàng hóa chi tiết
+      inventoryItemComboIDList: [], // Danh sách ID hàng hóa thành phần của combo
       isShowLoading: false, // Trạng thái loading
       inventoryItems: [], // Danh sách hàng hóa
       inventoryItemCategorys: [], // Danh sách nhóm hàng hóa
@@ -547,8 +552,8 @@ export default {
       this.inventoryDetailConfig.inventoryItem = inventoryItem;
     },
     async onClickBtnSave(rule, arrObj) {
-      console.log(rule);
-      console.log(arrObj);
+      // console.log(rule);
+      // console.log(arrObj);
       await saveInventoryItem(
         this.inventoryDetailConfig.inventoryItem,
         this.inventoryDetailConfig.isInsert
@@ -575,6 +580,7 @@ export default {
                       });
                     }
                   );
+                  this.inventoryListConfig.inventoryItemIDList = [];
                   if (res.statusCode == 200) {
                     arrObj.forEach(async (item) => {
                       item.inventoryItemType = res.data.inventoryItemType;
@@ -596,12 +602,22 @@ export default {
                 this.inventoryDetailConfig.inventoryItem.skuCode
               ).then(async (res) => {
                 if (res.statusCode == 200) {
+                  this.inventoryListConfig.inventoryItemComboIDList.forEach(
+                    async (objID) => {
+                      console.log(objID);
+                      await deleteInventoryItemCombo(objID).then((res) => {
+                        console.log(res);
+                      });
+                    }
+                  );
+                  this.inventoryListConfig.inventoryItemComboIDList = [];
                   arrObj.forEach(async (combo) => {
                     combo.data.forEach(async (item) => {
                       let obj = {};
                       obj.componentID = combo.componentID;
                       obj.childID = item.inventoryItemID;
                       obj.quantity = item.quantity;
+                      obj.isSelected = item.isSelected;
 
                       if (item.inventoryItemComboDetailID == null) {
                         obj.inventoryItemComboDetailID =
@@ -634,6 +650,10 @@ export default {
     },
     updateInventoryItemIDList(ID) {
       this.inventoryListConfig.inventoryItemIDList.push(ID);
+    },
+
+    updateItemComboListID(objID) {
+      this.inventoryListConfig.inventoryItemComboIDList.push(objID);
     },
     /**
      * Click sắp xếp

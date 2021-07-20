@@ -134,6 +134,14 @@
                   <div class="info-item-combo">
                     Gồm một trong các hàng hóa dưới đây
                   </div>
+                  <div
+                    class="delete-item-combo"
+                    @click="deleteItemCombo(index)"
+                    v-if="index > 0"
+                  >
+                    <div class="icon-delete"></div>
+                    <div class="text-delete">Xóa thành phần</div>
+                  </div>
                 </div>
                 <div class="filter-item-combo">
                   <AutoCompleteFilterItemCombo
@@ -173,7 +181,8 @@
                         :indexCombo="indexCombo"
                         :indexData="index"
                         :inventoryItem="data"
-                        @updatequantity="updatequantity"
+                        @updateQuantity="updateQuantity"
+                        @updateIsSelected="updateIsSelected"
                       />
                     </tbody>
                   </table>
@@ -751,10 +760,14 @@ export default {
       if (ID != null && ID != "") {
         getInventoryItemSelectOptionComboByParentID(ID).then((res) => {
           if (res.statusCode == 200) {
+            console.log(res.data);
             this.itemCombo[index].data = res.data;
             this.itemCombo[index].data.forEach((item) => {
               if (item.quantity == null) {
                 item.quantity = 1;
+              }
+              if (item.isSelected == null) {
+                item.isSelected = true;
               }
             });
           }
@@ -772,8 +785,11 @@ export default {
     /**
      * cập nhật số lượng hàng hóa thành phần của combo
      */
-    updatequantity(value, indexData, indexCombo) {
+    updateQuantity(value, indexData, indexCombo) {
       this.itemCombo[indexData].data[indexCombo].quantity = parseInt(value);
+    },
+    updateIsSelected(value, indexData, indexCombo) {
+      this.itemCombo[indexData].data[indexCombo].isSelected = value;
     },
     /**
      * Thêm một thành phần mới cho combo
@@ -785,6 +801,22 @@ export default {
         componentID: this.componentID,
         data: [],
       });
+    },
+    /**
+     * Xóa một thành phần của combo
+     */
+    deleteItemCombo(index) {
+      this.itemCombo[index].data.forEach((item) => {
+        if (item.inventoryItemComboDetailID != null) {
+          console.log("thêm");
+          this.$emit("updateItemComboListID", {
+            childID: item.inventoryItemID,
+            componentID: item.componentID,
+            inventoryItemComboDetailID: item.inventoryItemComboDetailID,
+          });
+        }
+      });
+      this.itemCombo.splice(index, 1);
     },
 
     onBlurInputName() {
