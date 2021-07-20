@@ -542,6 +542,7 @@ import {
   getInventoryItemsOptionCombo,
   getInventoryItemSelectOptionComboByParentID,
   getInventoryItemComboDetails,
+  getNewCode,
 } from "../../api/inventoryItem";
 
 import ItemCombo from "../inventory/ItemCombo.vue";
@@ -783,6 +784,7 @@ export default {
         });
       }
     },
+
     //#endregion
 
     /**
@@ -828,6 +830,21 @@ export default {
     },
 
     onBlurInputName() {
+      // Lấy mã sku mới từ hệ thống
+      getNewCode("InventoryItem", "SKUCode").then((res) => {
+        if (res.statusCode == 200) {
+          if (
+            this.inventoryItem.skuCode == undefined ||
+            this.inventoryItem.skuCode == null ||
+            this.inventoryItem.skuCode == ""
+          ) {
+            this.$emit("update:inventoryItem", {
+              ...this.inventoryItem,
+              skuCode: res.data,
+            });
+          }
+        }
+      });
       setTimeout(() => {
         this.handleAttributeInventoryItem();
       }, 200);

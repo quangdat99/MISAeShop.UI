@@ -119,3 +119,14 @@ export const getInventoryItemComboDetails = (inventoryItemComboID) =>
     req.get(`${PREFIX_URL}/GetInventoryItemComboDetails/${inventoryItemComboID}`)
         .then(res => Promise.resolve(res.data))
         .catch(err => Promise.reject(err));
+
+/**
+* Lấy mã mới từ bảng sinh mã tự động
+* @param {}  
+* @returns 
+* CreatedBy: dqdat (20/07/2021)
+*/
+export const getNewCode = (tableName, fieldName) =>
+    req.get(`${PREFIX_URL}/GetNewCode?tableName=${tableName}&fieldName=${fieldName}`)
+        .then(res => Promise.resolve(res.data))
+        .catch(err => Promise.reject(err));
