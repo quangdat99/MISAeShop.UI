@@ -15,6 +15,7 @@
           :class="[
             inventoryListConfig.isDisableButtonDuplicate ? 'disable' : '',
           ]"
+          @click="onClickDuplicate"
         />
       </div>
       <div class="toolbar-btn">
@@ -22,6 +23,7 @@
           text="Sửa"
           icon="icon-btnedit-white"
           :class="[inventoryListConfig.isDisableButtonEdit ? 'disable' : '']"
+          @click="onClickEdit"
         />
       </div>
       <div class="toolbar-btn">
@@ -328,6 +330,7 @@ import {
   saveInventoryItem,
   getInventoryBySKUCode,
   deleteInventoryItemByID,
+  getNewCode,
   // deleteInventoryItemByParentID,
 } from "../../api/inventoryItem.js";
 
@@ -487,13 +490,21 @@ export default {
         });
     },
     /**
-     * Click Nạp để load lại dữ liệu mới
+     * Click sắp xếp
      * CreatedBy: dqdat (20/07/2021)
      */
-    onClickBtnRefresh() {
-      this.inventoryDetailConfig.pageNumber = 1;
+    sort(propertyName) {
+      this.filterData.sortProperty = propertyName.toString();
+      if (this.filterData.sortType == "ASC") {
+        this.filterData.sortType = "DESC";
+      } else if (this.filterData.sortType == "DESC") {
+        this.filterData.sortType = "ASC";
+      } else {
+        this.filterData.sortType = "ASC";
+      }
       this.getPaging();
     },
+
     /**
      * Đóng dialog hàng hóa
      * CreatedBy: dqdat (20/07/2021)
@@ -561,8 +572,6 @@ export default {
      * CreatedBy: dqdat (20/07/2021)
      */
     async onClickBtnSave(rule, arrObj) {
-      // console.log(rule);
-      // console.log(arrObj);
       await saveInventoryItem(
         this.inventoryDetailConfig.inventoryItem,
         this.inventoryDetailConfig.isInsert
@@ -595,18 +604,25 @@ export default {
                   );
                   this.inventoryListConfig.inventoryItemIDList = [];
                   if (res.statusCode == 200) {
-                    arrObj.forEach(async (item) => {
-                      item.inventoryItemType = res.data.inventoryItemType;
-                      if (item.parentID == null) {
-                        // Thực hiện thêm mới dữ liệu
-                        item.parentID = res.data.inventoryItemID;
-                        await saveInventoryItem(item, true).then(() => {});
-                      } else {
+                    let i = 0;
+                    while (i <= arrObj.length - 1) {
+                      arrObj[i].inventoryItemType = res.data.inventoryItemType;
+                      if (arrObj[i].parentID == res.data.inventoryItemID) {
                         // Thực hiện sửa dữ liệu
-                        item.parentID = res.data.inventoryItemID;
-                        await saveInventoryItem(item, false).then(() => {});
+                        arrObj[i].parentID = res.data.inventoryItemID;
+                        await saveInventoryItem(arrObj[i], false).then(() => {
+                          // console.log(res);
+                          i = i + 1;
+                        });
+                      } else {
+                        // Thực hiện thêm mới dữ liệu
+                        arrObj[i].parentID = res.data.inventoryItemID;
+                        await saveInventoryItem(arrObj[i], true).then(() => {
+                          // console.log(res);
+                          i = i + 1;
+                        });
                       }
-                    });
+                    }
                   }
                 }
               });
@@ -637,20 +653,23 @@ export default {
                       obj.quantity = item.quantity;
                       obj.isSelected = item.isSelected;
 
-                      if (item.inventoryItemComboDetailID == null) {
-                        // Thực hiện thêm mới thành phần hàng hóa của combo
+                      if (
+                        item.inventoryItemComboDetailID ==
+                        res.data.inventoryItemID
+                      ) {
+                        // Thực hiện sửa thành phần hàng hóa của combo
                         obj.inventoryItemComboDetailID =
                           res.data.inventoryItemID;
-                        await saveInventoryItemComboDetail(obj, true).then(
+                        await saveInventoryItemComboDetail(obj, false).then(
                           () => {
                             // console.log(res);
                           }
                         );
                       } else {
-                        // Thực hiện sửa thành phần hàng hóa của combo
+                        // Thực hiện thêm mới thành phần hàng hóa của combo
                         obj.inventoryItemComboDetailID =
                           res.data.inventoryItemID;
-                        await saveInventoryItemComboDetail(obj, false).then(
+                        await saveInventoryItemComboDetail(obj, true).then(
                           () => {
                             // console.log(res);
                           }
@@ -667,6 +686,8 @@ export default {
       this.inventoryDetailConfig.isShow = false;
       this.getPaging();
     },
+
+    //#region update List ID
     /**
      * update danh sách ID hàng hóa thuộc tính chi tiết
      * CreatedBy: dqdat (20/07/2021)
@@ -682,21 +703,7 @@ export default {
     updateItemComboListID(objID) {
       this.inventoryListConfig.inventoryItemComboIDList.push(objID);
     },
-    /**
-     * Click sắp xếp
-     * CreatedBy: dqdat (20/07/2021)
-     */
-    sort(propertyName) {
-      this.filterData.sortProperty = propertyName.toString();
-      if (this.filterData.sortType == "ASC") {
-        this.filterData.sortType = "DESC";
-      } else if (this.filterData.sortType == "DESC") {
-        this.filterData.sortType = "ASC";
-      } else {
-        this.filterData.sortType = "ASC";
-      }
-      this.getPaging();
-    },
+
     /**
      * Cập nhật lại Danh sách ID được chọn
      * CreatedBy: dqdat (20/07/2021)
@@ -708,6 +715,54 @@ export default {
         this.inventoryListConfig.selectionListID =
           this.inventoryListConfig.selectionListID.filter((s) => s != ID);
       }
+    },
+    //#endregion
+
+    //#region sự kiện click trên toolbar
+    /**
+     * Nhân bản hàng hóa theo checkbox được chọn
+     * CreatedBy: dqdat (20/07/2021)
+     */
+    onClickDuplicate() {
+      let ID = this.inventoryListConfig.selectionListID[0];
+      let inventoryItem = this.inventoryListConfig.inventoryItems.find(
+        (item) => item.inventoryItemID == ID
+      );
+      let newInventoryItem = Object.assign({}, inventoryItem);
+      if (newInventoryItem.inventoryItemType !== 3) {
+        delete newInventoryItem.inventoryItemID;
+      }
+
+      this.onClickInventoryItem(newInventoryItem);
+      this.inventoryDetailConfig.isInsert = true;
+      // Lấy mã sku mới
+      getNewCode("InventoryItem", "SKUCode").then((res) => {
+        if (res.statusCode == 200) {
+          this.inventoryDetailConfig.inventoryItem.skuCode = res.data;
+        } else {
+          this.inventoryDetailConfig.inventoryItem.skuCode = null;
+        }
+      });
+      // Lấy mã vạch mới
+      getNewCode("InventoryItem", "BarCode").then((res) => {
+        if (res.statusCode == 200) {
+          this.inventoryDetailConfig.inventoryItem.barCode = res.data;
+        } else {
+          this.inventoryDetailConfig.inventoryItem.barCode = null;
+        }
+      });
+    },
+
+    /**
+     * Sửa hàng hóa theo checkbox được chọn
+     * CreatedBy: dqdat (20/07/2021)
+     */
+    onClickEdit() {
+      let ID = this.inventoryListConfig.selectionListID[0];
+      let inventoryItem = this.inventoryListConfig.inventoryItems.find(
+        (item) => item.inventoryItemID == ID
+      );
+      this.onClickInventoryItem(inventoryItem);
     },
 
     /**
@@ -727,6 +782,16 @@ export default {
       }
       this.getPaging();
     },
+
+    /**
+     * Click Nạp để load lại dữ liệu mới
+     * CreatedBy: dqdat (20/07/2021)
+     */
+    onClickBtnRefresh() {
+      this.inventoryDetailConfig.pageNumber = 1;
+      this.getPaging();
+    },
+    //#endregion
   },
 
   watch: {
@@ -734,14 +799,25 @@ export default {
       this.getPaging();
     },
     "inventoryListConfig.selectionListID": function (arrID) {
-      if (arrID.length > 0) {
+      if (arrID.length > 1) {
         this.inventoryListConfig.isDisableButtonDelete = false;
+        this.inventoryListConfig.isDisableButtonDuplicate = true;
+        this.inventoryListConfig.isDisableButtonEdit = true;
         if (arrID.length == this.inventoryListConfig.inventoryItems.length) {
           this.inventoryListConfig.isSelectAll = true;
         }
       } else if (arrID.length == 0) {
         this.inventoryListConfig.isDisableButtonDelete = true;
+        this.inventoryListConfig.isDisableButtonDuplicate = true;
+        this.inventoryListConfig.isDisableButtonEdit = true;
         this.inventoryListConfig.isSelectAll = false;
+      } else if (arrID.length == 1) {
+        this.inventoryListConfig.isDisableButtonDelete = false;
+        this.inventoryListConfig.isDisableButtonDuplicate = false;
+        this.inventoryListConfig.isDisableButtonEdit = false;
+        if (arrID.length == this.inventoryListConfig.inventoryItems.length) {
+          this.inventoryListConfig.isSelectAll = true;
+        }
       }
     },
     "inventoryListConfig.isSelectAll": function (value) {

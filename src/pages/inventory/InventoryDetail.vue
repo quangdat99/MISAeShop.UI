@@ -622,7 +622,11 @@ export default {
   created() {
     this.getInventoryItemCategorys();
     this.getUnits();
-    if (this.inventoryItem && this.inventoryItem.color) {
+    if (
+      this.inventoryItem &&
+      this.inventoryItem.color &&
+      this.inventoryItem.inventoryItemID
+    ) {
       this.getItemDetail();
     }
     if (this.inventoryItem && this.inventoryItem.inventoryItemType == 3) {
@@ -770,7 +774,7 @@ export default {
       if (ID != null && ID != "") {
         getInventoryItemSelectOptionComboByParentID(ID).then((res) => {
           if (res.statusCode == 200) {
-            console.log(res.data);
+            // console.log(res.data);
             this.itemCombo[index].data = res.data;
             this.itemCombo[index].data.forEach((item) => {
               if (item.quantity == null) {
@@ -845,20 +849,21 @@ export default {
      */
     onBlurInputName() {
       // Lấy mã sku mới từ hệ thống
-      getNewCode("InventoryItem", "SKUCode").then((res) => {
-        if (res.statusCode == 200) {
-          if (
-            this.inventoryItem.skuCode == undefined ||
-            this.inventoryItem.skuCode == null ||
-            this.inventoryItem.skuCode == ""
-          ) {
+      if (
+        this.inventoryItem.skuCode == undefined ||
+        this.inventoryItem.skuCode == null ||
+        this.inventoryItem.skuCode == ""
+      ) {
+        getNewCode("InventoryItem", "SKUCode").then((res) => {
+          if (res.statusCode == 200) {
             this.$emit("update:inventoryItem", {
               ...this.inventoryItem,
               skuCode: res.data,
             });
           }
-        }
-      });
+        });
+      }
+
       setTimeout(() => {
         this.handleAttributeInventoryItem();
       }, 200);
@@ -879,6 +884,7 @@ export default {
      */
     onClickCloseDialogInventory() {
       this.$emit("closeDialogInventory");
+      this.$emit("update:inventoryItem", null);
     },
     /**
      * Click Lưu
