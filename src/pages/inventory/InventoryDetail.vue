@@ -3,7 +3,16 @@
     <div class="dialog-content">
       <div class="dialog-header">
         <div class="dialog-btn">
-          <Button text="Lưu" icon="icon-save" @click="onClickSave" />
+          <Button
+            text="Lưu"
+            icon="icon-save"
+            @click="onClickSave"
+            content="Ctrl + S"
+            v-tippy="{
+              placement: 'bottom-end',
+              followCursor: true,
+            }"
+          />
         </div>
         <div class="dialog-btn">
           <Button
@@ -25,6 +34,11 @@
             icon="icon-cancle"
             color="secondary"
             @click="onClickCloseDialogInventory"
+            content="Ctrl + B"
+            v-tippy="{
+              placement: 'bottom-end',
+              followCursor: true,
+            }"
           />
         </div>
       </div>
@@ -503,7 +517,16 @@
       </div>
       <div class="dialog-footer">
         <div class="dialog-btn">
-          <Button text="Lưu" icon="icon-save" @click="onClickSave" />
+          <Button
+            text="Lưu"
+            icon="icon-save"
+            @click="onClickSave"
+            content="Ctrl + S"
+            v-tippy="{
+              placement: 'bottom-end',
+              followCursor: true,
+            }"
+          />
         </div>
         <div class="dialog-btn">
           <Button
@@ -525,6 +548,11 @@
             icon="icon-cancle"
             color="secondary"
             @click="onClickCloseDialogInventory"
+            content="Ctrl + B"
+            v-tippy="{
+              placement: 'bottom-end',
+              followCursor: true,
+            }"
           />
         </div>
       </div>
@@ -984,12 +1012,36 @@ export default {
       this.itemDetails[index][property] = inventoryItem[property];
     },
     //#endregion
+
+    /**
+     * sự kiện nhấn phím
+     * CreatedBy: dqdat (21/07/2021)
+     */
+    onKeyDown(e) {
+      if (e.key == "b" && e.ctrlKey) {
+        // ESC
+        this.onClickCloseDialogInventory();
+        e.preventDefault();
+      }
+
+      if (e.key == "s" && e.ctrlKey) {
+        // Ctrl + s
+        this.onClickSave();
+        e.preventDefault();
+      }
+    },
   },
 
   mounted() {
     this.handleAttributeInventoryItem();
     this.$refs.inputInventoryItemName.$el.focus();
+    document.addEventListener("keydown", this.onKeyDown);
   },
+  //#region boforeDestroy
+  beforeDestroy() {
+    document.removeEventListener("keydown", this.onKeyDown);
+  },
+  //#endregion
   computed: {
     ShowInMenu: {
       get: function () {
@@ -1010,6 +1062,3 @@ export default {
   },
 };
 </script>
-
-<style>
-</style>

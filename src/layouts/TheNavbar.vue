@@ -8,7 +8,7 @@
         :class="{ active: $route.name == 'overview' }"
         content="Tổng quan"
         v-tippy="{
-          placement: 'right-start',
+          placement: 'bottom-end',
           followCursor: true,
         }"
       >
@@ -23,7 +23,7 @@
         :class="{ active: $route.name == 'inventory' }"
         content="Hàng hóa"
         v-tippy="{
-          placement: 'right-start',
+          placement: 'bottom-end',
           followCursor: true,
         }"
       >

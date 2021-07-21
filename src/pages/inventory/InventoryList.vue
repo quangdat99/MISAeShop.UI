@@ -6,6 +6,11 @@
           text="Thêm mới"
           icon="icon-btnnew-white"
           @click="onClickShowDialogInventory"
+          content="Ctrl + 1"
+          v-tippy="{
+            placement: 'bottom-end',
+            followCursor: true,
+          }"
         />
       </div>
       <div class="toolbar-btn">
@@ -24,6 +29,11 @@
           icon="icon-btnedit-white"
           :class="[inventoryListConfig.isDisableButtonEdit ? 'disable' : '']"
           @click="onClickEdit"
+          content="Ctrl + E"
+          v-tippy="{
+            placement: 'bottom-end',
+            followCursor: true,
+          }"
         />
       </div>
       <div class="toolbar-btn">
@@ -32,6 +42,11 @@
           icon="icon-btndel-white"
           :class="[inventoryListConfig.isDisableButtonDelete ? 'disable' : '']"
           @click="onClickDelete"
+          content="Ctrl + D"
+          v-tippy="{
+            placement: 'bottom-end',
+            followCursor: true,
+          }"
         />
       </div>
       <div class="toolbar-btn">
@@ -39,6 +54,11 @@
           text="Nạp"
           icon="icon-btnrefresh-white"
           @click="onClickBtnRefresh"
+          content="Ctrl + Y"
+          v-tippy="{
+            placement: 'bottom-end',
+            followCursor: true,
+          }"
         />
       </div>
     </div>
@@ -792,7 +812,47 @@ export default {
       this.getPaging();
     },
     //#endregion
+
+    /**
+     * sự kiện nhấn phím
+     * CreatedBy: dqdat (21/07/2021)
+     */
+    onKeyDown(e) {
+      if (e.key == "1" && e.ctrlKey) {
+        // ctrl + 1
+        this.onClickShowDialogInventory(1);
+        e.preventDefault();
+      }
+
+      if (e.key == "e" && e.ctrlKey) {
+        // Ctrl + e
+        this.onClickEdit();
+        e.preventDefault();
+      }
+
+      if (e.key == "d" && e.ctrlKey) {
+        // Ctrl + d
+        this.onClickDelete();
+        e.preventDefault();
+      }
+
+      if (e.key == "y" && e.ctrlKey) {
+        // Ctrl + y
+        this.onClickBtnRefresh();
+        e.preventDefault();
+      }
+    },
   },
+
+  mounted() {
+    document.addEventListener("keydown", this.onKeyDown);
+  },
+
+  //#region boforeDestroy
+  beforeDestroy() {
+    document.removeEventListener("keydown", this.onKeyDown);
+  },
+  //#endregion
 
   watch: {
     paging: function () {
