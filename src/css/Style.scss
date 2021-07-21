@@ -533,6 +533,16 @@ $color-error-3: #fbeae5;
             color: $color-primary-3;
         }
     }
+
+    &.btn-error {
+        background-color: #df4646;
+        color: $color-white;
+        font-weight: bold;
+        border: 1px solid #df4646;
+        &:hover {
+            color: $color-white;
+        }
+    }
     .btn-text {
         padding-left: 8px;
         padding-right: 8px;
@@ -560,7 +570,7 @@ $color-error-3: #fbeae5;
         }
     }
 
-    & ~ div {
+    & ~ div.dropdown-content {
         background-color: $color-white;
         box-shadow: 0px 4px 4px #c0c0c0;
         z-index: 100;

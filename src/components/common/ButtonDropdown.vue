@@ -1,6 +1,13 @@
 <template>
   <div>
-    <div :class="['btn', color ? 'btn-' + color : '']">
+    <div
+      :class="['btn', color ? 'btn-' + color : '']"
+      content="Ctrl + 1"
+      v-tippy="{
+        placement: 'bottom-end',
+        followCursor: true,
+      }"
+    >
       <div class="btn-icon" @click.prevent="$emit('click', 1)">
         <div :class="['icon', icon ? icon : '']"></div>
       </div>

@@ -6,11 +6,6 @@
           text="Thêm mới"
           icon="icon-btnnew-white"
           @click="onClickShowDialogInventory"
-          content="Ctrl + 1"
-          v-tippy="{
-            placement: 'bottom-end',
-            followCursor: true,
-          }"
         />
       </div>
       <div class="toolbar-btn">
@@ -41,7 +36,7 @@
           text="Xóa"
           icon="icon-btndel-white"
           :class="[inventoryListConfig.isDisableButtonDelete ? 'disable' : '']"
-          @click="onClickDelete"
+          @click="onShowConfirmDialog"
           content="Ctrl + D"
           v-tippy="{
             placement: 'bottom-end',
@@ -340,6 +335,20 @@
       @updateListID="updateInventoryItemIDList"
       @updateItemComboListID="updateItemComboListID"
     />
+    <ConfirmDialog
+      v-if="confirmDialogConfig.isShow"
+      :title="confirmDialogConfig.title"
+      :msg="confirmDialogConfig.msg"
+      :type="confirmDialogConfig.type"
+      @onClose="onCloseConfirmDialog"
+      @onOk="onClickDelete"
+    />
+    <AlertDialog
+      v-if="alertDialogConfig.isShow"
+      :msg="alertDialogConfig.msg"
+      :type="alertDialogConfig.type"
+      @onClose="onCloseAlertDialog"
+    />
     <Loading v-if="inventoryListConfig.isShowLoading" />
   </div>
 </template>
@@ -351,6 +360,7 @@ import {
   getInventoryBySKUCode,
   deleteInventoryItemByID,
   getNewCode,
+  CheckInventoryItemIncurred,
   // deleteInventoryItemByParentID,
 } from "../../api/inventoryItem.js";
 
@@ -360,6 +370,8 @@ import {
 } from "../../api/inventoryItemComboDetail.js";
 
 import InventoryDetail from "../../pages/inventory/InventoryDetail.vue";
+import AlertDialog from "../../components/common/AlertDialog.vue";
+import ConfirmDialog from "../../components/common/ConfirmDialog.vue";
 import Loading from "../../components/common/Loading";
 import Pagination from "../../components/common/Pagination.vue";
 import Button from "../../components/common/Button.vue";
@@ -377,6 +389,8 @@ export default {
     FilterType,
     InputFilter,
     Loading,
+    AlertDialog,
+    ConfirmDialog,
     InventoryItem,
     InventoryDetail,
     Pagination,
@@ -481,6 +495,25 @@ export default {
           filterValue: 0,
         },
       ], // Dữ liệu để tìm kiếm, sắp xếp,...
+    },
+
+    /**
+     * Config của dialog Thông báo
+     */
+    alertDialogConfig: {
+      isShow: false,
+      msg: "",
+      type: "warning",
+    },
+
+    /**
+     * Config của dialog xác nhận
+     */
+    confirmDialogConfig: {
+      isShow: false,
+      msg: "",
+      title: "MISA",
+      type: "warning",
     },
   }),
   created() {
@@ -706,6 +739,60 @@ export default {
       this.inventoryDetailConfig.isShow = false;
       this.getPaging();
     },
+    //#region ConfirmDialog
+    /**
+     * Hàm đóng dialog xác nhận.
+     * CreatedBy: dqdat (21/07/2021)
+     */
+    onCloseConfirmDialog() {
+      this.confirmDialogConfig.isShow = false;
+      this.confirmDialogConfig.msg = "";
+    },
+    /**
+     * Hàm show dialog xác nhận
+     * CreatedBy: dqdat (21/07/2021)
+     */
+    onShowConfirmDialog() {
+      let listID = this.inventoryListConfig.selectionListID;
+      if (listID.length == 1) {
+        let inventoryItem = this.inventoryListConfig.inventoryItems.find(
+          (item) => item.inventoryItemID == listID[0]
+        );
+        this.confirmDialogConfig.msg = `Có có chắc chắn muốn xóa hàng hóa <b style="color:#df4646" > ${inventoryItem.inventoryItemName} - (${inventoryItem.skuCode}) </b> không ?`;
+      } else if (listID.length > 1) {
+        this.confirmDialogConfig.msg = `Bạn có chắc chắn muốn xóa các hàng hóa đã chọn không ?`;
+      }
+      this.confirmDialogConfig.isShow = true;
+      this.confirmDialogConfig.type = "question";
+      this.confirmDialogConfig.title = "Xóa dữ liệu";
+    },
+    //#endregion
+
+    //#region AlertDialog
+    /**
+     * Hàm đóng dialog thông báo.
+     * CreatedBy: dqdat (21/07/2021)
+     */
+    onCloseAlertDialog() {
+      this.alertDialogConfig = {
+        isShow: false,
+        msg: "",
+        type: "warning",
+      };
+    },
+
+    /**
+     * Hàm show dialog thông báo.
+     * CreatedBy: dqdat (21/07/2021)
+     */
+    showAlertDialog(alertDialogConfig) {
+      this.alertDialogConfig = {
+        isShow: true,
+        msg: alertDialogConfig.msg,
+        type: alertDialogConfig.type,
+      };
+    },
+    //#endregion
 
     //#region update List ID
     /**
@@ -790,15 +877,42 @@ export default {
      * CreatedBy: dqdat (20/07/2021)
      */
     async onClickDelete() {
+      let arrIDIncurred = [];
       let arrID = this.inventoryListConfig.selectionListID;
       if (arrID.length > 0) {
         for (let i = 0; i < arrID.length; i++) {
           let Id = arrID[i];
-          await deleteInventoryItemByID(Id).then(() => {
-            // console.log(res);
-            this.updateSelectionListID(Id, false);
+          await CheckInventoryItemIncurred(Id).then(async (res) => {
+            if (res.statusCode == 200) {
+              if (res.data == false) {
+                await deleteInventoryItemByID(Id).then((res) => {
+                  // console.log(res);
+                  if (res.statusCode == 200) {
+                    this.updateSelectionListID(Id, false);
+                  }
+                });
+              } else if (res.data == true) {
+                arrIDIncurred.push(Id);
+              }
+            }
           });
         }
+      }
+      // Xử lý thông báo các hàng hóa có phát sinh
+      let msg = "Không xóa được hàng hóa ";
+      arrIDIncurred.forEach((ID) => {
+        let inventoryItem = this.inventoryListConfig.inventoryItems.find(
+          (item) => item.inventoryItemID == ID
+        );
+        msg += inventoryItem.skuCode + ", ";
+      });
+      if (arrIDIncurred.length > 0) {
+        msg +=
+          "do hàng hóa đã có phát sinh. Xem các tình huống phát sinh và cách xử lý " +
+          `<a id="helpWarningDelete" style="color: #0873b8;" href="https://help.mshopkeeper.vn/vi/kb/lam_the_nao_de_xoa_duoc_hang_hoa_khi_da_co_phat_sinh" target="_blank">tại đây</a>`;
+        this.alertDialogConfig.msg = msg;
+        this.alertDialogConfig.type = "error";
+        this.alertDialogConfig.isShow = true;
       }
       this.getPaging();
     },

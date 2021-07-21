@@ -130,3 +130,14 @@ export const getNewCode = (tableName, fieldName) =>
     req.get(`${PREFIX_URL}/GetNewCode?tableName=${tableName}&fieldName=${fieldName}`)
         .then(res => Promise.resolve(res.data))
         .catch(err => Promise.reject(err));
+
+/**
+* Kiểm tra hàng hóa đã có phát sinh hay chưa
+* @param {}  
+* @returns 
+* CreatedBy: dqdat (21/07/2021)
+*/
+export const CheckInventoryItemIncurred = (inventoryItemID) =>
+    req.get(`${PREFIX_URL}/CheckInventoryItemIncurred/${inventoryItemID}`)
+        .then(res => Promise.resolve(res.data))
+        .catch(err => Promise.reject(err));
