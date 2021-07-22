@@ -746,7 +746,11 @@ export default {
         });
 
       if (this.inventoryDetailConfig.isShow == false) {
-        this.getPaging();
+        if (this.inventoryDetailConfig.isInsert == true) {
+          this.onClickBtnRefresh();
+        } else {
+          this.getPaging();
+        }
       }
     },
     //#region ConfirmDialog
@@ -933,7 +937,7 @@ export default {
      * CreatedBy: dqdat (20/07/2021)
      */
     onClickBtnRefresh() {
-      this.inventoryDetailConfig.pageNumber = 1;
+      this.filterData.pageNumber = 1;
       this.getPaging();
     },
     //#endregion
