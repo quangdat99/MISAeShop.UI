@@ -226,22 +226,21 @@
             <div class="title-item">
               Giá mua <span class="icon icon-question"></span>
             </div>
-            <Input
+            <InputMoney
               @input="
                 $emit('update:inventoryItem', {
                   ...inventoryItem,
                   buyPrice: $event,
                 })
               "
-              style="width: 153px"
-              type="number"
               :isReadonly="inventoryItem.color != '' ? true : false"
-              :value="[inventoryItem && inventoryItem.buyPrice]"
+              style="width: 153px"
+              :value="inventoryItem && inventoryItem.buyPrice"
             />
           </div>
           <div class="info-item" v-if="isInventory || isService">
             <div class="title-item">Giá bán</div>
-            <Input
+            <InputMoney
               @input="
                 $emit('update:inventoryItem', {
                   ...inventoryItem,
@@ -249,9 +248,8 @@
                 })
               "
               style="width: 153px"
-              type="number"
               :isReadonly="inventoryItem.color != '' ? true : false"
-              :value="[inventoryItem && inventoryItem.costPrice]"
+              :value="inventoryItem && inventoryItem.costPrice"
             />
           </div>
           <div class="info-item" v-if="isCombo">
@@ -593,6 +591,7 @@ import Radio from "../../components/common/Radio.vue";
 import Checkbox from "../../components/common/Checkbox.vue";
 import Button from "../../components/common/Button.vue";
 import Input from "../../components/common/Input.vue";
+import InputMoney from "../../components/common/InputMoney.vue";
 import Textarea from "../../components/common/Textarea.vue";
 import AutoComplete from "../../components/common/AutoComplete.vue";
 import AutoCompleteFilterItemCombo from "../../components/common/AutoCompleteFilterItemCombo.vue";
@@ -610,6 +609,7 @@ export default {
     AutoCompleteFilterItemCombo,
     Checkbox,
     Radio,
+    InputMoney,
     InputForm,
     Loading,
   },

@@ -7,7 +7,7 @@
     </td>
     <td>{{ inventoryItem.inventoryItemCategoryName }}</td>
     <td>{{ inventoryItem.unitName }}</td>
-    <td>{{ inventoryItem.costPrice }}</td>
+    <td style="text-align: end">{{ CostPrice }}</td>
     <td>{{ ShowInMenu }}</td>
     <td>{{ InventoryItemType }}</td>
     <td>{{ ManageType }}</td>
@@ -88,6 +88,17 @@ export default {
         return "Serial/ IMEI";
       }
       return "Không xác định";
+    },
+
+    // Giá bán
+    CostPrice: function () {
+      try {
+        return this.inventoryItem.costPrice
+          .toString()
+          .replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+      } catch (error) {
+        return this.inventoryItem.costPrice;
+      }
     },
   },
 };

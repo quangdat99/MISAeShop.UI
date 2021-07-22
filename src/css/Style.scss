@@ -802,6 +802,9 @@ $color-error-3: #fbeae5;
     &.read-only {
         background-color: #e5e6eb;
     }
+    &.money {
+        text-align: end;
+    }
 }
 .con-input {
     position: relative;
