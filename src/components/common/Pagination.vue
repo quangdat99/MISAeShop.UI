@@ -41,6 +41,7 @@
         @change="changePageSize($event.target.value)"
         class="pagination-combo"
       >
+        <option value="5">5</option>
         <option value="15">15</option>
         <option value="25">25</option>
         <option value="50">50</option>
@@ -116,10 +117,17 @@ export default {
      */
     changePageSize(value) {
       this.$emit("update:pageSize", parseInt(value));
+      this.$emit("update:pageNumber", 1);
+      this.pageIndex = 1;
     },
   },
   mounted() {
     this.pageIndex = this.pageNumber;
+  },
+  watch: {
+    pageNumber: function () {
+      this.pageIndex = this.pageNumber;
+    },
   },
 };
 </script>

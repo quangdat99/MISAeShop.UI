@@ -857,6 +857,9 @@ $color-error-3: #fbeae5;
             display: flex;
             flex-direction: column;
             min-width: 370px;
+            max-width: 600px;
+            max-height: 400px;
+            overflow: auto;
             .dropdown-item {
                 display: flex;
                 height: 34px;
@@ -955,6 +958,7 @@ $color-error-3: #fbeae5;
                     position: absolute;
                     cursor: default;
                 }
+                pointer-events: none;
             }
         }
         .pagination-item-label {
