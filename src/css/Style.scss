@@ -244,6 +244,13 @@ $color-error-3: #fbeae5;
                         border-radius: 3px;
                         height: 34px;
                     }
+                    .icon-error {
+                        background: url("./assets/icons/exclamation.png") no-repeat;
+                        height: 16px;
+                        width: 16px;
+                        margin-top: 8px;
+                        margin-left: 8px;
+                    }
                     .label-checkbox {
                         height: 14px;
                         line-height: 14px;
@@ -789,8 +796,11 @@ $color-error-3: #fbeae5;
         padding-right: 28px;
     }
 
-    &.has-error {
+    &.has-error:not(:focus) {
         border-color: #f20 !important;
+    }
+    &.read-only {
+        background-color: #e5e6eb;
     }
 }
 .con-input {
@@ -932,6 +942,17 @@ $color-error-3: #fbeae5;
             border-radius: 3px;
             cursor: pointer;
             margin-right: 2px;
+            &.disable {
+                &::after {
+                    content: "";
+                    height: 22px;
+                    width: 22px;
+                    background-color: #ffffff87;
+                    z-index: 50;
+                    position: absolute;
+                    cursor: default;
+                }
+            }
         }
         .pagination-item-label {
             line-height: 24px;
@@ -1070,6 +1091,31 @@ $color-error-3: #fbeae5;
                 left: -3px;
             }
         }
+    }
+}
+/* #endregion */
+
+/* #region v-tooltp */
+.tooltip {
+    display: block !important;
+    z-index: 10000;
+    .tooltip-inner {
+        background: #f63232;
+        color: white;
+        border-radius: 3px;
+        padding: 8px;
+        margin-left: 20px !important;
+    }
+
+    &[aria-hidden="true"] {
+        visibility: hidden;
+        opacity: 0;
+        transition: opacity 0.15s, visibility 0.15s;
+    }
+    &[aria-hidden="false"] {
+        visibility: visible;
+        opacity: 1;
+        transition: opacity 0.15s;
     }
 }
 /* #endregion */

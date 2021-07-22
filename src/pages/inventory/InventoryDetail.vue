@@ -78,6 +78,7 @@
             </div>
             <Input
               ref="inputInventoryItemName"
+              :class="{ 'has-error': errors && errors.inventoryItemName }"
               @input="
                 $emit('update:inventoryItem', {
                   ...inventoryItem,
@@ -88,6 +89,15 @@
               :value="inventoryItem && inventoryItem.inventoryItemName"
               @blur="onBlurInputName"
             />
+            <span
+              v-if="errors && errors.inventoryItemName"
+              class="icon-error"
+              v-tooltip.bottom-end="{
+                content: errors.inventoryItemName,
+                delay: { show: 0, hide: 300 },
+                show: tooltip.isShow,
+              }"
+            ></span>
           </div>
           <div class="info-item">
             <div class="title-item">Nhóm hàng hóa</div>
@@ -225,6 +235,7 @@
               "
               style="width: 153px"
               type="number"
+              :isReadonly="inventoryItem.color != '' ? true : false"
               :value="[inventoryItem && inventoryItem.buyPrice]"
             />
           </div>
@@ -239,6 +250,7 @@
               "
               style="width: 153px"
               type="number"
+              :isReadonly="inventoryItem.color != '' ? true : false"
               :value="[inventoryItem && inventoryItem.costPrice]"
             />
           </div>
@@ -294,6 +306,7 @@
               "
               style="width: 101px"
               type="number"
+              :isReadonly="inventoryItem.color != '' ? true : false"
               :value="[inventoryItem && inventoryItem.firstStock]"
             />
             <div class="note-item">
@@ -645,6 +658,12 @@ export default {
       ], // Các thành phần combo
       componentID: 1, // ID nhóm thành phần hàng hóa của combo
       isShowLoading: false, // trạng thái loading
+      errors: {
+        inventoryItemName: "",
+      }, // thông tin lỗi
+      tooltip: {
+        isShow: false,
+      }, // trạng thái tooltip
     };
   },
   created() {
@@ -819,6 +838,7 @@ export default {
 
     //#endregion
 
+    //#region Xử lý hàng hóa combo
     /**
      * cập nhật ID thành phân combo
      * CreatedBy: dqdat (20/07/2021)
@@ -871,6 +891,7 @@ export default {
       });
       this.itemCombo.splice(index, 1);
     },
+    //#endregion
 
     /**
      * Blur ô nhập tên hàng hóa
@@ -892,6 +913,13 @@ export default {
         });
       }
 
+      // Kiểm tra hợp lệ
+      if (this.inventoryItem && this.inventoryItem.inventoryItemName) {
+        this.errors.inventoryItemName = "";
+      } else {
+        this.errors.inventoryItemName = "Trường này không được để trống";
+      }
+
       setTimeout(() => {
         this.handleAttributeInventoryItem();
       }, 200);
@@ -906,6 +934,43 @@ export default {
         this.handleAttributeInventoryItem();
       }, 200);
     },
+
+    /**
+     * Kiểm tra lỗi trước khi bấm lưu
+     * CreatedBy: dqdat (22/07/2021)
+     */
+    validateBeforeSave() {
+      let valid = true;
+
+      for (const err in this.errors) {
+        if (this.errors[err]) {
+          valid = false;
+          break;
+        }
+      }
+      return valid;
+    },
+
+    /**
+     * Click Lưu
+     * CreatedBy: dqdat (20/07/2021)
+     */
+    onClickSave() {
+      let valid = this.validateBeforeSave();
+      if (valid) {
+        if (this.inventoryItem.inventoryItemType == 3) {
+          this.$emit("onSave", 3, this.itemCombo);
+        } else {
+          this.$emit("onSave", 1, this.itemDetails);
+        }
+      } else {
+        this.tooltip.isShow = true;
+        setTimeout(() => {
+          this.tooltip.isShow = false;
+        }, 2000);
+      }
+    },
+
     /**
      * Click đóng dialog
      * CreatedBy: dqdat (20/07/2021)
@@ -913,17 +978,6 @@ export default {
     onClickCloseDialogInventory() {
       this.$emit("closeDialogInventory");
       this.$emit("update:inventoryItem", null);
-    },
-    /**
-     * Click Lưu
-     * CreatedBy: dqdat (20/07/2021)
-     */
-    onClickSave() {
-      if (this.inventoryItem.inventoryItemType == 3) {
-        this.$emit("onSave", 3, this.itemCombo);
-      } else {
-        this.$emit("onSave", 1, this.itemDetails);
-      }
     },
     //#region Thành phần thuộc tính của hàng hóa
     /**
@@ -1013,6 +1067,7 @@ export default {
     },
     //#endregion
 
+    //#region Sự kiện nhấn phím tắt
     /**
      * sự kiện nhấn phím
      * CreatedBy: dqdat (21/07/2021)
@@ -1030,18 +1085,21 @@ export default {
         e.preventDefault();
       }
     },
+    //#endregion
   },
-
+  //#region mounted
   mounted() {
     this.handleAttributeInventoryItem();
     this.$refs.inputInventoryItemName.$el.focus();
     document.addEventListener("keydown", this.onKeyDown);
   },
+  //#endregion
   //#region boforeDestroy
   beforeDestroy() {
     document.removeEventListener("keydown", this.onKeyDown);
   },
   //#endregion
+  //#region computed
   computed: {
     ShowInMenu: {
       get: function () {
@@ -1060,5 +1118,6 @@ export default {
       },
     },
   },
+  //#endregion
 };
 </script>

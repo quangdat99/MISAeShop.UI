@@ -121,7 +121,8 @@ export default {
         this.$emit("update:value", res.value);
       } else {
         if (this.valueInput) {
-          this.$emit("update:value", "");
+          this.$emit("update:value", null);
+          this.valueInput = "";
         } else {
           this.$emit("update:value", null);
         }
@@ -179,7 +180,8 @@ export default {
         this.$emit("update:value", res.value);
       } else {
         if (this.valueInput) {
-          this.$emit("update:value", "");
+          this.$emit("update:value", null);
+          this.valueInput = "";
         } else {
           this.$emit("update:value", null);
         }

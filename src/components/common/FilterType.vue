@@ -1,21 +1,7 @@
 <template>
   <div>
-    <div
-      v-if="curruntText == '&le;'"
-      class="filter-type"
-      @click.prevent="toggleOption"
-    >
-      &le;
-    </div>
-    <div
-      v-else-if="curruntText == '&ge;'"
-      class="filter-type"
-      @click.prevent="toggleOption"
-    >
-      &ge;
-    </div>
-    <div v-else class="filter-type" @click.prevent="toggleOption">
-      {{ curruntText }}
+    <div class="filter-type" @click.prevent="toggleOption" v-html="curruntText">
+      <!-- {{ curruntText }} -->
     </div>
     <div
       class="dropdown-content"
@@ -29,8 +15,9 @@
         v-for="(option, index) in optionFilter"
         :key="index"
         @click="selectOption(option)"
+        v-html="option.text"
       >
-        {{ option.text }}
+        <!-- {{ option.text }} -->
       </div>
     </div>
   </div>

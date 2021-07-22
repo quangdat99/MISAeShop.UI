@@ -321,6 +321,7 @@
         :totalPage="inventoryListConfig.totalPage"
         :totalRecord="inventoryListConfig.totalRecord"
         :pageSize.sync="filterData.pageSize"
+        @onRefeshData="onClickBtnRefresh"
       />
     </div>
     <InventoryDetail
@@ -405,10 +406,10 @@ export default {
       { value: 5, text: "! : Không chứa", prefix: "!" },
     ], // kiểu lọc option text
     optionFilterNumber: [
-      { value: 6, text: "<= : Nhỏ hơn hoặc bằng", prefix: "&le;" },
+      { value: 6, text: "&le; : Nhỏ hơn hoặc bằng", prefix: "&le;" },
       { value: 7, text: "< : Nhỏ hơn", prefix: "<" },
       { value: 8, text: "= : Bằng", prefix: "=" },
-      { value: 9, text: ">= : Lớn hơn hoặc bằng", prefix: "&ge;" },
+      { value: 9, text: "&ge; : Lớn hơn hoặc bằng", prefix: "&ge;" },
       { value: 10, text: "> : Lớn hơn", prefix: ">" },
     ], // kiểu lọc option number
     /**
@@ -434,7 +435,7 @@ export default {
       units: [], // Danh sách đơn vị tính
       isSelectAll: false, // Trạng thái chọn tất cả bản ghi
       selectionListID: [], // Danh sách ID được lựa chọn
-      totalPage: 0, // Tổng số trang
+      totalPage: 1, // Tổng số trang
       totalRecord: 0, // Tổng số bản ghi
       isDisableButtonDelete: true, // disable nút xóa
       isDisableButtonDuplicate: true, // Disable nút nhân bản
@@ -533,6 +534,9 @@ export default {
             this.inventoryListConfig.totalPage = Math.ceil(
               this.inventoryListConfig.totalRecord / this.filterData.pageSize
             );
+            if (this.inventoryListConfig.totalPage == 0) {
+              this.inventoryListConfig.totalPage = 1;
+            }
 
             this.inventoryListConfig.inventoryItems = res.data;
             this.inventoryListConfig.isShowLoading = false;
@@ -630,10 +634,10 @@ export default {
         this.inventoryDetailConfig.isInsert
       )
         .then(async (res) => {
-          return await res.statusCode;
+          return await res;
         })
-        .then(async (statusCode) => {
-          if (statusCode == 200) {
+        .then(async (res) => {
+          if (res.statusCode == 200) {
             // Lưu thông tin hàng hóa loại thông thường và dịch vụ
             if (
               // rule = 1: đối với hàng hóa thông thường và dịch vụ
@@ -733,11 +737,17 @@ export default {
                 }
               });
             }
+            this.inventoryDetailConfig.isShow = false;
+          } else if (res.statusCode == 400) {
+            this.showAlertDialog(res.userMessage, "warning");
+          } else if (res.statusCode == 500) {
+            this.showAlertDialog(res.userMessage, "error");
           }
         });
 
-      this.inventoryDetailConfig.isShow = false;
-      this.getPaging();
+      if (this.inventoryDetailConfig.isShow == false) {
+        this.getPaging();
+      }
     },
     //#region ConfirmDialog
     /**
@@ -785,12 +795,10 @@ export default {
      * Hàm show dialog thông báo.
      * CreatedBy: dqdat (21/07/2021)
      */
-    showAlertDialog(alertDialogConfig) {
-      this.alertDialogConfig = {
-        isShow: true,
-        msg: alertDialogConfig.msg,
-        type: alertDialogConfig.type,
-      };
+    showAlertDialog(msg, type) {
+      this.alertDialogConfig.isShow = true;
+      this.alertDialogConfig.msg = msg;
+      this.alertDialogConfig.type = type;
     },
     //#endregion
 
@@ -882,9 +890,11 @@ export default {
       if (arrID.length > 0) {
         for (let i = 0; i < arrID.length; i++) {
           let Id = arrID[i];
+          // kiểm tra hàng hóa có phát sinh
           await CheckInventoryItemIncurred(Id).then(async (res) => {
             if (res.statusCode == 200) {
               if (res.data == false) {
+                // không có phát sinh thì thực hiện xóa hàng hóa
                 await deleteInventoryItemByID(Id).then((res) => {
                   // console.log(res);
                   if (res.statusCode == 200) {
@@ -892,6 +902,7 @@ export default {
                   }
                 });
               } else if (res.data == true) {
+                // có phát sinh thì thông báo
                 arrIDIncurred.push(Id);
               }
             }
@@ -927,6 +938,7 @@ export default {
     },
     //#endregion
 
+    //#region sự kiện nhấn phím
     /**
      * sự kiện nhấn phím
      * CreatedBy: dqdat (21/07/2021)
@@ -955,6 +967,7 @@ export default {
         this.onClickBtnRefresh();
         e.preventDefault();
       }
+      //#endregion
     },
   },
 

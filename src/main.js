@@ -2,6 +2,10 @@ import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
 
+//#region sử dụng thư viện v-tooltip
+import VTooltip from 'v-tooltip'
+Vue.use(VTooltip)
+//#endregion
 
 //#region sử dụng thư viện vue-tippy
 import VueTippy, { TippyComponent } from "vue-tippy";
