@@ -51,7 +51,7 @@
       />
     </td>
     <td style="width: 100px">
-      <Input
+      <InputMoney
         @input="
           $emit(
             'updateItemDetail',
@@ -63,12 +63,11 @@
             'buyPrice'
           )
         "
-        :value="[inventoryItem && inventoryItem.buyPrice]"
-        :type="'number'"
+        :value="inventoryItem && inventoryItem.buyPrice"
       />
     </td>
     <td style="width: 100px">
-      <Input
+      <InputMoney
         @input="
           $emit(
             'updateItemDetail',
@@ -80,8 +79,7 @@
             'costPrice'
           )
         "
-        :value="[inventoryItem && inventoryItem.costPrice]"
-        :type="'number'"
+        :value="inventoryItem && inventoryItem.costPrice"
       />
     </td>
     <td style="width: 54px; padding: 0px 19px">
@@ -95,9 +93,11 @@
 
 <script>
 import Input from "../../components/common/Input.vue";
+import InputMoney from "../../components/common/InputMoney.vue";
 export default {
   components: {
     Input,
+    InputMoney,
   },
   props: {
     /**

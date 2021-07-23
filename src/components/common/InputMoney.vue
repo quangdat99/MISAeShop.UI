@@ -15,7 +15,9 @@ export default {
     Money,
   },
   mounted() {
-    this.displayValue = this.value;
+    setTimeout(() => {
+      this.displayValue = this.value;
+    }, 200);
   },
 
   props: {
@@ -46,14 +48,6 @@ export default {
       },
     };
   },
-  methods: {
-    /**
-     *lấy giá trị tiền gửi ra cho componet cha
-     */
-    getValue() {
-      this.$emit("input", parseInt(this.displayValue));
-    },
-  },
   watch: {
     /**
      *kiểm tra khi giá trị đầu vào thay đổi thì cập nhật
@@ -61,9 +55,6 @@ export default {
     displayValue() {
       this.$emit("input", parseInt(this.displayValue));
     },
-    // value: function (value) {
-    //   this.displayValue = value;
-    // },
   },
 };
 </script>
