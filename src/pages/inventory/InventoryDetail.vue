@@ -117,6 +117,7 @@
             <div class="title-item">Mã SKU</div>
 
             <Input
+              :class="{ 'has-error': errors && errors.skuCode }"
               @input="
                 $emit('update:inventoryItem', {
                   ...inventoryItem,
@@ -128,10 +129,20 @@
               :value="inventoryItem && inventoryItem.skuCode"
               @blur="onBlurInputSKUCode"
             />
+            <span
+              v-if="errors && errors.skuCode"
+              class="icon-error"
+              v-tooltip.bottom-end="{
+                content: errors.skuCode,
+                delay: { show: 0, hide: 300 },
+                show: tooltip.isShow,
+              }"
+            ></span>
           </div>
           <div class="info-item">
             <div class="title-item">Mã vạch</div>
             <Input
+              :class="{ 'has-error': errors && errors.barCode }"
               @input="
                 $emit('update:inventoryItem', {
                   ...inventoryItem,
@@ -141,7 +152,17 @@
               style="width: 240px"
               placeholder="Hệ thống tự sinh khi bỏ trống"
               :value="inventoryItem && inventoryItem.barCode"
+              @blur="onBlurInputBarCode"
             />
+            <span
+              v-if="errors && errors.barCode"
+              class="icon-error"
+              v-tooltip.bottom-end="{
+                content: errors.barCode,
+                delay: { show: 0, hide: 300 },
+                show: tooltip.isShow,
+              }"
+            ></span>
           </div>
           <div class="info-item" v-if="isCombo">
             <div class="title-item">Thành phần combo</div>
@@ -491,6 +512,7 @@
           <div class="info-item">
             <div class="title-item">Mô tả</div>
             <Textarea
+              :class="{ 'has-error': errors && errors.description }"
               style="width: 438px; height: 80px"
               :value="inventoryItem && inventoryItem.description"
               @input="
@@ -499,7 +521,17 @@
                   description: $event,
                 })
               "
+              @blur="onBlurInputDescription"
             />
+            <span
+              v-if="errors && errors.description"
+              class="icon-error"
+              v-tooltip.bottom-end="{
+                content: errors.description,
+                delay: { show: 0, hide: 300 },
+                show: tooltip.isShow,
+              }"
+            ></span>
           </div>
           <div class="info-item">
             <div class="title-item">Ảnh hàng hóa</div>
@@ -660,6 +692,9 @@ export default {
       isShowLoading: false, // trạng thái loading
       errors: {
         inventoryItemName: "",
+        skuCode: "",
+        barCode: "",
+        description: "",
       }, // thông tin lỗi
       tooltip: {
         isShow: false,
@@ -913,11 +948,23 @@ export default {
         });
       }
 
-      // Kiểm tra hợp lệ
+      // Kiểm tra tên hàng hóa không được để trống
       if (this.inventoryItem && this.inventoryItem.inventoryItemName) {
         this.errors.inventoryItemName = "";
       } else {
         this.errors.inventoryItemName = "Trường này không được để trống";
+      }
+
+      // kiểm tra ký tự tối đa tên hàng hóa
+      if (this.inventoryItem.inventoryItemName != undefined) {
+        if (
+          this.inventoryItem &&
+          this.inventoryItem.inventoryItemName.length > 255
+        ) {
+          this.errors.inventoryItemName = "Trường này tối đa 255 ký tự.";
+        } else {
+          this.errors.inventoryItemName = "";
+        }
       }
 
       setTimeout(() => {
@@ -930,9 +977,48 @@ export default {
      * CreatedBy: dqdat (20/07/2021)
      */
     onBlurInputSKUCode() {
+      // kiểm tra ký tự tối đa mã sku
+      if (this.inventoryItem.skuCode != undefined) {
+        if (this.inventoryItem && this.inventoryItem.skuCode.length > 20) {
+          this.errors.skuCode = "Trường này tối đa 20 ký tự.";
+        } else {
+          this.errors.skuCode = "";
+        }
+      }
+
       setTimeout(() => {
         this.handleAttributeInventoryItem();
       }, 200);
+    },
+
+    /**
+     * Blur ô nhập mã vạch
+     * CreatedBy: dqdat (20/07/2021)
+     */
+    onBlurInputBarCode() {
+      // kiểm tra ký tự tối đa mã vạch
+      if (this.inventoryItem.barCode != undefined) {
+        if (this.inventoryItem && this.inventoryItem.barCode.length > 20) {
+          this.errors.barCode = "Trường này tối đa 20 ký tự.";
+        } else {
+          this.errors.barCode = "";
+        }
+      }
+    },
+
+    /**
+     * Blur ô nhập mô tả hàng hóa
+     * CreatedBy: dqdat (20/07/2021)
+     */
+    onBlurInputDescription() {
+      // kiểm tra ký tự tối đa mô tả hàng hóa
+      if (this.inventoryItem.description != undefined) {
+        if (this.inventoryItem && this.inventoryItem.description.length > 255) {
+          this.errors.description = "Trường này tối đa 255 ký tự.";
+        } else {
+          this.errors.description = "";
+        }
+      }
     },
 
     /**
