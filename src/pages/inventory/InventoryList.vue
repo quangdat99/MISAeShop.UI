@@ -400,9 +400,9 @@ export default {
   data: () => ({
     optionFilter: [
       { value: 1, text: "* : Chứa", prefix: "*" },
-      { value: 2, text: "= : Bằng", prefix: "=" },
-      { value: 3, text: "+ : Bắt đầu bằng", prefix: "+" },
-      { value: 4, text: "- : Kết thúc bằng", prefix: "-" },
+      { value: 4, text: "= : Bằng", prefix: "=" },
+      { value: 2, text: "+ : Bắt đầu bằng", prefix: "+" },
+      { value: 3, text: "- : Kết thúc bằng", prefix: "-" },
       { value: 5, text: "! : Không chứa", prefix: "!" },
     ], // kiểu lọc option text
     optionFilterNumber: [
