@@ -81,7 +81,7 @@
                 <div>
                   <FilterType
                     :optionFilter="optionFilter"
-                    @updatePaging="getPaging"
+                    @updatePaging="onClickBtnRefresh"
                     :value.sync="filterData.dataFilter[0].filterType"
                   />
                 </div>
@@ -89,7 +89,7 @@
                   <InputFilter
                     style="width: 60px"
                     :value.sync="filterData.dataFilter[0].filterValue"
-                    @updatePaging="getPaging"
+                    @updatePaging="onClickBtnRefresh"
                   />
                 </div>
               </tr>
@@ -113,14 +113,14 @@
                 <div>
                   <FilterType
                     :optionFilter="optionFilter"
-                    @updatePaging="getPaging"
+                    @updatePaging="onClickBtnRefresh"
                     :value.sync="filterData.dataFilter[1].filterType"
                   />
                 </div>
                 <div>
                   <InputFilter
                     style="width: 240px"
-                    @updatePaging="getPaging"
+                    @updatePaging="onClickBtnRefresh"
                     :value.sync="filterData.dataFilter[1].filterValue"
                   />
                 </div>
@@ -145,14 +145,14 @@
                 <div>
                   <FilterType
                     :optionFilter="optionFilter"
-                    @updatePaging="getPaging"
+                    @updatePaging="onClickBtnRefresh"
                     :value.sync="filterData.dataFilter[2].filterType"
                   />
                 </div>
                 <div>
                   <InputFilter
                     style="width: 100px"
-                    @updatePaging="getPaging"
+                    @updatePaging="onClickBtnRefresh"
                     :value.sync="filterData.dataFilter[2].filterValue"
                   />
                 </div>
@@ -177,14 +177,14 @@
                 <div>
                   <FilterType
                     :optionFilter="optionFilter"
-                    @updatePaging="getPaging"
+                    @updatePaging="onClickBtnRefresh"
                     :value.sync="filterData.dataFilter[3].filterType"
                   />
                 </div>
                 <div>
                   <InputFilter
                     style="width: 80px"
-                    @updatePaging="getPaging"
+                    @updatePaging="onClickBtnRefresh"
                     :value.sync="filterData.dataFilter[3].filterValue"
                   />
                 </div>
@@ -209,7 +209,7 @@
                 <div>
                   <FilterType
                     :optionFilter="optionFilterNumber"
-                    @updatePaging="getPaging"
+                    @updatePaging="onClickBtnRefresh"
                     :value.sync="filterData.dataFilter[4].filterType"
                   />
                 </div>
@@ -217,7 +217,7 @@
                   <InputFilter
                     :type="'number'"
                     style="width: 80px"
-                    @updatePaging="getPaging"
+                    @updatePaging="onClickBtnRefresh"
                     :value.sync="filterData.dataFilter[4].filterValue"
                   />
                 </div>
@@ -231,7 +231,7 @@
                 <div>
                   <AutoCompleteFilter
                     style="width: 154px"
-                    @updatePaging="getPaging"
+                    @updatePaging="onClickBtnRefresh"
                     :value.sync="filterData.dataFilter[5].filterValue"
                     :options="[
                       { value: 0, text: 'Tất cả' },
@@ -250,7 +250,7 @@
                 <div>
                   <AutoCompleteFilter
                     style="width: 134px"
-                    @updatePaging="getPaging"
+                    @updatePaging="onClickBtnRefresh"
                     :value.sync="filterData.dataFilter[6].filterValue"
                     :options="[
                       { value: 0, text: 'Tất cả' },
@@ -270,7 +270,7 @@
                 <div>
                   <AutoCompleteFilter
                     style="width: 134px"
-                    @updatePaging="getPaging"
+                    @updatePaging="onClickBtnRefresh"
                     :value.sync="filterData.dataFilter[7].filterValue"
                     :options="[
                       { value: 0, text: 'Tất cả' },
@@ -290,7 +290,7 @@
                 <div>
                   <AutoCompleteFilter
                     style="width: 134px"
-                    @updatePaging="getPaging"
+                    @updatePaging="onClickBtnRefresh"
                     :value.sync="filterData.dataFilter[8].filterValue"
                     :options="[
                       { value: 0, text: 'Tất cả' },
