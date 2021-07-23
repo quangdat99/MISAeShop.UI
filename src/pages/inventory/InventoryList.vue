@@ -647,43 +647,42 @@ export default {
                 this.inventoryListConfig.inventoryItemIDList.length > 0)
             ) {
               // Lấy dữ liệu theo mã sku
-              await getInventoryBySKUCode(res.data.skuCode).then(
-                async (res) => {
+              await getInventoryBySKUCode(
+                this.inventoryDetailConfig.inventoryItem.skuCode
+              ).then(async (res) => {
+                if (res.statusCode == 200) {
+                  this.inventoryListConfig.inventoryItemIDList.forEach(
+                    async (ID) => {
+                      // Xóa hàng hóa theo ID
+                      await deleteInventoryItemByID(ID).then(() => {
+                        // console.log(res);
+                      });
+                    }
+                  );
+                  this.inventoryListConfig.inventoryItemIDList = [];
                   if (res.statusCode == 200) {
-                    this.inventoryListConfig.inventoryItemIDList.forEach(
-                      async (ID) => {
-                        // Xóa hàng hóa theo ID
-                        await deleteInventoryItemByID(ID).then(() => {
+                    let i = 0;
+                    while (i <= arrObj.length - 1) {
+                      arrObj[i].inventoryItemType = res.data.inventoryItemType;
+                      if (arrObj[i].parentID == res.data.inventoryItemID) {
+                        // Thực hiện sửa dữ liệu
+                        arrObj[i].parentID = res.data.inventoryItemID;
+                        await saveInventoryItem(arrObj[i], false).then(() => {
                           // console.log(res);
+                          i = i + 1;
                         });
-                      }
-                    );
-                    this.inventoryListConfig.inventoryItemIDList = [];
-                    if (res.statusCode == 200) {
-                      let i = 0;
-                      while (i <= arrObj.length - 1) {
-                        arrObj[i].inventoryItemType =
-                          res.data.inventoryItemType;
-                        if (arrObj[i].parentID == res.data.inventoryItemID) {
-                          // Thực hiện sửa dữ liệu
-                          arrObj[i].parentID = res.data.inventoryItemID;
-                          await saveInventoryItem(arrObj[i], false).then(() => {
-                            // console.log(res);
-                            i = i + 1;
-                          });
-                        } else {
-                          // Thực hiện thêm mới dữ liệu
-                          arrObj[i].parentID = res.data.inventoryItemID;
-                          await saveInventoryItem(arrObj[i], true).then(() => {
-                            // console.log(res);
-                            i = i + 1;
-                          });
-                        }
+                      } else {
+                        // Thực hiện thêm mới dữ liệu
+                        arrObj[i].parentID = res.data.inventoryItemID;
+                        await saveInventoryItem(arrObj[i], true).then(() => {
+                          // console.log(res);
+                          i = i + 1;
+                        });
                       }
                     }
                   }
                 }
-              );
+              });
             }
             // Lưu thông tin hàng hóa loại combo
             if (rule == 3 && arrObj.length >= 0) {
@@ -691,7 +690,7 @@ export default {
               // arrObj: dữ liệu thành phần hàng hóa của conbo
               await getInventoryBySKUCode(
                 // Lấy dữ liệu theo mã sku
-                res.data.skuCode
+                this.inventoryDetailConfig.inventoryItem.skuCode
               ).then(async (res) => {
                 if (res.statusCode == 200) {
                   this.inventoryListConfig.inventoryItemComboIDList.forEach(
