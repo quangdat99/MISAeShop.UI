@@ -356,7 +356,7 @@
             />
           </div>
           <div class="info-item" v-if="isInventory || isCombo">
-            <div class="title-item">Vĩ trí trưng bày</div>
+            <div class="title-item">Vị trí trưng bày</div>
             <Input
               @input="
                 $emit('update:inventoryItem', {
