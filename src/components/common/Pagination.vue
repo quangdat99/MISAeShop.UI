@@ -50,7 +50,13 @@
     </div>
     <div class="pagination-right">
       <div class="pagination-right-info" v-if="pageSize <= totalRecord">
-        Hiển thị 1 - {{ pageSize }} trên {{ totalRecord }} kết quả
+        Hiển thị {{ pageSize * (pageIndex - 1) + 1 }} -
+        {{
+          pageSize * pageIndex > totalRecord
+            ? totalRecord
+            : pageIndex * pageSize
+        }}
+        trên {{ totalRecord }} kết quả
       </div>
       <div
         class="pagination-right-info"
